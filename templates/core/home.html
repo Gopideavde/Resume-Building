@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - {{ site_settings.site_name|default:'ResumePro' }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5 bg-white overflow-hidden">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0 reveal-up">
+                <h1 class="display-4 fw-bold text-dark mb-4">{{ site_settings.site_tagline|default:"Build a Professional Resume That Gets Noticed" }}</h1>
+                <p class="lead text-muted mb-4">Create your resume easily with our intuitive builder. Choose from free and premium ATS-friendly templates.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-primary-modern btn-modern btn-lg rounded-pill px-4 ">Create My Resume</a>
+                    <!-- Assuming you have a templates_list url, if not, keeping # -->
+                    <a href="#" class="btn btn-outline-secondary btn-modern btn-lg rounded-pill px-4">Explore Templates</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center reveal-up" style="transition-delay: 0.2s;">
+                <!-- Animated Hero Mockup -->
+                <div class="p-4 bg-transparent rounded-4  border hero-illustration position-relative" style="height: 400px; display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #ffffff, #f3f4f6);">
+                    <!-- Subtle floating elements -->
+                    <div class="position-absolute rounded-pill bg-primary" style="width: 80px; height: 12px; top: 15%; left: -20px; opacity: 0.5;"></div>
+                    <div class="position-absolute rounded-pill bg-warning" style="width: 40px; height: 12px; bottom: 20%; right: -15px; opacity: 0.5;"></div>
+                    <i class="bi bi-file-earmark-text text-primary" style="font-size: 8rem; opacity: 0.8; filter: drop-shadow(0 10px 15px var(--primary-glow));"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-transparent">
+    <div class="container py-5">
+        <div class="text-center mb-5 reveal-up">
+            <h2 class="fw-bold">Why Choose {{ site_settings.site_name|default:'ResumePro' }}?</h2>
+            <p class="text-muted">Everything you need to create a winning resume.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4 reveal-up" style="transition-delay: 0.1s;">
+                <div class="card border-0  rounded-4 h-100 text-center p-4 card-lift">
+                    <div class="mb-3"><i class="bi bi-magic fs-1 text-primary"></i></div>
+                    <h5 class="fw-bold">Easy Resume Builder</h5>
+                    <p class="text-muted">Our multi-step builder makes it incredibly easy to fill out your details.</p>
+                </div>
+            </div>
+            <div class="col-md-4 reveal-up" style="transition-delay: 0.2s;">
+                <div class="card border-0  rounded-4 h-100 text-center p-4 card-lift">
+                    <div class="mb-3"><i class="bi bi-check-circle fs-1 text-primary"></i></div>
+                    <h5 class="fw-bold">ATS-Friendly</h5>
+                    <p class="text-muted">Templates designed to pass through Applicant Tracking Systems flawlessly.</p>
+                </div>
+            </div>
+            <div class="col-md-4 reveal-up" style="transition-delay: 0.3s;">
+                <div class="card border-0  rounded-4 h-100 text-center p-4 card-lift">
+                    <div class="mb-3"><i class="bi bi-file-pdf fs-1 text-primary"></i></div>
+                    <h5 class="fw-bold">PDF Export</h5>
+                    <p class="text-muted">Download your resume as a high-quality PDF ready for printing and emailing.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

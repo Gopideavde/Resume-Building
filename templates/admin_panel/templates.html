@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Admin - Templates{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4><i class="bi bi-file-earmark"></i> Template Management</h4>
+        <!-- In a full app, a "Create Template" button would route to a full CRUD form -->
+        <a href="/admin/templates_app/resumetemplate/" class="btn btn-primary btn-sm">Advanced Template CRUD</a>
+    </div>
+
+    <div class="card border-0  rounded-4">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Template Name</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in templates %}
+                    <tr>
+                        <td>{{ t.name }}</td>
+                        <td>{{ t.category.name|default:"None" }}</td>
+                        <td>
+                            {% if t.is_premium %}
+                                <span class="badge bg-warning text-dark">PREMIUM</span>
+                            {% else %}
+                                <span class="badge bg-success">FREE</span>
+                            {% endif %}
+                        </td>
+                        <td>₹{{ t.price }}</td>
+                        <td>
+                            <form action="{% url 'admin_template_toggle' t.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                    Toggle Free/Premium
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

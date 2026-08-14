@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard - {{ site_settings.site_name|default:'ResumePro' }}{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Admin Dashboard</h2>
+        <a href="{% url 'admin:index' %}" class="btn btn-outline-dark rounded-pill px-4" target="_blank">Django Admin</a>
+    </div>
+
+    <!-- Stats row -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card border-0  rounded-4 bg-primary text-white">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1 opacity-75">Users</h6>
+                        <h2 class="mb-0 fw-bold">{{ total_users }}</h2>
+                    </div>
+                    <i class="bi bi-people fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0  rounded-4 text-white" style="background-color: #8b5cf6;">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1 opacity-75">Resumes</h6>
+                        <h2 class="mb-0 fw-bold">{{ total_resumes }}</h2>
+                    </div>
+                    <i class="bi bi-file-earmark-text fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0  rounded-4 text-white" style="background-color: #10b981;">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1 opacity-75">Revenue</h6>
+                        <h2 class="mb-0 fw-bold">₹{{ revenue }}</h2>
+                    </div>
+                    <i class="bi bi-currency-rupee fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0  rounded-4 bg-dark text-white">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1 opacity-75">Templates</h6>
+                        <h2 class="mb-0 fw-bold">{{ total_templates }}</h2>
+                    </div>
+                    <i class="bi bi-palette fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card border-0  rounded-4">
+                <div class="card-header bg-white border-0 pt-4 pb-0">
+                    <h5 class="fw-bold">Payments Overview</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Successful Payments
+                            <span class="badge bg-success rounded-pill">{{ successful_payments }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Failed Payments
+                            <span class="badge bg-danger rounded-pill">{{ failed_payments }}</span>
+                        </li>
+                    </ul>
+                    <ul class="nav flex-column mb-auto mt-3">
+                        <li class="nav-item">
+                            <a href="{% url 'admin_dashboard' %}" class="nav-link text-dark active">
+                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin_payments' %}" class="nav-link text-dark">
+                                <i class="bi bi-credit-card me-2"></i> Payments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin_templates' %}" class="nav-link text-dark">
+                                <i class="bi bi-file-earmark me-2"></i> Templates
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin_audit_logs' %}" class="nav-link text-dark">
+                                <i class="bi bi-shield-lock me-2"></i> Audit Logs
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0  rounded-4">
+                <div class="card-header bg-white border-0 pt-4 pb-0">
+                    <h5 class="fw-bold">Template Breakdown</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Free Templates
+                            <span class="badge bg-secondary rounded-pill">{{ free_templates }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Premium Templates
+                            <span class="badge bg-warning text-dark rounded-pill">{{ premium_templates }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Payment Status - {{ site_settings.site_name|default:'ResumePro' }}{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+    {% if status == 'success' %}
+        <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+        <h2 class="fw-bold mt-4 mb-3">Payment Successful!</h2>
+        <p class="text-muted lead mb-4">Your premium template has been unlocked.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'use_template' transaction.template.id %}" class="btn btn-primary rounded-pill px-4">Use Template</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary rounded-pill px-4">Go To Dashboard</a>
+        </div>
+    {% else %}
+        <i class="bi bi-x-circle-fill text-danger" style="font-size: 5rem;"></i>
+        <h2 class="fw-bold mt-4 mb-3">Payment Failed</h2>
+        <p class="text-muted lead mb-4">Unfortunately, your payment could not be processed. Please try again.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'create_order' transaction.template.id %}" class="btn btn-primary rounded-pill px-4">Retry Payment</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary rounded-pill px-4">Go To Dashboard</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Admin - Payments{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4><i class="bi bi-credit-card"></i> Payment Management</h4>
+    </div>
+    
+    <div class="card border-0  rounded-4 mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-5">
+                    <input type="text" name="q" class="form-control" placeholder="Search Email or Order ID..." value="{{ query }}">
+                </div>
+                <div class="col-md-4">
+                    <select name="status" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="SUCCESS" {% if status == 'SUCCESS' %}selected{% endif %}>SUCCESS</option>
+                        <option value="PENDING" {% if status == 'PENDING' %}selected{% endif %}>PENDING</option>
+                        <option value="FAILED" {% if status == 'FAILED' %}selected{% endif %}>FAILED</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0  rounded-4">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>User</th>
+                        <th>Template</th>
+                        <th>Amount</th>
+                        <th>Order ID</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in page_obj %}
+                    <tr>
+                        <td>{{ p.created_at|date:"M d, Y H:i" }}</td>
+                        <td>{{ p.user.email }}</td>
+                        <td>{{ p.template.name }}</td>
+                        <td>₹{{ p.amount }}</td>
+                        <td>{{ p.razorpay_order_id }}</td>
+                        <td>
+                            {% if p.status == 'SUCCESS' %}
+                                <span class="badge bg-success">SUCCESS</span>
+                            {% elif p.status == 'PENDING' %}
+                                <span class="badge bg-warning text-dark">PENDING</span>
+                            {% else %}
+                                <span class="badge bg-danger">FAILED</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">No payments found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

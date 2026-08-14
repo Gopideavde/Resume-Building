@@ -1,0 +1,145 @@
+/* 
+   ResumePro UI/UX Enhancements & Animations
+   Follows prefers-reduced-motion for accessibility
+*/
+
+/* --- Theme Variables (Dynamic Fallbacks) --- */
+:root {
+    --primary-color: #4f46e5;
+    --secondary-color: #334155;
+    --primary-glow: rgba(79, 70, 229, 0.3);
+}
+
+/* --- Base Typography & Spacing --- */
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --- Modern Buttons --- */
+.btn-modern {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-modern:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-primary-modern {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+.btn-primary-modern:hover {
+    background-color: var(--primary-color);
+    filter: brightness(1.1);
+    border-color: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+/* --- Navbar Hover Effects --- */
+.nav-link {
+    position: relative;
+    transition: color 0.2s ease;
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--primary-color);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+.nav-link:hover::after, .nav-link.active::after {
+    width: 100%;
+}
+
+/* --- Card Lift Effects --- */
+.card-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 12px;
+    overflow: hidden;
+}
+.card-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+.card-lift .card-img-top {
+    transition: transform 0.4s ease;
+}
+.card-lift:hover .card-img-top {
+    transform: scale(1.03);
+}
+
+/* --- Premium Badges & Glow --- */
+.premium-card {
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+.premium-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    z-index: 10;
+}
+.premium-card:hover {
+    box-shadow: 0 10px 30px var(--primary-glow);
+}
+
+.premium-badge {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+}
+
+/* --- Hero Section Floating Illustration --- */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+.hero-illustration {
+    animation: float 6s ease-in-out infinite;
+    filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
+}
+
+/* --- Scroll Reveal Animations --- */
+.reveal-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-up.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Accessibility: Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .hero-illustration { animation: none; }
+    .reveal-up { opacity: 1; transform: none; transition: none; }
+}

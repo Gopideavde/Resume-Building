@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - {{ site_settings.site_name|default:'ResumePro' }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">My Dashboard</h2>
+        <form method="POST" action="{% url 'create_resume' %}" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="title" value="Untitled Resume">
+            <button type="submit" class="btn btn-primary rounded-pill px-4"><i class="bi bi-plus-lg me-1"></i> Create New Resume</button>
+        </form>
+    </div>
+
+    <!-- Stats row -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card border-0  rounded-4 bg-primary text-white hover-shadow">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1 opacity-75">Total Resumes</h6>
+                        <h2 class="mb-0 fw-bold">{{ resumes.count }}</h2>
+                    </div>
+                    <i class="bi bi-files fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0  rounded-4 hover-shadow">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted text-uppercase mb-1">Downloads</h6>
+                        <h2 class="mb-0 fw-bold">0</h2>
+                    </div>
+                    <i class="bi bi-download fs-1 text-secondary opacity-25"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0  rounded-4 hover-shadow">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted text-uppercase mb-1">Premium Templates</h6>
+                        <h2 class="mb-0 fw-bold">0</h2>
+                    </div>
+                    <i class="bi bi-star fs-1 text-warning opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="fw-bold mb-4">My Resumes</h4>
+    
+    {% if resumes %}
+        <div class="row g-4">
+            {% for resume in resumes %}
+            <div class="col-md-4">
+                <div class="card border-0  rounded-4 h-100 hover-shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="fw-bold text-truncate mb-0" title="{{ resume.title }}">{{ resume.title }}</h5>
+                            <span class="badge bg-transparent text-dark"><i class="bi bi-clock"></i> {{ resume.updated_at|date:"M d, Y" }}</span>
+                        </div>
+                        <p class="text-muted small mb-4">
+                            Template: {% if resume.template %}{{ resume.template.name }}{% else %}Not Selected{% endif %}
+                        </p>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'resume_builder' resume.id %}" class="btn btn-outline-primary btn-sm flex-grow-1 rounded-pill">Edit</a>
+                            <form method="POST" action="{% url 'resume_delete' resume.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill" onclick="return confirm('Are you sure you want to delete this resume?');"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card border-0  rounded-4 text-center p-5">
+            <div class="card-body">
+                <i class="bi bi-file-earmark-text text-muted mb-3" style="font-size: 4rem; opacity: 0.5;"></i>
+                <h5 class="fw-bold">No resumes found</h5>
+                <p class="text-muted mb-4">You haven't created any resumes yet. Start building your professional profile.</p>
+                <form method="POST" action="{% url 'create_resume' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="title" value="Untitled Resume">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">Create Your First Resume</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    <h4 class="fw-bold mt-5 mb-4">My Payments</h4>
+    
+    <div class="card border-0  rounded-4 mb-5">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Template</th>
+                        <th>Amount</th>
+                        <th>Order ID</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in payments %}
+                    <tr>
+                        <td>{{ p.created_at|date:"M d, Y" }}</td>
+                        <td>{{ p.template.name }}</td>
+                        <td>₹{{ p.amount }}</td>
+                        <td>{{ p.razorpay_order_id }}</td>
+                        <td>
+                            {% if p.status == 'SUCCESS' %}
+                                <span class="badge bg-success">SUCCESS</span>
+                            {% elif p.status == 'PENDING' %}
+                                <span class="badge bg-warning text-dark">PENDING</span>
+                            {% else %}
+                                <span class="badge bg-danger">FAILED</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">You have no payment history.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
