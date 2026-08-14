@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Curriculum Vitae - {{ resume.title }}</title>
+    <style>
+        body {
+            font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+            color: #000;
+            margin: 0;
+            padding: 40px;
+            background: {% if is_preview %}transparent{% else %}#fff{% endif %};
+            line-height: 1.5;
+        }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { font-size: 24px; font-weight: bold; margin: 0; text-transform: uppercase; }
+        .contact { font-size: 14px; margin-top: 5px; }
+        .section-header {
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            padding-bottom: 2px;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        td { vertical-align: top; padding-bottom: 15px; }
+        .date-col { width: 20%; font-weight: bold; font-size: 14px; }
+        .content-col { width: 80%; font-size: 14px; }
+        .item-title { font-weight: bold; }
+        .item-meta { font-style: italic; }
+        .item-desc { margin-top: 5px; white-space: pre-line; }
+        .demo-banner { background: #000; color: #fff; text-align: center; font-size: 12px; padding: 5px; margin-bottom: 20px; font-family: sans-serif;}
+    </style>
+</head>
+<body>
+    {% if is_demo %}
+    <div class="demo-banner">Live Demo - Academic CV Layout</div>
+    {% endif %}
+
+    {% if resume.personal_info %}
+    <div class="header">
+        <h1>{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }}</h1>
+        <div class="contact">
+            {{ resume.personal_info.email }} | {{ resume.personal_info.phone }} | {{ resume.personal_info.location }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if resume.educations.all %}
+    <div class="section-header">Education</div>
+    <table>
+        {% for edu in resume.educations.all %}
+        <tr>
+            <td class="date-col">{{ edu.start_date }} - {{ edu.end_date }}</td>
+            <td class="content-col">
+                <div class="item-title">{{ edu.degree }}</div>
+                <div class="item-meta">{{ edu.school }}, {{ edu.location }}</div>
+                <div class="item-desc">{{ edu.description }}</div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    {% if resume.experiences.all %}
+    <div class="section-header">Academic & Professional Experience</div>
+    <table>
+        {% for exp in resume.experiences.all %}
+        <tr>
+            <td class="date-col">{{ exp.start_date }} - {% if exp.currently_working %}Present{% else %}{{ exp.end_date }}{% endif %}</td>
+            <td class="content-col">
+                <div class="item-title">{{ exp.job_title }}</div>
+                <div class="item-meta">{{ exp.company }}, {{ exp.location }}</div>
+                <div class="item-desc">{{ exp.description }}</div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    {% if resume.skills.all %}
+    <div class="section-header">Skills & Competencies</div>
+    <div style="font-size: 14px;">
+        {% for skill in resume.skills.all %}
+            {{ skill.name }} ({{ skill.level }}){% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</body>
+</html>

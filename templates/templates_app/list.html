@@ -3,81 +3,201 @@
 {% block title %}Explore Templates - {{ site_settings.site_name|default:'ResumePro' }}{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold">Professional Resume Templates</h2>
-        <p class="text-muted">Choose from our collection of ATS-friendly designs.</p>
-    </div>
+<style>
+    /* Premium Visual Enhancements */
+    .hero-section {
+        background: linear-gradient(135deg, #1a2744 0%, #2c3e50 100%);
+        color: #ffffff;
+        padding: 80px 0 60px 0;
+        margin-bottom: 50px;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero-section::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 50px;
+        background: linear-gradient(to bottom, transparent, #faf8f3);
+    }
+    .search-bar {
+        max-width: 600px;
+        margin: 0 auto;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        border-radius: 50px;
+        overflow: hidden;
+    }
+    .search-bar input {
+        border: none;
+        padding: 15px 25px;
+        font-size: 1.1rem;
+    }
+    .search-bar input:focus {
+        box-shadow: none;
+        outline: none;
+    }
+    .search-bar button {
+        padding: 10px 30px;
+        font-weight: 600;
+        border-radius: 0 50px 50px 0;
+    }
+    
+    .filter-btn {
+        transition: all 0.3s ease;
+        border: 1px solid #e0e0e0;
+        color: #555;
+        background: #fff;
+    }
+    .filter-btn:hover, .filter-btn.active {
+        background: #c9a84c;
+        color: #fff;
+        border-color: #c9a84c;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(201,168,76,0.3);
+    }
 
-    <!-- Category Filter -->
-    <div class="d-flex flex-wrap justify-content-center gap-2 mb-5 reveal-up">
-        <a href="{% url 'template_list' %}" class="btn rounded-pill px-4 btn-modern {% if not current_cat %}btn-primary{% else %}btn-outline-secondary{% endif %}">All</a>
-        {% for cat in categories %}
-            <a href="{% url 'template_list' %}?category={{ cat.slug }}" class="btn rounded-pill px-4 btn-modern {% if current_cat == cat.slug %}btn-primary{% else %}btn-outline-secondary{% endif %}">{{ cat.name }}</a>
-        {% endfor %}
+    .template-card {
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border: 1px solid #eee;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+    }
+    .template-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        border-color: #dcdcdc;
+    }
+    
+    .preview-container {
+        height: 320px;
+        overflow: hidden;
+        background: #f8f9fa;
+        position: relative;
+    }
+    .preview-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+        transition: transform 0.6s ease;
+    }
+    .template-card:hover .preview-container img {
+        transform: scale(1.05);
+    }
+    
+    .premium-badge {
+        background: linear-gradient(135deg, #d4af37, #f1c40f);
+        color: #fff;
+        font-weight: 700;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 10px rgba(212,175,55,0.4);
+    }
+    .free-badge {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: #fff;
+        font-weight: 700;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 10px rgba(46,204,113,0.3);
+    }
+    
+    .card-footer-custom {
+        background: #fff;
+        border-top: 1px solid #f1f1f1;
+        padding: 20px;
+    }
+    
+    .btn-use-premium {
+        background: linear-gradient(135deg, #1a2744, #2c3e50);
+        color: #fff;
+        border: none;
+    }
+    .btn-use-premium:hover {
+        background: linear-gradient(135deg, #2c3e50, #1a2744);
+        color: #fff;
+        box-shadow: 0 5px 15px rgba(26,39,68,0.3);
+    }
+</style>
+
+<div class="hero-section text-center">
+    <div class="container" data-aos="fade-up">
+        <h1 class="display-4 fw-bold mb-3" style="font-family: 'Playfair Display', serif;">Professional Resume Templates</h1>
+        <p class="lead mb-5 opacity-75">Discover meticulously crafted designs tailored for every industry and career level.</p>
+        
+        <form method="get" class="search-bar d-flex">
+            <!-- Preserve other filters -->
+            {% if current_type %}<input type="hidden" name="type" value="{{ current_type }}">{% endif %}
+            {% if current_cat %}<input type="hidden" name="category" value="{{ current_cat }}">{% endif %}
+            
+            <input type="text" name="q" class="form-control" placeholder="Search templates (e.g. Minimal, Executive)..." value="{{ search_query|default:'' }}">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Filters -->
+    <div class="d-flex flex-column align-items-center mb-5 gap-3" data-aos="fade-up" data-aos-delay="100">
+        <!-- Type Filter -->
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a href="{% url 'template_list' %}{% if current_cat %}?category={{ current_cat }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn rounded-pill px-4 filter-btn {% if not current_type %}active{% endif %}">All Types</a>
+            <a href="{% url 'template_list' %}?type=free{% if current_cat %}&category={{ current_cat }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn rounded-pill px-4 filter-btn {% if current_type == 'free' %}active{% endif %}">Free</a>
+            <a href="{% url 'template_list' %}?type=premium{% if current_cat %}&category={{ current_cat }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn rounded-pill px-4 filter-btn {% if current_type == 'premium' %}active{% endif %}">Premium</a>
+        </div>
+        
+        <!-- Category Filter -->
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a href="{% url 'template_list' %}{% if current_type %}?type={{ current_type }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn rounded-pill px-3 btn-sm filter-btn {% if not current_cat %}active{% endif %}">All Categories</a>
+            {% for cat in categories %}
+                <a href="{% url 'template_list' %}?category={{ cat.slug }}{% if current_type %}&type={{ current_type }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn rounded-pill px-3 btn-sm filter-btn {% if current_cat == cat.slug %}active{% endif %}">{{ cat.name }}</a>
+            {% endfor %}
+        </div>
     </div>
 
     <!-- Templates Grid -->
     <div class="row g-4">
         {% for template in templates %}
-            <div class="col-md-6 col-lg-4 reveal-up" style="transition-delay: {{ forloop.counter0|add:'1' }}00ms;">
-                <div class="card border-0  rounded-4 h-100 position-relative card-lift {% if template.is_premium %}premium-card{% endif %}">
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+                <div class="card rounded-4 h-100 template-card">
                     {% if template.is_premium %}
-                        <span class="badge position-absolute top-0 end-0 m-3 z-3 premium-badge"><i class="bi bi-star-fill"></i> PREMIUM</span>
+                        <span class="badge position-absolute top-0 end-0 m-3 z-3 premium-badge px-3 py-2 rounded-pill"><i class="bi bi-star-fill text-white"></i> Premium &bull; ₹{{ template.price }}</span>
                     {% else %}
-                        <span class="badge bg-success position-absolute top-0 end-0 m-3 z-3">FREE</span>
+                        <span class="badge position-absolute top-0 end-0 m-3 z-3 free-badge px-3 py-2 rounded-pill">FREE</span>
                     {% endif %}
                     
-                    <div class="p-3 bg-transparent rounded-top-4" style="height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                    <div class="preview-container rounded-top-4">
                         {% if template.preview_image %}
-                            <img src="{{ template.preview_image.url }}" alt="{{ template.name }}" class="img-fluid h-100 object-fit-cover  border">
+                            <img src="{{ template.preview_image.url }}" alt="{{ template.name }}">
                         {% else %}
-                            <i class="bi bi-file-earmark-richtext text-muted opacity-25" style="font-size: 8rem;"></i>
+                            <div class="h-100 d-flex align-items-center justify-content-center">
+                                <i class="bi bi-file-earmark-richtext text-muted opacity-25" style="font-size: 6rem;"></i>
+                            </div>
                         {% endif %}
                     </div>
                     
                     <div class="card-body p-4 d-flex flex-column">
                         <div class="mb-auto">
-                            <span class="text-primary fw-semibold small text-uppercase">{% if template.category %}{{ template.category.name }}{% else %}Uncategorized{% endif %}</span>
-                            <h5 class="fw-bold mt-1">{{ template.name }}</h5>
-                            <p class="text-muted small">{{ template.description|truncatewords:15 }}</p>
-                        </div>
-                        <div class="mt-4 d-grid gap-2">
-                            <button class="btn btn-outline-secondary btn-modern rounded-pill" data-bs-toggle="modal" data-bs-target="#previewModal{{ template.id }}">Preview</button>
-                            <a href="{% url 'use_template' template.id %}{% if request.GET.resume_id %}?resume_id={{ request.GET.resume_id }}{% endif %}" class="btn btn-primary btn-modern rounded-pill">
-                                {% if template.is_premium %}Unlock Premium Template (₹{{ template.price }}){% else %}Use Template{% endif %}
-                            </a>
+                            <span class="text-primary fw-bold small text-uppercase" style="letter-spacing: 1px;">{% if template.category %}{{ template.category.name }}{% else %}Uncategorized{% endif %}</span>
+                            <h4 class="fw-bold mt-2" style="font-family: 'Playfair Display', serif;">{{ template.name }}</h4>
+                            <p class="text-muted small mt-2">{{ template.description }}</p>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Preview Modal -->
-            <div class="modal fade" id="previewModal{{ template.id }}" tabindex="-1">
-                <div class="modal-dialog modal-xl modal-dialog-centered">
-                    <div class="modal-content border-0 rounded-4 shadow">
-                        <div class="modal-header border-0 pb-0">
-                            <h5 class="modal-title fw-bold">{{ template.name }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    
+                    <div class="card-footer-custom rounded-bottom-4">
+                        <div class="d-flex gap-2 mb-2">
+                            <a href="{% url 'template_demo' template.id %}" target="_blank" class="btn btn-outline-secondary rounded-pill w-100 fw-semibold"><i class="bi bi-eye"></i> Live Demo</a>
                         </div>
-                        <div class="modal-body text-center p-5 bg-transparent">
-                            {% if template.preview_image %}
-                                <img src="{{ template.preview_image.url }}" class="img-fluid border " alt="Preview">
-                            {% else %}
-                                <div class="py-5 text-muted"><i class="bi bi-image fs-1 opacity-25"></i><p class="mt-3">No preview image available</p></div>
-                            {% endif %}
-                        </div>
-                        <div class="modal-footer border-0">
-                            <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
-                            <a href="{% url 'use_template' template.id %}{% if request.GET.resume_id %}?resume_id={{ request.GET.resume_id }}{% endif %}" class="btn btn-primary rounded-pill px-4">{% if template.is_premium %}Unlock Premium Template (₹{{ template.price }}){% else %}Use Template{% endif %}</a>
-                        </div>
+                        <a href="{% url 'use_template' template.id %}{% if request.GET.resume_id %}?resume_id={{ request.GET.resume_id }}{% endif %}" class="btn {% if template.is_premium %}btn-use-premium{% else %}btn-success{% endif %} rounded-pill w-100 fw-bold shadow-sm">
+                            {% if template.is_premium %}<i class="bi bi-lock-fill"></i> Unlock Template{% else %}<i class="bi bi-check-circle"></i> Use Template{% endif %}
+                        </a>
                     </div>
                 </div>
             </div>
         {% empty %}
             <div class="col-12 text-center py-5">
-                <i class="bi bi-search fs-1 text-muted opacity-25"></i>
-                <h5 class="mt-3 text-muted">No templates found in this category.</h5>
+                <i class="bi bi-search text-muted opacity-25" style="font-size: 4rem;"></i>
+                <h4 class="mt-4 fw-bold">No templates found</h4>
+                <p class="text-muted">Try adjusting your search or filters.</p>
+                <a href="{% url 'template_list' %}" class="btn btn-primary rounded-pill mt-3">Clear All Filters</a>
             </div>
         {% endfor %}
     </div>

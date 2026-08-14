@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume - {{ resume.title }}</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            color: #222;
+            margin: 0;
+            padding: 40px;
+            background: {% if is_preview %}transparent{% else %}#fff{% endif %};
+        }
+        .header {
+            border-left: 5px solid #e74c3c;
+            padding-left: 20px;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 36px;
+            margin: 0;
+            text-transform: lowercase;
+            color: #e74c3c;
+        }
+        .contact {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+        .section-header {
+            font-size: 20px;
+            text-transform: lowercase;
+            color: #e74c3c;
+            margin-bottom: 15px;
+            margin-top: 30px;
+        }
+        .entry {
+            margin-bottom: 25px;
+            padding-left: 15px;
+            border-left: 2px dashed #ccc;
+        }
+        .entry-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .entry-meta {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .entry-desc {
+            font-size: 14px;
+            white-space: pre-line;
+        }
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .skill {
+            background: #eee;
+            padding: 5px 10px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        .demo-banner { text-align: center; background: #34495e; color: #fff; font-size: 12px; padding: 5px; margin-bottom: 20px; font-family: sans-serif; }
+    </style>
+</head>
+<body>
+    {% if is_demo %}
+    <div class="demo-banner">Live Demo - Creative Layout</div>
+    {% endif %}
+
+    {% if resume.personal_info %}
+    <div class="header">
+        <h1>{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }}</h1>
+        <div class="contact">
+            {{ resume.personal_info.email }} // {{ resume.personal_info.phone }} // {{ resume.personal_info.location }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if resume.personal_info.professional_summary %}
+    <div class="section-header"># summary</div>
+    <div class="entry-desc" style="padding-left: 15px;">{{ resume.personal_info.professional_summary }}</div>
+    {% endif %}
+
+    {% if resume.experiences.all %}
+    <div class="section-header"># experience</div>
+    {% for exp in resume.experiences.all %}
+    <div class="entry">
+        <div class="entry-title">{{ exp.job_title }} @ {{ exp.company }}</div>
+        <div class="entry-meta">{{ exp.start_date }} to {% if exp.currently_working %}Present{% else %}{{ exp.end_date }}{% endif %} | {{ exp.location }}</div>
+        <div class="entry-desc">{{ exp.description }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if resume.educations.all %}
+    <div class="section-header"># education</div>
+    {% for edu in resume.educations.all %}
+    <div class="entry">
+        <div class="entry-title">{{ edu.degree }}</div>
+        <div class="entry-meta">{{ edu.school }}, {{ edu.location }} | {{ edu.start_date }} to {{ edu.end_date }}</div>
+        <div class="entry-desc">{{ edu.description }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if resume.skills.all %}
+    <div class="section-header"># skills</div>
+    <div class="skills">
+        {% for skill in resume.skills.all %}
+        <div class="skill">{{ skill.name }} ({{ skill.level }})</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+</html>

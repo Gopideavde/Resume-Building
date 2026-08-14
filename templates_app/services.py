@@ -11,4 +11,9 @@ def user_can_use_template(user, template):
     if not user.is_authenticated:
         return False
         
-    return PremiumAccess.objects.filter(user=user, template=template).exists()
+    from django.utils import timezone
+    return PremiumAccess.objects.filter(
+        user=user, 
+        template=template,
+        expiry_date__gte=timezone.now()
+    ).exists()

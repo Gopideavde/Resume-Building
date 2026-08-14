@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume - {{ resume.title }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #000;
+            line-height: 1.4;
+            margin: 0;
+            padding: 30px 40px;
+            background: {% if is_preview %}transparent{% else %}#fff{% endif %};
+        }
+        h1, h2, h3 { margin: 0; padding: 0; }
+        .name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .contact {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .section-header {
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid #000;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            padding-bottom: 3px;
+        }
+        .entry { margin-bottom: 15px; }
+        .entry-top { font-weight: bold; font-size: 14px; }
+        .entry-sub { font-style: italic; font-size: 14px; margin-bottom: 5px; }
+        .entry-desc { font-size: 13px; white-space: pre-line; margin-top: 5px; }
+        .demo-banner { background: #333; color: #fff; text-align: center; font-size: 12px; padding: 5px; margin-bottom: 15px; }
+        ul { margin: 0; padding-left: 20px; }
+        li { font-size: 13px; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    {% if is_demo %}
+    <div class="demo-banner">Live Demo - ATS Friendly Layout</div>
+    {% endif %}
+
+    {% if resume.personal_info %}
+    <div class="name">{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }}</div>
+    <div class="contact">
+        {{ resume.personal_info.email }} | {{ resume.personal_info.phone }} | {{ resume.personal_info.location }}
+        {% if resume.personal_info.linkedin %} | {{ resume.personal_info.linkedin }}{% endif %}
+    </div>
+    {% endif %}
+
+    {% if resume.personal_info.professional_summary %}
+    <div class="section-header">Summary</div>
+    <div class="entry-desc">{{ resume.personal_info.professional_summary }}</div>
+    {% endif %}
+
+    {% if resume.experiences.all %}
+    <div class="section-header">Experience</div>
+    {% for exp in resume.experiences.all %}
+    <div class="entry">
+        <div class="entry-top">{{ exp.job_title }} — {{ exp.company }} ({{ exp.location }})</div>
+        <div class="entry-sub">{{ exp.start_date }} to {% if exp.currently_working %}Present{% else %}{{ exp.end_date }}{% endif %}</div>
+        <div class="entry-desc">{{ exp.description }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if resume.educations.all %}
+    <div class="section-header">Education</div>
+    {% for edu in resume.educations.all %}
+    <div class="entry">
+        <div class="entry-top">{{ edu.degree }}</div>
+        <div class="entry-sub">{{ edu.school }}, {{ edu.location }} | {{ edu.start_date }} to {{ edu.end_date }}</div>
+        <div class="entry-desc">{{ edu.description }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if resume.skills.all %}
+    <div class="section-header">Skills</div>
+    <ul>
+        {% for skill in resume.skills.all %}
+        <li>{{ skill.name }} - {{ skill.level }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>

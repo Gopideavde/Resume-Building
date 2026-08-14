@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume - {{ resume.title }}</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 40px;
+            background: {% if is_preview %}transparent{% else %}#fff{% endif %};
+        }
+        .header {
+            background-color: #1a3b5c;
+            color: #fff;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 14px;
+            color: #bdc3c7;
+        }
+        .two-col {
+            display: flex;
+            margin-top: 20px;
+        }
+        .col-left {
+            width: 35%;
+            padding-right: 20px;
+            border-right: 2px solid #ecf0f1;
+        }
+        .col-right {
+            width: 65%;
+            padding-left: 20px;
+        }
+        .section-title {
+            color: #1a3b5c;
+            font-size: 16px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 15px;
+            margin-top: 20px;
+            border-bottom: 1px solid #1a3b5c;
+            display: inline-block;
+            padding-bottom: 2px;
+        }
+        .item { margin-bottom: 20px; }
+        .item-title { font-weight: bold; font-size: 15px; color: #333; }
+        .item-meta { font-size: 13px; color: #7f8c8d; margin-bottom: 5px; }
+        .item-desc { font-size: 13px; line-height: 1.5; white-space: pre-line; }
+        .skill-bar { margin-bottom: 10px; }
+        .skill-name { font-size: 13px; font-weight: bold; display: block; margin-bottom: 3px; }
+        .demo-banner { text-align: center; background: #e74c3c; color: #fff; font-size: 12px; padding: 5px; }
+    </style>
+</head>
+<body>
+    {% if is_demo %}
+    <div class="demo-banner">Live Demo - Corporate Layout</div>
+    {% endif %}
+
+    {% if resume.personal_info %}
+    <div class="header">
+        <h1>{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }}</h1>
+        <p>{{ resume.personal_info.email }} | {{ resume.personal_info.phone }} | {{ resume.personal_info.location }}</p>
+    </div>
+    {% endif %}
+
+    <div class="two-col">
+        <div class="col-left">
+            {% if resume.personal_info.professional_summary %}
+            <div class="section-title">About Me</div>
+            <div class="item-desc">{{ resume.personal_info.professional_summary }}</div>
+            {% endif %}
+
+            {% if resume.skills.all %}
+            <div class="section-title" style="margin-top: 30px;">Core Competencies</div>
+            {% for skill in resume.skills.all %}
+            <div class="skill-bar">
+                <span class="skill-name">{{ skill.name }} ({{ skill.level }})</span>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        
+        <div class="col-right">
+            {% if resume.experiences.all %}
+            <div class="section-title" style="margin-top: 0;">Professional Experience</div>
+            {% for exp in resume.experiences.all %}
+            <div class="item">
+                <div class="item-title">{{ exp.job_title }}</div>
+                <div class="item-meta">{{ exp.company }}, {{ exp.location }} | {{ exp.start_date }} - {% if exp.currently_working %}Present{% else %}{{ exp.end_date }}{% endif %}</div>
+                <div class="item-desc">{{ exp.description }}</div>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            {% if resume.educations.all %}
+            <div class="section-title">Education & Credentials</div>
+            {% for edu in resume.educations.all %}
+            <div class="item">
+                <div class="item-title">{{ edu.degree }}</div>
+                <div class="item-meta">{{ edu.school }}, {{ edu.location }} | {{ edu.start_date }} - {{ edu.end_date }}</div>
+                <div class="item-desc">{{ edu.description }}</div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

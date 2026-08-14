@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume - {{ resume.title }}</title>
+    <style>
+        body {
+            font-family: 'Garamond', serif;
+            color: #2b2b2b;
+            margin: 0;
+            padding: 40px;
+            background: {% if is_preview %}transparent{% else %}#fff{% endif %};
+            line-height: 1.6;
+        }
+        .header {
+            border-bottom: 5px solid #1a2744;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .header h1 {
+            font-size: 38px;
+            margin: 0;
+            color: #1a2744;
+            text-transform: uppercase;
+        }
+        .contact {
+            text-align: right;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+        .section-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1a2744;
+            text-transform: uppercase;
+            border-bottom: 2px solid #e0e0e0;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+        }
+        .item { margin-bottom: 20px; }
+        .item-top { display: flex; justify-content: space-between; align-items: baseline; }
+        .item-title { font-size: 16px; font-weight: bold; color: #1a2744; }
+        .item-date { font-size: 14px; font-weight: bold; color: #555; }
+        .item-sub { font-size: 14px; font-style: italic; color: #555; margin-bottom: 8px; }
+        .item-desc { font-size: 14px; white-space: pre-line; }
+        .skills-grid { display: flex; flex-wrap: wrap; }
+        .skill-item { width: 33%; font-size: 14px; margin-bottom: 5px; font-weight: bold;}
+        .demo-banner { text-align: center; background: #1a2744; color: #d4af37; font-size: 12px; padding: 5px; margin-bottom: 20px; font-family: sans-serif; font-weight: bold;}
+    </style>
+</head>
+<body>
+    {% if is_demo %}
+    <div class="demo-banner">Live Demo - Executive Premium Layout</div>
+    {% endif %}
+
+    {% if resume.personal_info %}
+    <div class="header">
+        <div>
+            <h1>{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }}</h1>
+        </div>
+        <div class="contact">
+            {{ resume.personal_info.email }}<br>
+            {{ resume.personal_info.phone }}<br>
+            {{ resume.personal_info.location }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if resume.personal_info.professional_summary %}
+    <div class="section-header">Executive Summary</div>
+    <div class="item-desc">{{ resume.personal_info.professional_summary }}</div>
+    {% endif %}
+
+    {% if resume.experiences.all %}
+    <div class="section-header">Professional Experience</div>
+    {% for exp in resume.experiences.all %}
+    <div class="item">
+        <div class="item-top">
+            <span class="item-title">{{ exp.job_title }}</span>
+            <span class="item-date">{{ exp.start_date }} - {% if exp.currently_working %}Present{% else %}{{ exp.end_date }}{% endif %}</span>
+        </div>
+        <div class="item-sub">{{ exp.company }}, {{ exp.location }}</div>
+        <div class="item-desc">{{ exp.description }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if resume.educations.all %}
+    <div class="section-header">Education</div>
+    {% for edu in resume.educations.all %}
+    <div class="item">
+        <div class="item-top">
+            <span class="item-title">{{ edu.degree }}</span>
+            <span class="item-date">{{ edu.start_date }} - {{ edu.end_date }}</span>
+        </div>
+        <div class="item-sub">{{ edu.school }}, {{ edu.location }}</div>
+        <div class="item-desc">{{ edu.description }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if resume.skills.all %}
+    <div class="section-header">Core Competencies</div>
+    <div class="skills-grid">
+        {% for skill in resume.skills.all %}
+        <div class="skill-item">&bull; {{ skill.name }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+</html>

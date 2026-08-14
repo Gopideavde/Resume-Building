@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Live Demo: {{ template.name }} - {{ site_settings.site_name|default:'ResumePro' }}{% endblock %}
+
+{% block content %}
+<style>
+    body, html {
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .demo-header {
+        background: #1a2744;
+        color: #fff;
+        padding: 15px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        z-index: 1000;
+        position: relative;
+    }
+    
+    .demo-title {
+        font-family: 'Playfair Display', serif;
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    .premium-badge {
+        background: linear-gradient(135deg, #d4af37, #f1c40f);
+        color: #fff;
+        font-size: 0.8rem;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    
+    .free-badge {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: #fff;
+        font-size: 0.8rem;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    
+    .demo-wrapper {
+        height: calc(100vh - 150px);
+        background: #f0f2f5;
+        padding: 40px;
+        display: flex;
+        justify-content: center;
+        overflow-y: auto;
+    }
+    
+    .iframe-container {
+        width: 100%;
+        max-width: 900px;
+        min-height: 1100px;
+        background: #fff;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .iframe-container iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+</style>
+
+<div class="demo-header">
+    <div class="d-flex align-items-center gap-4">
+        <a href="{% url 'template_list' %}" class="btn btn-outline-light rounded-pill btn-sm"><i class="bi bi-arrow-left"></i> Back to Templates</a>
+        <div>
+            <h1 class="demo-title">{{ template.name }}</h1>
+        </div>
+        <div>
+            {% if template.is_premium %}
+                <span class="premium-badge"><i class="bi bi-star-fill"></i> Premium &bull; ₹{{ template.price }}</span>
+            {% else %}
+                <span class="free-badge">FREE</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div>
+        <a href="{% url 'use_template' template.id %}" class="btn {% if template.is_premium %}btn-warning text-dark{% else %}btn-success{% endif %} rounded-pill px-4 fw-bold shadow-sm">
+            {% if template.is_premium %}
+                <i class="bi bi-lock-fill"></i> Unlock & Use Template
+            {% else %}
+                <i class="bi bi-check-circle"></i> Use Template
+            {% endif %}
+        </a>
+    </div>
+</div>
+
+<div class="demo-wrapper">
+    <div class="iframe-container">
+        <iframe src="{% url 'template_demo' template.id %}?raw=1"></iframe>
+    </div>
+</div>
+
+<script>
+    // Hide standard navbar/footer for full immersion
+    document.addEventListener('DOMContentLoaded', function() {
+        const navbar = document.querySelector('.navbar');
+        const footer = document.querySelector('footer');
+        if(navbar) navbar.style.display = 'none';
+        if(footer) footer.style.display = 'none';
+    });
+</script>
+{% endblock %}

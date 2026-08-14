@@ -22,7 +22,8 @@ def get_razorpay_client():
 def create_order(request, template_id):
     template = get_object_or_404(ResumeTemplate, id=template_id, is_active=True, is_premium=True)
     
-    if request.user.premium_access.filter(template=template).exists():
+    from django.utils import timezone
+    if request.user.premium_access.filter(template=template, expiry_date__gte=timezone.now()).exists():
         return redirect('use_template', template_id=template.id)
         
     amount = int(template.price * 100)
@@ -105,10 +106,14 @@ def payment_verify(request):
             transaction.razorpay_signature = razorpay_signature
             transaction.save()
             
+            from django.utils import timezone
+            from datetime import timedelta
+            
             PremiumAccess.objects.create(
                 user=transaction.user,
                 template=transaction.template,
-                payment=transaction
+                payment=transaction,
+                expiry_date=timezone.now() + timedelta(days=30)
             )
             
             AuditLog.objects.create(

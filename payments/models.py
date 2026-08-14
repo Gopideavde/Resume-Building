@@ -41,6 +41,14 @@ class PremiumAccess(models.Model):
     template = models.ForeignKey(ResumeTemplate, on_delete=models.CASCADE)
     payment = models.ForeignKey(PaymentTransaction, on_delete=models.SET_NULL, null=True, blank=True)
     granted_at = models.DateTimeField(auto_now_add=True)
+    expiry_date = models.DateTimeField(null=True, blank=True)
+
+    @property
+    def is_active(self):
+        from django.utils import timezone
+        if self.expiry_date:
+            return timezone.now() <= self.expiry_date
+        return False
 
     def __str__(self):
         return f"{self.user.email} - {self.template.name}"

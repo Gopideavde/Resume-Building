@@ -159,9 +159,9 @@ def resume_download(request, resume_id):
     if not user_can_use_template(request.user, resume.template):
         return redirect('create_order', template_id=resume.template.id)
 
-    # In a full implementation, we'd use resume.template.html_identifier
-    # For now, use the default template
-    template_name = 'resumes/templates/default.html'
+    # Use dynamic template identifier if present, else default
+    identifier = resume.template.html_identifier if resume.template.html_identifier else 'default'
+    template_name = f'resumes/templates/{identifier}.html'
     
     context = {'resume': resume}
     html_string = render_to_string(template_name, context)
@@ -173,6 +173,26 @@ def resume_download(request, resume_id):
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="Resume_{resume.title}.pdf"'
         return response
-    except OSError:
-        # Fallback if GTK is not installed on Windows
-        return HttpResponse("WeasyPrint system dependencies (GTK3) are not installed on this server. Please see README.", status=500)
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"PDF Generation Failed for Resume {resume_id}: {str(e)}")
+        # Fallback if GTK is not installed on Windows or other PDF failure
+        return render(request, 'resumes/pdf_error.html', {'resume': resume}, status=500)
+
+@login_required
+def resume_preview_html(request, resume_id):
+    resume = get_object_or_404(Resume, id=resume_id, user=request.user)
+    
+    if not resume.template:
+        return HttpResponse("No template selected.", status=400)
+        
+    from templates_app.services import user_can_use_template
+    if not user_can_use_template(request.user, resume.template):
+        return HttpResponse("Premium Access Required.", status=403)
+        
+    identifier = resume.template.html_identifier if resume.template.html_identifier else 'default'
+    template_name = f'resumes/templates/{identifier}.html'
+    
+    context = {'resume': resume, 'is_preview': True}
+    return render(request, template_name, context)

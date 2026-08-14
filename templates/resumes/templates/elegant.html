@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume - {{ resume.title }}</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+            background: {% if is_preview %}transparent{% else %}#fff{% endif %};
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 32px;
+            color: #2c3e50;
+            margin: 0;
+            font-weight: normal;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .header p {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin: 10px 0 0 0;
+            letter-spacing: 1px;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 16px;
+            color: #bdc3c7;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin: 30px 0 20px 0;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 2px;
+            background: #d4af37; /* Gold */
+            margin: 10px auto 0 auto;
+        }
+        .content-block {
+            margin-bottom: 25px;
+        }
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+        .primary-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .date-text {
+            font-size: 13px;
+            color: #95a5a6;
+            font-style: italic;
+        }
+        .subtitle {
+            font-size: 15px;
+            color: #d4af37;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        .description {
+            font-size: 14px;
+            color: #555;
+            text-align: justify;
+            white-space: pre-line;
+        }
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .skill-badge {
+            font-size: 13px;
+            color: #2c3e50;
+            border-bottom: 1px solid #d4af37;
+            padding-bottom: 2px;
+        }
+        .demo-banner {
+            background: #d4af37;
+            color: #fff;
+            text-align: center;
+            padding: 8px;
+            font-family: sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    {% if is_demo %}
+    <div class="demo-banner">Live Demo - Elegant Template Layout</div>
+    {% endif %}
+
+    {% if resume.personal_info %}
+    <div class="header">
+        <h1>{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }}</h1>
+        <p>{{ resume.personal_info.email }} | {{ resume.personal_info.phone }} | {{ resume.personal_info.location }}</p>
+    </div>
+    {% endif %}
+
+    {% if resume.personal_info.professional_summary %}
+    <div class="section-title">Profile</div>
+    <div class="description" style="text-align: center; max-width: 80%; margin: 0 auto;">
+        {{ resume.personal_info.professional_summary }}
+    </div>
+    {% endif %}
+
+    {% if resume.experiences.all %}
+    <div class="section-title">Experience</div>
+    {% for exp in resume.experiences.all %}
+    <div class="content-block">
+        <div class="title-row">
+            <span class="primary-title">{{ exp.job_title }}</span>
+            <span class="date-text">{{ exp.start_date }} - {% if exp.currently_working %}Present{% else %}{{ exp.end_date }}{% endif %}</span>
+        </div>
+        <div class="subtitle">{{ exp.company }}, {{ exp.location }}</div>
+        <div class="description">{{ exp.description }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if resume.educations.all %}
+    <div class="section-title">Education</div>
+    {% for edu in resume.educations.all %}
+    <div class="content-block">
+        <div class="title-row">
+            <span class="primary-title">{{ edu.degree }}</span>
+            <span class="date-text">{{ edu.start_date }} - {{ edu.end_date }}</span>
+        </div>
+        <div class="subtitle">{{ edu.school }}, {{ edu.location }}</div>
+        <div class="description">{{ edu.description }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if resume.skills.all %}
+    <div class="section-title">Expertise</div>
+    <div class="skills-container">
+        {% for skill in resume.skills.all %}
+            <span class="skill-badge">{{ skill.name }} ({{ skill.level }})</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+</html>

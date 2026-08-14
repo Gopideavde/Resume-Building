@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}PDF Export Failed{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+    <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 5rem;"></i>
+    <h2 class="mt-4 fw-bold">PDF Export Unavailable</h2>
+    <p class="text-muted mt-2 mx-auto" style="max-width: 600px;">
+        Our PDF generation engine is currently missing system dependencies required for export on this server. 
+        Your resume data is completely safe and securely saved.
+    </p>
+    <div class="mt-4">
+        <a href="{% url 'resume_builder' resume.id %}" class="btn btn-primary rounded-pill px-4"><i class="bi bi-arrow-left"></i> Back to Builder</a>
+    </div>
+</div>
+{% endblock %}

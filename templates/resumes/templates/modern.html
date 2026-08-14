@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume - {{ resume.title }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            background: {% if is_preview %}transparent{% else %}#fff{% endif %};
+            display: flex;
+        }
+        .sidebar {
+            width: 30%;
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+        .main-content {
+            width: 70%;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 28px;
+            margin: 0 0 5px 0;
+            color: #fff;
+        }
+        .sidebar h3 {
+            font-size: 16px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #34495e;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        .main-content h3 {
+            font-size: 18px;
+            color: #2980b9;
+            text-transform: uppercase;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .contact-info p {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        .skill-item {
+            background: #34495e;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 8px;
+            margin-right: 5px;
+        }
+        .exp-item {
+            margin-bottom: 25px;
+        }
+        .exp-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        .exp-meta {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        .exp-desc {
+            font-size: 14px;
+            white-space: pre-line;
+        }
+        /* Demo Banner */
+        .demo-banner {
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            background-color: #27ae60;
+            color: #fff;
+            text-align: center;
+            padding: 5px;
+            font-weight: bold;
+            font-size: 12px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    {% if is_demo %}
+    <div class="demo-banner">Live Demo - Modern Template Layout</div>
+    {% endif %}
+
+    <div class="sidebar">
+        {% if resume.personal_info %}
+        <h1>{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }}</h1>
+        <div class="contact-info" style="margin-top:20px;">
+            <p>{{ resume.personal_info.email }}</p>
+            <p>{{ resume.personal_info.phone }}</p>
+            <p>{{ resume.personal_info.location }}</p>
+            {% if resume.personal_info.linkedin %}<p>{{ resume.personal_info.linkedin }}</p>{% endif %}
+        </div>
+        {% endif %}
+
+        {% if resume.skills.all %}
+        <h3>Skills</h3>
+        <div>
+            {% for skill in resume.skills.all %}
+                <span class="skill-item">{{ skill.name }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="main-content">
+        {% if resume.personal_info.professional_summary %}
+        <h3>Profile</h3>
+        <div class="exp-desc" style="margin-bottom: 30px;">
+            {{ resume.personal_info.professional_summary }}
+        </div>
+        {% endif %}
+
+        {% if resume.experiences.all %}
+        <h3>Experience</h3>
+        {% for exp in resume.experiences.all %}
+        <div class="exp-item">
+            <div class="exp-title">{{ exp.job_title }} at {{ exp.company }}</div>
+            <div class="exp-meta">{{ exp.start_date }} - {% if exp.currently_working %}Present{% else %}{{ exp.end_date }}{% endif %} | {{ exp.location }}</div>
+            <div class="exp-desc">{{ exp.description }}</div>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if resume.educations.all %}
+        <h3>Education</h3>
+        {% for edu in resume.educations.all %}
+        <div class="exp-item">
+            <div class="exp-title">{{ edu.degree }}</div>
+            <div class="exp-meta">{{ edu.school }}, {{ edu.location }} | {{ edu.start_date }} - {{ edu.end_date }}</div>
+            <div class="exp-desc">{{ edu.description }}</div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>
