@@ -1,9 +1,3 @@
-databases:
-  - name: resumepro-db
-    databaseName: resumepro
-    user: resumepro_user
-    plan: free
-
 services:
   - type: web
     name: resumepro-web
@@ -12,16 +6,24 @@ services:
     startCommand: "gunicorn config.wsgi:application"
     plan: free
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: resumepro-db
-          property: connectionString
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
         value: "localhost" # Render dashboard can automatically append its own hostname
+      - key: DB_ENGINE
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY
