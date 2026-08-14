@@ -1,0 +1,371 @@
+{% load static %}
+<style>
+/* =============================================
+   WEBSITE NAVBAR — PROFESSIONAL GLASSMORPHISM
+   ============================================= */
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --secondary: #7c3aed;
+    --gradient: linear-gradient(135deg, #2563eb, #7c3aed);
+    --glass-bg: rgba(255,255,255,0.88);
+    --glass-blur: blur(20px);
+    --text-dark: #0f172a;
+    --text-muted: #64748b;
+    --shadow-md: 0 8px 30px rgba(0,0,0,0.08);
+    --shadow-lg: 0 20px 60px rgba(37,99,235,0.2);
+    --radius-xl: 18px;
+    --radius-full: 50px;
+    --transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* NAVBAR */
+.site-navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 9999;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding: 14px 0;
+    transition: var(--transition);
+}
+.site-navbar.scrolled {
+    padding: 8px 0;
+    background: rgba(255,255,255,0.97);
+    box-shadow: var(--shadow-md);
+}
+/* LOGO */
+.nav-logo {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none;
+}
+.nav-logo-icon {
+    width: 48px; height: 48px;
+    background: var(--gradient);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; color: #fff;
+    transition: var(--transition);
+    box-shadow: 0 6px 20px rgba(37,99,235,0.35);
+}
+.nav-logo:hover .nav-logo-icon { transform: rotate(-8deg) scale(1.1); }
+.nav-logo-title {
+    font-size: 20px; font-weight: 800;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 0;
+}
+.nav-logo-sub { font-size: 11px; color: var(--text-muted); font-weight: 500; line-height: 1; }
+
+/* NAV LINKS */
+.nav-menu { list-style: none; display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; }
+.nav-menu .nav-item .nav-link {
+    font-weight: 600; font-size: 14.5px;
+    color: var(--text-dark);
+    padding: 9px 16px;
+    border-radius: 12px;
+    transition: var(--transition);
+    text-decoration: none;
+    position: relative;
+    display: flex; align-items: center; gap: 5px;
+}
+.nav-menu .nav-item .nav-link::after {
+    content: ''; position: absolute; bottom: 4px; left: 16px;
+    width: 0; height: 2.5px;
+    background: var(--gradient); border-radius: 10px;
+    transition: var(--transition);
+}
+.nav-menu .nav-item .nav-link:hover,
+.nav-menu .nav-item .nav-link.active {
+    color: var(--primary); background: rgba(37,99,235,0.08);
+}
+.nav-menu .nav-item .nav-link:hover::after,
+.nav-menu .nav-item .nav-link.active::after { width: calc(100% - 32px); }
+
+/* DROPDOWN */
+.nav-menu .dropdown-menu {
+    border-radius: var(--radius-xl); border: none;
+    padding: 10px; min-width: 230px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    animation: fadeDropdown 0.3s ease;
+}
+@keyframes fadeDropdown {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: none; }
+}
+.nav-menu .dropdown-item {
+    border-radius: 10px; padding: 10px 14px;
+    font-weight: 500; font-size: 14px;
+    transition: var(--transition);
+}
+.nav-menu .dropdown-item:hover { background: rgba(37,99,235,0.07); color: var(--primary); padding-left: 20px; }
+
+/* SEARCH */
+.nav-search-wrap {
+    display: flex; align-items: center;
+    background: #f1f5f9; border-radius: var(--radius-full);
+    padding: 4px 4px 4px 16px;
+    border: 1.5px solid transparent;
+    transition: var(--transition);
+}
+.nav-search-wrap:focus-within {
+    background: #fff; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+.nav-search-wrap input {
+    border: none; background: transparent; outline: none;
+    box-shadow: none; font-size: 14px; width: 180px;
+    font-family: 'Inter', sans-serif; color: var(--text-dark);
+}
+.nav-search-wrap input::placeholder { color: var(--text-muted); }
+.nav-search-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: none; background: var(--gradient); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: var(--transition); font-size: 14px;
+}
+.nav-search-btn:hover { transform: rotate(360deg); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+
+/* BUTTONS */
+.btn-nav-login {
+    border: 2px solid var(--primary); color: var(--primary);
+    border-radius: 12px; padding: 9px 20px;
+    font-weight: 700; font-size: 14px; text-decoration: none;
+    transition: var(--transition);
+}
+.btn-nav-login:hover { background: var(--primary); color: #fff; transform: translateY(-2px); }
+.btn-nav-cta {
+    background: var(--gradient); color: #fff;
+    border-radius: 12px; padding: 9px 22px;
+    font-weight: 700; font-size: 14px; text-decoration: none;
+    border: none; box-shadow: 0 8px 25px rgba(37,99,235,0.3);
+    transition: var(--transition);
+}
+.btn-nav-cta:hover { transform: translateY(-3px); box-shadow: 0 14px 35px rgba(37,99,235,0.4); color: #fff; }
+
+/* USER AVATAR */
+.nav-avatar-btn {
+    display: flex; align-items: center; gap: 10px;
+    background: none; border: none; cursor: pointer;
+    padding: 4px 12px 4px 4px; border-radius: 50px;
+    border: 2px solid rgba(37,99,235,0.15);
+    transition: var(--transition); text-decoration: none;
+}
+.nav-avatar-btn:hover { border-color: var(--primary); background: rgba(37,99,235,0.06); }
+.nav-avatar-img {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 2px solid var(--primary); object-fit: cover;
+}
+.nav-avatar-name { font-size: 13.5px; font-weight: 600; color: var(--text-dark); }
+.nav-avatar-dropdown {
+    border-radius: var(--radius-xl); border: none;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    padding: 10px; min-width: 230px;
+    animation: fadeDropdown 0.3s ease;
+}
+.nav-avatar-header { padding: 14px; text-align: center; }
+.nav-avatar-header img { width: 68px; height: 68px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; }
+.nav-avatar-header h6 { font-weight: 700; margin: 8px 0 2px; font-size: 15px; }
+.nav-avatar-header small { color: var(--text-muted); font-size: 12px; }
+
+/* NOTIFICATION */
+.nav-notif-btn {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: #f1f5f9; border: none; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-dark); font-size: 18px; cursor: pointer;
+    transition: var(--transition); text-decoration: none;
+}
+.nav-notif-btn:hover { background: rgba(37,99,235,0.1); color: var(--primary); transform: scale(1.1); }
+.nav-notif-badge {
+    position: absolute; top: 4px; right: 4px;
+    width: 10px; height: 10px; background: #ef4444; border-radius: 50%;
+    border: 2px solid #fff; animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+
+/* TOGGLER */
+.nav-toggler {
+    background: none; border: 2px solid rgba(37,99,235,0.2);
+    border-radius: 10px; padding: 8px 10px; cursor: pointer;
+    transition: var(--transition);
+}
+.nav-toggler:hover { background: rgba(37,99,235,0.08); border-color: var(--primary); }
+.nav-toggler span { display: block; width: 22px; height: 2px; background: var(--text-dark); border-radius: 2px; margin: 5px 0; transition: var(--transition); }
+
+/* BODY OFFSET */
+body { padding-top: 80px; }
+</style>
+
+<nav class="site-navbar" id="siteNavbar">
+    <div class="container-xl">
+        <div class="d-flex align-items-center justify-content-between">
+
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="nav-logo" id="navLogo">
+                <div class="nav-logo-icon">
+                    <i class="bi bi-file-earmark-person-fill"></i>
+                </div>
+                <div>
+                    <div class="nav-logo-title">A2Z Resume</div>
+                    <div class="nav-logo-sub">Professional Builder</div>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <ul class="nav-menu d-none d-lg-flex">
+                <li class="nav-item">
+                    <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                        <i class="bi bi-house-door"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+                        <i class="bi bi-info-circle"></i> About
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bi bi-grid"></i> Templates
+                    </a>
+                    <ul class="dropdown-menu shadow">
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-check me-2 text-primary"></i>ATS Resume</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-palette me-2 text-success"></i>Modern Resume</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-stars me-2 text-warning"></i>Creative Resume</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-award me-2 text-info"></i>Professional Resume</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item fw-bold text-primary" href="#"><i class="bi bi-eye me-2"></i>View All Templates</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'blog' %}" class="nav-link {% if request.resolver_match.url_name == 'blog' %}active{% endif %}">
+                        <i class="bi bi-newspaper"></i> Blog
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'contact' %}" class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+                        <i class="bi bi-envelope"></i> Contact
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Right Section -->
+            <div class="d-none d-lg-flex align-items-center gap-3">
+
+                <!-- Search -->
+                <form class="nav-search-wrap" method="get" action="#">
+                    <input type="text" placeholder="Search templates..." name="q">
+                    <button class="nav-search-btn" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+
+                {% if user.is_authenticated %}
+
+                <!-- Notification -->
+                <div class="dropdown">
+                    <a href="#" class="nav-notif-btn" data-bs-toggle="dropdown" title="Notifications">
+                        <i class="bi bi-bell"></i>
+                        <span class="nav-notif-badge"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end shadow rounded-4 border-0 p-2" style="min-width:280px;">
+                        <div class="dropdown-header fw-bold text-dark border-bottom pb-2 mb-2">
+                            <i class="bi bi-bell-fill me-2 text-primary"></i>Notifications
+                        </div>
+                        <a href="#" class="dropdown-item rounded-3 py-2"><i class="bi bi-file-earmark-plus me-2 text-success"></i>New template available!</a>
+                        <a href="#" class="dropdown-item rounded-3 py-2"><i class="bi bi-download me-2 text-info"></i>Resume ready to download</a>
+                        <a href="#" class="dropdown-item rounded-3 py-2"><i class="bi bi-star me-2 text-warning"></i>Premium offer available</a>
+                    </div>
+                </div>
+
+                <!-- User Avatar Dropdown -->
+                <div class="dropdown">
+                    <a href="#" class="nav-avatar-btn" data-bs-toggle="dropdown" id="userAvatarBtn">
+                        <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}{% else %}https://ui-avatars.com/api/?name={{ user.get_full_name|default:user.username }}&background=2563eb&color=fff&bold=true{% endif %}"
+                             class="nav-avatar-img" alt="Avatar">
+                        <span class="nav-avatar-name d-none d-xl-block">{{ user.first_name|default:user.username }}</span>
+                        <i class="bi bi-chevron-down text-muted" style="font-size:12px;"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end nav-avatar-dropdown">
+                        <li>
+                            <div class="nav-avatar-header">
+                                <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}{% else %}https://ui-avatars.com/api/?name={{ user.get_full_name|default:user.username }}&background=2563eb&color=fff&bold=true&size=128{% endif %}" alt="Avatar">
+                                <h6>{{ user.get_full_name|default:user.username }}</h6>
+                                <small>{{ user.email }}</small>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider mx-2"></li>
+                        <li><a class="dropdown-item rounded-3 py-2" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2 text-primary"></i>My Dashboard</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2" href="{% url 'resume_list' %}"><i class="bi bi-file-earmark-person me-2 text-success"></i>My Resumes</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2" href="{% url 'profile' %}"><i class="bi bi-person-circle me-2 text-info"></i>Profile</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2" href="{% url 'edit_profile' %}"><i class="bi bi-gear me-2 text-warning"></i>Settings</a></li>
+                        {% if user.is_staff %}
+                        <li><hr class="dropdown-divider mx-2"></li>
+                        <li><a class="dropdown-item rounded-3 py-2" href="{% url 'admin_dashboard' %}"><i class="bi bi-shield-lock me-2 text-danger"></i>Admin Panel</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider mx-2"></li>
+                        <li><a class="dropdown-item rounded-3 py-2 text-danger" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+
+                {% else %}
+
+                <a href="{% url 'login' %}" class="btn-nav-login">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                </a>
+                <a href="{% url 'register' %}" class="btn-nav-cta">
+                    <i class="bi bi-rocket-takeoff-fill me-1"></i> Get Started Free
+                </a>
+
+                {% endif %}
+            </div>
+
+            <!-- Mobile Toggler -->
+            <button class="nav-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="collapse" id="mobileMenu">
+            <div class="py-3 border-top mt-3">
+                <ul class="list-unstyled mb-3">
+                    <li><a href="{% url 'home' %}" class="d-block py-2 px-3 rounded-3 fw-semibold text-dark text-decoration-none"><i class="bi bi-house-door me-2"></i>Home</a></li>
+                    <li><a href="{% url 'about' %}" class="d-block py-2 px-3 rounded-3 fw-semibold text-dark text-decoration-none"><i class="bi bi-info-circle me-2"></i>About</a></li>
+                    <li><a href="{% url 'blog' %}" class="d-block py-2 px-3 rounded-3 fw-semibold text-dark text-decoration-none"><i class="bi bi-newspaper me-2"></i>Blog</a></li>
+                    <li><a href="{% url 'contact' %}" class="d-block py-2 px-3 rounded-3 fw-semibold text-dark text-decoration-none"><i class="bi bi-envelope me-2"></i>Contact</a></li>
+                    {% if user.is_authenticated %}
+                    <li><hr></li>
+                    <li><a href="{% url 'dashboard' %}" class="d-block py-2 px-3 rounded-3 fw-semibold text-primary text-decoration-none"><i class="bi bi-speedometer2 me-2"></i>My Dashboard</a></li>
+                    <li><a href="{% url 'profile' %}" class="d-block py-2 px-3 rounded-3 fw-semibold text-dark text-decoration-none"><i class="bi bi-person-circle me-2"></i>Profile</a></li>
+                    <li><a href="{% url 'logout' %}" class="d-block py-2 px-3 rounded-3 fw-semibold text-danger text-decoration-none"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                    {% else %}
+                    <li><hr></li>
+                    <li><a href="{% url 'login' %}" class="d-block py-2 px-3 btn btn-outline-primary rounded-3 fw-bold text-decoration-none mb-2"><i class="bi bi-box-arrow-in-right me-1"></i>Login</a></li>
+                    <li><a href="{% url 'register' %}" class="d-block py-2 px-3 btn btn-primary rounded-3 fw-bold text-decoration-none"><i class="bi bi-rocket-takeoff-fill me-1"></i>Get Started</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+// Scroll shrink effect
+(function(){
+    const nav = document.getElementById('siteNavbar');
+    if(!nav) return;
+    window.addEventListener('scroll', function() {
+        nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+})();
+</script>

@@ -1,0 +1,273 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}
+{{ page_title }}
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+.blog-form-card{
+
+    max-width:1000px;
+
+    margin:auto;
+
+    border:none;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+    animation:fadeIn .5s ease;
+
+}
+
+.blog-form-header{
+
+    background:linear-gradient(135deg,#2563eb,#4f46e5);
+
+    color:#fff;
+
+    padding:22px 30px;
+
+}
+
+.blog-form-body{
+
+    padding:30px;
+
+}
+
+.blog-form-body p{
+
+    margin-bottom:20px;
+
+}
+
+.blog-form-body label{
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+    color:#374151;
+
+    display:block;
+
+}
+
+.blog-form-body input,
+.blog-form-body textarea,
+.blog-form-body select{
+
+    width:100%;
+
+    border:1px solid #d1d5db;
+
+    border-radius:12px;
+
+    padding:12px 15px;
+
+    transition:.3s;
+
+    box-shadow:none;
+
+}
+
+.blog-form-body textarea{
+
+    min-height:180px;
+
+    resize:vertical;
+
+}
+
+.blog-form-body input:focus,
+.blog-form-body textarea:focus,
+.blog-form-body select:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 0 .2rem rgba(37,99,235,.15);
+
+    outline:none;
+
+}
+
+.btn-save{
+
+    min-width:180px;
+
+    transition:.3s;
+
+}
+
+.btn-save:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.image-preview{
+
+    display:none;
+
+    margin-top:15px;
+
+    max-width:250px;
+
+    border-radius:12px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+<div class="card blog-form-card">
+
+<div class="blog-form-header d-flex justify-content-between align-items-center">
+
+<h3 class="mb-0">
+
+<i class="bi bi-pencil-square me-2"></i>
+
+{{ page_title }}
+
+</h3>
+
+<a href="{% url 'blog_list' %}"
+
+class="btn btn-light">
+
+<i class="bi bi-arrow-left"></i>
+
+Back
+
+</a>
+
+</div>
+
+<div class="blog-form-body">
+
+<form
+
+method="POST"
+
+enctype="multipart/form-data"
+
+id="blogForm">
+
+{% csrf_token %}
+
+{{ form.as_p }}
+
+<img
+
+id="preview"
+
+class="image-preview">
+
+<hr>
+
+<button
+
+type="submit"
+
+class="btn btn-primary btn-save">
+
+<i class="bi bi-check-circle me-2"></i>
+
+{{ button_text }}
+
+</button>
+
+<a
+
+href="{% url 'blog_list' %}"
+
+class="btn btn-secondary ms-2">
+
+<i class="bi bi-x-circle me-2"></i>
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const imageInput=document.querySelector('input[type="file"]');
+
+const preview=document.getElementById("preview");
+
+if(imageInput){
+
+imageInput.addEventListener("change",function(){
+
+const file=this.files[0];
+
+if(file){
+
+preview.src=URL.createObjectURL(file);
+
+preview.style.display="block";
+
+}
+
+});
+
+}
+
+document.getElementById("blogForm").addEventListener(
+
+"submit",
+
+function(){
+
+const btn=document.querySelector(".btn-save");
+
+btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+
+btn.disabled=true;
+
+}
+
+);
+
+</script>
+
+{% endblock %}

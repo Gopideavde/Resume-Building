@@ -1,0 +1,120 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #1a2744;
+        --gold: #c9a84c;
+        --bg: #faf8f3;
+        --text: #1a1a2e;
+        --light: #fff8f0;
+        --muted: #6b7280;
+    }
+    body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; color: var(--primary); }
+    
+    .hero-inner {
+        background: linear-gradient(135deg, var(--primary) 0%, #111a2f 100%);
+        padding: 100px 0; color: #fff; text-align: center;
+    }
+    .hero-inner h1 { color: #fff; font-size: 3.5rem; }
+    
+    .featured-blog {
+        background: #fff; border-radius: 20px; overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.08); margin-top: -50px;
+        position: relative; z-index: 10; border: 1px solid rgba(201,168,76,0.2);
+    }
+    .featured-img { height: 400px; width: 100%; object-fit: cover; }
+    .featured-content { padding: 50px; display: flex; flex-direction: column; justify-content: center; height: 100%; }
+    
+    .blog-card {
+        background: #fff; border-radius: 16px; overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(201,168,76,0.1);
+        transition: all 0.4s ease; height: 100%; display: flex; flex-direction: column;
+    }
+    .blog-card:hover { transform: translateY(-10px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-color: var(--gold); }
+    .blog-img-wrapper { overflow: hidden; height: 220px; }
+    .blog-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .blog-card:hover .blog-img { transform: scale(1.1); }
+    .blog-body { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+    .blog-category { color: var(--gold); font-weight: bold; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .blog-title { font-size: 1.4rem; margin-bottom: 15px; }
+    .blog-title a { color: var(--primary); text-decoration: none; transition: color 0.3s; }
+    .blog-title a:hover { color: var(--gold); }
+    
+    .read-more { margin-top: auto; color: var(--primary); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; transition: color 0.3s; }
+    .read-more i { margin-left: 5px; transition: transform 0.3s; }
+    .read-more:hover { color: var(--gold); }
+    .read-more:hover i { transform: translateX(5px); }
+
+    .pagination { margin-top: 50px; }
+    .page-link { color: var(--primary); border: none; border-radius: 5px; margin: 0 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .page-link:hover { background: var(--light); color: var(--gold); }
+    .page-item.active .page-link { background: var(--gold); color: var(--primary); font-weight: bold; }
+</style>
+
+<div class="hero-inner" data-aos="fade-in">
+    <div class="container">
+        <h1>Career Insights</h1>
+        <p class="lead text-light mt-3">Expert advice, resume tips, and industry trends.</p>
+    </div>
+</div>
+
+<section class="pb-5">
+    <div class="container">
+        {% if featured_blog %}
+        <div class="featured-blog mb-5" data-aos="fade-up">
+            <div class="row g-0">
+                <div class="col-lg-7">
+                    <img src="{% if featured_blog.image %}{{ featured_blog.image.url }}{% else %}{% static 'images/default-blog.jpg' %}{% endif %}" class="featured-img" alt="{{ featured_blog.title }}">
+                </div>
+                <div class="col-lg-5">
+                    <div class="featured-content">
+                        <div class="blog-category mb-2">{{ featured_blog.category }}</div>
+                        <h2 class="mb-3"><a href="{% url 'blog_detail' featured_blog.slug %}" class="text-primary text-decoration-none">{{ featured_blog.title }}</a></h2>
+                        <p class="text-muted mb-4">{{ featured_blog.excerpt|truncatewords:30 }}</p>
+                        <div class="d-flex align-items-center">
+                            <a href="{% url 'blog_detail' featured_blog.slug %}" class="read-more">Read Full Article <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row g-4 mt-4">
+            {% for blog in blogs %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
+                <div class="blog-card">
+                    <div class="blog-img-wrapper">
+                        <img src="{% if blog.image %}{{ blog.image.url }}{% else %}{% static 'images/default-blog.jpg' %}{% endif %}" class="blog-img" alt="{{ blog.title }}">
+                    </div>
+                    <div class="blog-body">
+                        <div class="blog-category">{{ blog.category }}</div>
+                        <h3 class="blog-title"><a href="{% url 'blog_detail' blog.slug %}">{{ blog.title }}</a></h3>
+                        <p class="text-muted">{{ blog.excerpt|truncatechars:120 }}</p>
+                        <a href="{% url 'blog_detail' blog.slug %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <h3 class="text-muted">More articles coming soon.</h3>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination Placeholder -->
+        <nav aria-label="Blog pagination" class="d-flex justify-content-center" data-aos="fade-in">
+            <ul class="pagination">
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+</section>
+{% endblock %}

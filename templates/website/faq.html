@@ -1,0 +1,114 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #1a2744;
+        --gold: #c9a84c;
+        --bg: #faf8f3;
+        --text: #1a1a2e;
+        --light: #fff8f0;
+        --muted: #6b7280;
+    }
+    body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; color: var(--primary); }
+    
+    .hero-inner {
+        background: linear-gradient(135deg, var(--primary) 0%, #111a2f 100%);
+        padding: 100px 0 150px;
+        color: #fff;
+        text-align: center;
+        position: relative;
+    }
+    .hero-inner h1 { color: #fff; font-size: 3.5rem; }
+    
+    .search-box {
+        position: absolute; bottom: -35px; left: 50%; transform: translateX(-50%);
+        width: 100%; max-width: 600px; padding: 0 15px;
+    }
+    .search-box .input-group { box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-radius: 50px; overflow: hidden; }
+    .search-box input { border: none; padding: 20px 30px; font-size: 1.1rem; }
+    .search-box input:focus { box-shadow: none; outline: none; }
+    .search-box button { background: var(--gold); border: none; padding: 0 30px; color: var(--primary); font-size: 1.2rem; transition: background 0.3s; }
+    .search-box button:hover { background: #e3c97e; }
+    
+    .faq-container { padding: 100px 0 80px; }
+    
+    .faq-accordion .accordion-item { border: none; background: transparent; margin-bottom: 20px; }
+    .faq-accordion .accordion-button {
+        background: #fff; border-radius: 12px !important; padding: 20px 25px;
+        font-family: 'Playfair Display', serif; font-size: 1.2rem;
+        color: var(--primary); font-weight: 600; box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+        border: 1px solid rgba(201,168,76,0.1); transition: all 0.3s;
+    }
+    .faq-accordion .accordion-button:not(.collapsed) {
+        background: var(--primary); color: var(--gold); box-shadow: 0 10px 25px rgba(26,39,68,0.2);
+    }
+    .faq-accordion .accordion-body {
+        background: var(--light); border-radius: 0 0 12px 12px;
+        padding: 25px; margin-top: 5px; color: var(--text); line-height: 1.7;
+        border: 1px solid rgba(201,168,76,0.1); border-top: none;
+    }
+    
+    .cta-section { background: var(--primary); padding: 80px 0; color: #fff; text-align: center; }
+    .btn-gold {
+        background: linear-gradient(to right, #c9a84c, #e3c97e); color: var(--primary);
+        border: none; border-radius: 50px; padding: 15px 35px; font-weight: 600;
+        text-decoration: none; display: inline-block; transition: all 0.4s;
+    }
+    .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(201, 168, 76, 0.4); color: var(--primary); }
+</style>
+
+<div class="hero-inner" data-aos="fade-in">
+    <div class="container">
+        <h1>How Can We Help?</h1>
+        <p class="lead text-light mt-3">Find answers to common questions about our platform.</p>
+    </div>
+    <div class="search-box" data-aos="up">
+        <form action="#" method="GET">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for answers..." name="q">
+                <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<section class="faq-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9" data-aos="fade-up" data-aos-delay="100">
+                <div class="accordion faq-accordion" id="faqAccordion">
+                    {% for item in faqs %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+                                {{ item.question }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                {{ item.answer }}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-5">
+                        <h4 class="text-muted">No FAQs available at the moment.</h4>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container" data-aos="zoom-in">
+        <h2 class="text-gold mb-4">Still Have Questions?</h2>
+        <p class="mb-4">Our support team is always ready to assist you with any inquiries.</p>
+        <a href="{% url 'contact' %}" class="btn-gold">Contact Support</a>
+    </div>
+</section>
+{% endblock %}

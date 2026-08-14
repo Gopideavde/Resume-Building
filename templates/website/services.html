@@ -1,0 +1,224 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #1a2744;
+        --gold: #c9a84c;
+        --bg: #faf8f3;
+        --text: #1a1a2e;
+        --light: #fff8f0;
+        --muted: #6b7280;
+    }
+    body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; color: var(--primary); }
+    
+    .hero-inner {
+        background: linear-gradient(rgba(26, 39, 68, 0.9), rgba(26, 39, 68, 0.9)), url('{% static "images/services-bg.jpg" %}') center/cover;
+        padding: 100px 0;
+        color: #fff;
+        text-align: center;
+    }
+    .hero-inner h1 { color: #fff; font-size: 3.5rem; }
+    
+    .service-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 40px 30px;
+        text-align: center;
+        border: 1px solid rgba(201,168,76,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: all 0.4s ease;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+    .service-card::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+        background: linear-gradient(to right, #c9a84c, #e3c97e);
+        transform: scaleX(0); transition: transform 0.4s ease;
+    }
+    .service-card:hover { transform: translateY(-10px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+    .service-card:hover::before { transform: scaleX(1); }
+    
+    .service-icon {
+        width: 80px; height: 80px;
+        background: var(--light);
+        color: var(--gold);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2rem; margin: 0 auto 20px;
+        transition: all 0.4s;
+    }
+    .service-card:hover .service-icon { background: var(--primary); color: #fff; transform: rotateY(180deg); }
+
+    .timeline { position: relative; max-width: 800px; margin: 0 auto; padding: 40px 0; }
+    .timeline::after { content: ''; position: absolute; width: 2px; background: rgba(201,168,76,0.3); top: 0; bottom: 0; left: 50%; margin-left: -1px; }
+    .timeline-item { padding: 10px 40px; position: relative; width: 50%; box-sizing: border-box; }
+    .timeline-item.left { left: 0; text-align: right; }
+    .timeline-item.right { left: 50%; }
+    .timeline-item::after {
+        content: ''; position: absolute; width: 20px; height: 20px;
+        background: var(--gold); border: 4px solid #fff; border-radius: 50%;
+        top: 15px; z-index: 1; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .timeline-item.left::after { right: -10px; }
+    .timeline-item.right::after { left: -10px; }
+    
+    .comparison-table { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.05); }
+    .comparison-table th { background: var(--primary); color: #fff; padding: 20px; text-align: center; font-family: 'Playfair Display', serif; }
+    .comparison-table td { padding: 15px 20px; border-bottom: 1px solid #eee; text-align: center; vertical-align: middle; }
+    .comparison-table td:first-child { text-align: left; font-weight: 600; color: var(--primary); }
+    
+    .cta-section { background: var(--primary); padding: 80px 0; color: #fff; text-align: center; }
+    .btn-gold {
+        background: linear-gradient(to right, #c9a84c, #e3c97e); color: var(--primary);
+        border: none; border-radius: 50px; padding: 15px 35px; font-weight: 600;
+        text-decoration: none; display: inline-block; transition: all 0.4s;
+    }
+    .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(201, 168, 76, 0.4); color: var(--primary); }
+    
+    @media (max-width: 768px) {
+        .timeline::after { left: 31px; }
+        .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; text-align: left; }
+        .timeline-item.right { left: 0; }
+        .timeline-item.left::after, .timeline-item.right::after { left: 21px; }
+    }
+</style>
+
+<div class="hero-inner" data-aos="fade-in">
+    <div class="container">
+        <h1>Premium Services</h1>
+        <p class="lead text-light mt-3">Elevate your professional profile with our tailored solutions.</p>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container py-5">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2>Our Expertise</h2>
+            <p class="text-muted">Comprehensive tools for your career advancement.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-file-alt"></i></div>
+                    <h4>Resume Builder</h4>
+                    <p class="text-muted">Create stunning, ATS-friendly resumes using our classic, customizable templates.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-envelope-open-text"></i></div>
+                    <h4>Cover Letters</h4>
+                    <p class="text-muted">Craft compelling cover letters that perfectly match your resume's aesthetic.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-spell-check"></i></div>
+                    <h4>Grammar Check</h4>
+                    <p class="text-muted">Ensure flawless presentation with our built-in premium proofreading tools.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                    <h4>ATS Optimization</h4>
+                    <p class="text-muted">Optimize keywords and formatting to easily pass through screening software.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-download"></i></div>
+                    <h4>Multi-format Export</h4>
+                    <p class="text-muted">Download your documents in high-quality PDF, DOCX, and TXT formats.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="600">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-globe"></i></div>
+                    <h4>Web Portfolios</h4>
+                    <p class="text-muted">Turn your resume into a beautiful, responsive personal webpage.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2>How It Works</h2>
+            <p class="text-muted">Four simple steps to perfection.</p>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item left" data-aos="fade-right">
+                <h4 class="text-gold">1. Choose a Template</h4>
+                <p>Select from our library of classic, professionally designed templates.</p>
+            </div>
+            <div class="timeline-item right" data-aos="fade-left">
+                <h4 class="text-gold">2. Fill in Details</h4>
+                <p>Enter your professional experience, education, and skills seamlessly.</p>
+            </div>
+            <div class="timeline-item left" data-aos="fade-right">
+                <h4 class="text-gold">3. Customize Design</h4>
+                <p>Tweak colors, fonts, and layout to match your personal brand.</p>
+            </div>
+            <div class="timeline-item right" data-aos="fade-left">
+                <h4 class="text-gold">4. Download & Apply</h4>
+                <p>Export your polished resume in your preferred format and start applying.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container py-5">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2>Feature Comparison</h2>
+        </div>
+        <div class="table-responsive" data-aos="zoom-in">
+            <table class="table comparison-table">
+                <thead>
+                    <tr>
+                        <th>Features</th>
+                        <th>Standard Resumes</th>
+                        <th>Our Classic Resumes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Design Aesthetic</td>
+                        <td>Generic & Cluttered</td>
+                        <td class="text-gold fw-bold">Timeless & Elegant</td>
+                    </tr>
+                    <tr>
+                        <td>ATS Compatibility</td>
+                        <td>Often Fails</td>
+                        <td><i class="fas fa-check text-success"></i> 100% Optimized</td>
+                    </tr>
+                    <tr>
+                        <td>Customization</td>
+                        <td>Rigid</td>
+                        <td><i class="fas fa-check text-success"></i> Highly Flexible</td>
+                    </tr>
+                    <tr>
+                        <td>Export Quality</td>
+                        <td>Standard</td>
+                        <td><i class="fas fa-check text-success"></i> Print-Ready High Res</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container" data-aos="fade-up">
+        <h2 class="mb-4 text-gold">Experience the Difference</h2>
+        <a href="{% url 'resume_list' %}" class="btn-gold">Create Your Resume Now</a>
+    </div>
+</section>
+{% endblock %}

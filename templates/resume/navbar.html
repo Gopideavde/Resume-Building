@@ -1,0 +1,187 @@
+{% load static %}
+<style>
+/* =============================================
+   RESUME APP NAVBAR — DASHBOARD STYLE
+   ============================================= */
+.resume-navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #2563eb 100%);
+    padding: 12px 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 30px rgba(29,78,216,0.35);
+}
+.resume-navbar.scrolled {
+    padding: 8px 0;
+    box-shadow: 0 8px 40px rgba(29,78,216,0.45);
+}
+/* Logo */
+.resume-nav-logo {
+    display: flex; align-items: center; gap: 10px; text-decoration: none;
+}
+.resume-nav-logo-icon {
+    width: 42px; height: 42px; border-radius: 12px;
+    background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; color: #fff; transition: all 0.35s;
+    backdrop-filter: blur(8px);
+}
+.resume-nav-logo:hover .resume-nav-logo-icon { background: rgba(255,255,255,0.3); transform: rotate(-5deg) scale(1.05); }
+.resume-nav-logo-text { font-size: 17px; font-weight: 800; color: #fff; }
+.resume-nav-logo-sub { font-size: 10.5px; color: rgba(255,255,255,0.65); }
+/* Nav links */
+.resume-nav-links { display: flex; align-items: center; gap: 2px; }
+.resume-nav-link {
+    display: flex; align-items: center; gap: 6px;
+    color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 600;
+    padding: 8px 14px; border-radius: 10px; text-decoration: none;
+    transition: all 0.3s ease; position: relative;
+}
+.resume-nav-link:hover,
+.resume-nav-link.active {
+    color: #fff; background: rgba(255,255,255,0.15);
+}
+.resume-nav-link.active::after {
+    content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+    width: 20px; height: 3px; background: #fff; border-radius: 10px;
+}
+/* Create button */
+.resume-nav-create {
+    display: flex; align-items: center; gap: 7px;
+    background: #fff; color: #1d4ed8;
+    font-weight: 800; font-size: 13.5px;
+    padding: 9px 20px; border-radius: 12px; text-decoration: none;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2); transition: all 0.3s ease;
+}
+.resume-nav-create:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.25); color: #1d4ed8; }
+/* User avatar */
+.resume-nav-user {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.25);
+    padding: 5px 14px 5px 5px; border-radius: 50px; text-decoration: none;
+    transition: all 0.3s; cursor: pointer;
+}
+.resume-nav-user:hover { background: rgba(255,255,255,0.2); }
+.resume-nav-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4); object-fit: cover;
+}
+.resume-nav-username { font-size: 13px; font-weight: 600; color: #fff; }
+/* Dropdown */
+.resume-nav-dropdown {
+    border-radius: 18px; border: none; padding: 10px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    min-width: 220px; animation: fadeRDrop 0.3s ease;
+}
+@keyframes fadeRDrop {
+    from { opacity:0; transform: translateY(12px); }
+    to   { opacity:1; transform: none; }
+}
+/* Breadcrumb strip */
+.resume-breadcrumb {
+    background: rgba(255,255,255,0.1); padding: 6px 0;
+    border-top: 1px solid rgba(255,255,255,0.12);
+}
+.resume-breadcrumb .breadcrumb { margin: 0; padding: 0 0; }
+.resume-breadcrumb .breadcrumb-item a { color: rgba(255,255,255,0.7); font-size: 12.5px; text-decoration: none; }
+.resume-breadcrumb .breadcrumb-item.active { color: rgba(255,255,255,0.95); font-size: 12.5px; }
+.resume-breadcrumb .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,0.4); }
+body { padding-top: 88px; }
+</style>
+
+<nav class="resume-navbar" id="resumeNavbar">
+    <div class="container-xl">
+        <div class="d-flex align-items-center gap-3">
+
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="resume-nav-logo">
+                <div class="resume-nav-logo-icon"><i class="bi bi-file-earmark-person-fill"></i></div>
+                <div>
+                    <div class="resume-nav-logo-text">A2Z Resume</div>
+                    <div class="resume-nav-logo-sub">Builder</div>
+                </div>
+            </a>
+
+            <!-- Nav Links (Desktop) -->
+            <div class="resume-nav-links d-none d-lg-flex ms-3">
+                <a href="{% url 'dashboard' %}" class="resume-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+                <a href="{% url 'resume_list' %}" class="resume-nav-link {% if request.resolver_match.url_name == 'resume_list' %}active{% endif %}">
+                    <i class="bi bi-files"></i> My Resumes
+                </a>
+                <a href="{% url 'resume_analytics' %}" class="resume-nav-link {% if request.resolver_match.url_name == 'resume_analytics' %}active{% endif %}">
+                    <i class="bi bi-graph-up-arrow"></i> Analytics
+                </a>
+                <a href="{% url 'home' %}" class="resume-nav-link">
+                    <i class="bi bi-house-door"></i> Website
+                </a>
+            </div>
+
+            <!-- Spacer -->
+            <div class="ms-auto"></div>
+
+            <!-- Create Resume -->
+            <a href="{% url 'create_resume' %}" class="resume-nav-create d-none d-md-flex">
+                <i class="bi bi-plus-circle-fill"></i> Create Resume
+            </a>
+
+            <!-- User Dropdown -->
+            {% if user.is_authenticated %}
+            <div class="dropdown">
+                <a href="#" class="resume-nav-user" data-bs-toggle="dropdown" id="resumeUserBtn">
+                    <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}{% else %}https://ui-avatars.com/api/?name={{ user.get_full_name|default:user.username }}&background=ffffff&color=1d4ed8&bold=true{% endif %}"
+                         class="resume-nav-avatar" alt="Avatar">
+                    <span class="resume-nav-username d-none d-sm-block">{{ user.first_name|default:user.username }}</span>
+                    <i class="bi bi-chevron-down text-white-50" style="font-size:11px;"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end resume-nav-dropdown">
+                    <li class="text-center py-3 px-3 border-bottom mb-1">
+                        <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}{% else %}https://ui-avatars.com/api/?name={{ user.get_full_name|default:user.username }}&background=1d4ed8&color=fff&bold=true&size=80{% endif %}"
+                             width="60" height="60" class="rounded-circle border border-2 border-primary mb-2" style="object-fit:cover;">
+                        <div class="fw-bold text-dark">{{ user.get_full_name|default:user.username }}</div>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </li>
+                    <li><a class="dropdown-item rounded-3 py-2" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2 text-primary"></i>My Dashboard</a></li>
+                    <li><a class="dropdown-item rounded-3 py-2" href="{% url 'create_resume' %}"><i class="bi bi-plus-circle me-2 text-success"></i>Create Resume</a></li>
+                    <li><a class="dropdown-item rounded-3 py-2" href="{% url 'profile' %}"><i class="bi bi-person-circle me-2 text-info"></i>My Profile</a></li>
+                    <li><a class="dropdown-item rounded-3 py-2" href="{% url 'edit_profile' %}"><i class="bi bi-gear me-2 text-warning"></i>Settings</a></li>
+                    <li><a class="dropdown-item rounded-3 py-2" href="{% url 'change_password' %}"><i class="bi bi-shield-lock me-2 text-secondary"></i>Change Password</a></li>
+                    {% if user.is_staff %}
+                    <li><hr class="dropdown-divider mx-2"></li>
+                    <li><a class="dropdown-item rounded-3 py-2" href="{% url 'admin_dashboard' %}"><i class="bi bi-grid-1x2 me-2 text-danger"></i>Admin Panel</a></li>
+                    {% endif %}
+                    <li><hr class="dropdown-divider mx-2"></li>
+                    <li><a class="dropdown-item rounded-3 py-2 text-danger" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Mobile Toggler -->
+            <button class="btn btn-outline-light btn-sm d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#resumeMobileMenu">
+                <i class="bi bi-list fs-4"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="collapse" id="resumeMobileMenu">
+            <div class="py-2 mt-2 border-top border-white border-opacity-25">
+                <div class="d-flex flex-column gap-1">
+                    <a href="{% url 'dashboard' %}" class="resume-nav-link"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                    <a href="{% url 'resume_list' %}" class="resume-nav-link"><i class="bi bi-files"></i> My Resumes</a>
+                    <a href="{% url 'create_resume' %}" class="resume-nav-link"><i class="bi bi-plus-circle-fill"></i> Create Resume</a>
+                    <a href="{% url 'resume_analytics' %}" class="resume-nav-link"><i class="bi bi-graph-up-arrow"></i> Analytics</a>
+                    <a href="{% url 'home' %}" class="resume-nav-link"><i class="bi bi-house-door"></i> Website</a>
+                    <a href="{% url 'logout' %}" class="resume-nav-link text-warning"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+(function(){
+    const nav = document.getElementById('resumeNavbar');
+    if(!nav) return;
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+})();
+</script>

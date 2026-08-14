@@ -1,0 +1,189 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Ambient Gradient Background for Contact Page */
+    .ambient-bg {
+        background: radial-gradient(circle at top left, rgba(201, 168, 76, 0.15) 0%, transparent 40%),
+                    radial-gradient(circle at bottom right, rgba(139, 26, 62, 0.1) 0%, transparent 50%),
+                    var(--bg);
+        position: relative;
+        padding-bottom: 80px;
+    }
+
+    .hero-inner {
+        background: linear-gradient(135deg, rgba(26, 39, 68, 0.95), rgba(26, 39, 68, 0.8)), url('{% static "images/contact-bg.jpg" %}') center/cover;
+        padding: 120px 0 80px;
+        color: #fff;
+        text-align: center;
+        border-bottom: 3px solid var(--gold);
+    }
+    .hero-inner h1 { color: #fff; font-size: 4rem; }
+    
+    .contact-info-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 40px 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+        border: 1px solid var(--glass-border);
+        display: flex;
+        align-items: flex-start;
+        gap: 25px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    .contact-info-card::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; height: 100%; width: 4px;
+        background: var(--gold);
+        transform: scaleY(0);
+        transition: transform 0.4s ease;
+    }
+    .contact-info-card:hover { 
+        transform: translateX(10px); 
+        border-color: var(--gold); 
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+    }
+    .contact-info-card:hover::before {
+        transform: scaleY(1);
+    }
+
+    .icon-box {
+        width: 65px; height: 65px; min-width: 65px;
+        background: var(--light);
+        color: var(--gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        box-shadow: inset 0 0 10px rgba(201,168,76,0.2);
+    }
+    
+    /* Glassmorphism Form */
+    .glass-form-wrapper {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 60px 50px;
+        border-radius: 24px;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-top: 5px solid var(--gold);
+        position: relative;
+    }
+    
+    .glass-form-wrapper .form-control {
+        border: none;
+        border-bottom: 2px solid rgba(26, 39, 68, 0.2);
+        border-radius: 0;
+        padding: 15px 0;
+        background: transparent;
+        transition: all 0.3s;
+        font-size: 1.1rem;
+        color: var(--primary);
+    }
+    .glass-form-wrapper .form-control:focus {
+        box-shadow: none;
+        border-color: var(--gold);
+        background: transparent;
+    }
+    .glass-form-wrapper label {
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 5px;
+        font-family: 'Playfair Display', serif;
+    }
+    
+    .map-container {
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        height: 450px;
+        margin-top: 60px;
+        border: 4px solid #fff;
+    }
+</style>
+
+<div class="hero-inner" data-aos="fade-down" data-aos-duration="1000">
+    <div class="container">
+        <h1 class="font-playfair">Get in Touch</h1>
+        <p class="lead text-light mt-3 opacity-75">We'd love to hear from you. Reach out to our team.</p>
+    </div>
+</div>
+
+<div class="ambient-bg">
+    <section class="py-5 mt-4">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-5" data-aos="fade-right">
+                    <div class="mb-5">
+                        <h2 class="font-playfair mb-3">Contact Information</h2>
+                        <div class="ornamental-divider text-start mb-4"></div>
+                        <p class="text-muted fs-5">Have questions about our templates or need support? Our dedicated team is ready to assist you in building your legacy.</p>
+                    </div>
+                    
+                    <div class="contact-info-card">
+                        <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>
+                            <h4 class="mb-2 font-playfair">Our Headquarters</h4>
+                            <p class="text-muted mb-0 fs-6">Vadgaongupta Nagar, Ahilyanagar<br>Maharashtra, India 414111</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-card">
+                        <div class="icon-box"><i class="fas fa-phone-alt"></i></div>
+                        <div>
+                            <h4 class="mb-2 font-playfair">Call Us</h4>
+                            <p class="text-muted mb-0 fs-6">+91 9370434105<br>Mon-Fri, 9am-6pm IST</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-card">
+                        <div class="icon-box"><i class="fas fa-envelope"></i></div>
+                        <div>
+                            <h4 class="mb-2 font-playfair">Email Us</h4>
+                            <p class="text-muted mb-0 fs-6">gopijanvallabhanildevade@gmail.com<br>gopidevade123@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-7" data-aos="fade-left" data-aos-delay="200">
+                    <div class="glass-form-wrapper tilt-card">
+                        <h3 class="mb-4 text-primary font-playfair fs-2">Send a Message</h3>
+                        <form method="post" action="{% url 'contact' %}">
+                            {% csrf_token %}
+                            <div class="row g-4">
+                                {% for field in form %}
+                                <div class="col-md-12">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="text-danger mt-1 fw-bold"><small>{{ field.errors|striptags }}</small></div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                                <div class="col-12 mt-5 text-end">
+                                    <button type="submit" class="btn-premium px-5 py-3 fs-5 shadow-lg w-100">Send Message <i class="fas fa-paper-plane ms-2"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-5" data-aos="zoom-in" data-aos-offset="100">
+                <div class="col-12">
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d15172.60912103087!2d74.69858865!3d19.16823475!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e1!3m2!1sen!2sin!4v1786335610674!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

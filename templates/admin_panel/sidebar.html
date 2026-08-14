@@ -1,0 +1,174 @@
+{% load static %}
+<aside class="admin-sidebar" id="sidebar">
+
+
+
+    <div class="sidebar-header">
+
+        <h5 class="mb-0">
+
+            Main Menu
+
+        </h5>
+
+    </div>
+
+    <ul class="sidebar-menu">
+
+        <!-- Dashboard -->
+
+        <li>
+
+            <a href="{% url 'admin_dashboard' %}">
+
+                <i class="bi bi-speedometer2"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+        </li>
+
+        <!-- Users -->
+
+        <li>
+
+            <a href="{% url 'user_list' %}">
+
+                <i class="bi bi-people-fill"></i>
+
+                <span>Users</span>
+
+            </a>
+
+        </li>
+
+        <!-- Resume -->
+
+        <li>
+
+            <a href="{% url 'admin_resume_list' %}">
+
+                <i class="bi bi-file-earmark-person"></i>
+
+                <span>Resumes</span>
+
+            </a>
+
+        </li>
+
+        <!-- Templates -->
+
+        <li>
+
+            <a href="{% url 'template_list' %}">
+
+                <i class="bi bi-grid-3x3-gap-fill"></i>
+
+                <span>Templates</span>
+
+            </a>
+
+        </li>
+
+        <!-- Blogs -->
+
+        <li>
+
+            <a href="{% url 'blog_list' %}">
+
+                <i class="bi bi-journal-richtext"></i>
+
+                <span>Blogs</span>
+
+            </a>
+
+        </li>
+
+        <!-- Contacts -->
+
+        <li>
+
+            <a href="{% url 'contact_list' %}">
+
+                <i class="bi bi-envelope-fill"></i>
+
+                <span>Contacts</span>
+
+            </a>
+
+        </li>
+
+        <!-- Newsletter -->
+
+        <li>
+
+            <a href="{% url 'newsletter_list' %}">
+
+                <i class="bi bi-newspaper"></i>
+
+                <span>Newsletter</span>
+
+            </a>
+
+        </li>
+
+        <!-- Divider -->
+
+        <li class="sidebar-divider">
+
+            <span>
+
+                Reports
+
+            </span>
+
+        </li>
+
+        <!-- Analytics -->
+
+        <li>
+
+            <a href="{% url 'analytics_dashboard' %}">
+
+                <i class="bi bi-graph-up-arrow"></i>
+
+                <span>Analytics</span>
+
+            </a>
+
+        </li>
+
+        <!-- Settings -->
+
+        <li>
+
+            <a href="{% url 'settings' %}">
+
+                <i class="bi bi-gear-fill"></i>
+
+                <span>Settings</span>
+
+            </a>
+
+        </li>
+
+        <!-- Logout -->
+
+        <li>
+
+            <a href="{% url 'admin_logout' %}"
+
+               class="text-danger">
+
+                <i class="bi bi-box-arrow-right"></i>
+
+                <span>Logout</span>
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</aside>

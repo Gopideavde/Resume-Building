@@ -1,0 +1,139 @@
+{% load static %}
+<style>
+/* =============================================
+   ACCOUNTS NAVBAR — CLEAN AUTH NAVBAR
+   ============================================= */
+.accounts-navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(37,99,235,0.12);
+    padding: 14px 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+.accounts-navbar.scrolled {
+    padding: 10px 0;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+/* Logo */
+.acct-logo {
+    display: flex; align-items: center; gap: 12px; text-decoration: none;
+}
+.acct-logo-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: #fff;
+    box-shadow: 0 6px 18px rgba(37,99,235,0.35);
+    transition: all 0.35s ease;
+}
+.acct-logo:hover .acct-logo-icon { transform: rotate(-8deg) scale(1.1); }
+.acct-logo-name {
+    font-size: 18px; font-weight: 800;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.acct-logo-sub { font-size: 11px; color: #64748b; font-weight: 500; }
+/* Nav pills */
+.acct-nav-pills { display: flex; align-items: center; gap: 6px; }
+.acct-nav-link {
+    font-size: 14px; font-weight: 600; color: #374151;
+    padding: 8px 18px; border-radius: 10px; text-decoration: none;
+    transition: all 0.3s ease; display: flex; align-items: center; gap: 6px;
+}
+.acct-nav-link:hover { background: rgba(37,99,235,0.07); color: #2563eb; }
+.acct-nav-link.active { background: rgba(37,99,235,0.1); color: #2563eb; }
+/* Buttons */
+.acct-btn-login {
+    padding: 8px 20px; border-radius: 10px;
+    border: 2px solid #2563eb; color: #2563eb; font-weight: 700;
+    font-size: 14px; text-decoration: none; transition: all 0.3s ease;
+}
+.acct-btn-login:hover { background: #2563eb; color: #fff; transform: translateY(-2px); }
+.acct-btn-register {
+    padding: 8px 20px; border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed); color: #fff;
+    font-weight: 700; font-size: 14px; text-decoration: none;
+    box-shadow: 0 6px 20px rgba(37,99,235,0.3); transition: all 0.3s ease;
+}
+.acct-btn-register:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37,99,235,0.4); color: #fff; }
+/* User menu */
+.acct-user-menu {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 14px 6px 6px; border-radius: 50px;
+    border: 2px solid rgba(37,99,235,0.15); background: none;
+    text-decoration: none; transition: all 0.3s ease;
+}
+.acct-user-menu:hover { border-color: #2563eb; background: rgba(37,99,235,0.05); }
+.acct-user-avatar {
+    width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
+    border: 2px solid #2563eb;
+}
+.acct-user-name { font-size: 13.5px; font-weight: 600; color: #0f172a; }
+</style>
+
+<nav class="accounts-navbar" id="accountsNavbar">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="acct-logo">
+                <div class="acct-logo-icon"><i class="bi bi-file-earmark-person-fill"></i></div>
+                <div>
+                    <div class="acct-logo-name">A2Z Resume</div>
+                    <div class="acct-logo-sub">Professional Builder</div>
+                </div>
+            </a>
+
+            <!-- Nav Links (desktop) -->
+            <div class="acct-nav-pills d-none d-md-flex">
+                <a href="{% url 'home' %}" class="acct-nav-link"><i class="bi bi-house-door"></i> Home</a>
+                <a href="{% url 'about' %}" class="acct-nav-link"><i class="bi bi-info-circle"></i> About</a>
+                <a href="{% url 'pricing' %}" class="acct-nav-link"><i class="bi bi-tag"></i> Pricing</a>
+                <a href="{% url 'contact' %}" class="acct-nav-link"><i class="bi bi-envelope"></i> Contact</a>
+            </div>
+
+            <!-- Auth Buttons -->
+            <div class="d-flex align-items-center gap-2">
+                {% if user.is_authenticated %}
+                <div class="dropdown">
+                    <a href="#" class="acct-user-menu" data-bs-toggle="dropdown">
+                        <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}{% else %}https://ui-avatars.com/api/?name={{ user.get_full_name|default:user.username }}&background=2563eb&color=fff&bold=true{% endif %}"
+                             class="acct-user-avatar" alt="Avatar">
+                        <span class="acct-user-name d-none d-sm-block">{{ user.first_name|default:user.username }}</span>
+                        <i class="bi bi-chevron-down" style="font-size:11px;color:#94a3b8;"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2" style="min-width:210px;animation:fadeDropdown .3s ease;">
+                        <li><a class="dropdown-item rounded-3 py-2" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2 text-primary"></i>Dashboard</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2" href="{% url 'profile' %}"><i class="bi bi-person-circle me-2 text-info"></i>My Profile</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2" href="{% url 'edit_profile' %}"><i class="bi bi-gear me-2 text-warning"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider mx-2"></li>
+                        <li><a class="dropdown-item rounded-3 py-2 text-danger" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a href="{% url 'login' %}" class="acct-btn-login"><i class="bi bi-box-arrow-in-right me-1"></i>Login</a>
+                <a href="{% url 'register' %}" class="acct-btn-register"><i class="bi bi-person-plus me-1"></i>Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+@keyframes fadeDropdown {
+    from { opacity:0; transform: translateY(10px); }
+    to   { opacity:1; transform: none; }
+}
+body { padding-top: 76px; }
+</style>
+
+<script>
+(function(){
+    const nav = document.getElementById('accountsNavbar');
+    if(!nav) return;
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+})();
+</script>

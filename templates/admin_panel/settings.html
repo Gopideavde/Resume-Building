@@ -1,0 +1,688 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block title %}
+Settings
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+
+    <div class="settings-header">
+
+        <div>
+
+            <h2>
+
+                <i class="bi bi-gear-fill"></i>
+
+                Settings
+
+            </h2>
+
+            <p>
+
+                Manage your Resume Builder configuration.
+
+            </p>
+
+        </div>
+
+        <button class="btn btn-light px-4">
+
+            <i class="bi bi-check-circle"></i>
+
+            Save Changes
+
+        </button>
+
+    </div>
+
+    <!-- Profile -->
+
+<form method="POST"
+      enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<!-- Profile -->
+
+<div class="card settings-card mt-4">
+
+<div class="card-header">
+
+<i class="bi bi-person-circle"></i>
+
+Administrator Profile
+
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-lg-3 text-center">
+
+{% if setting.logo %}
+
+<img
+src="{{ setting.logo.url }}"
+class="rounded-circle shadow"
+width="140"
+height="140"
+style="object-fit:cover;">
+
+{% else %}
+
+<img
+src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=2563eb&color=fff"
+class="rounded-circle shadow"
+width="140">
+
+{% endif %}
+
+<div class="mt-3">
+
+<label class="form-label">
+
+Website Logo
+
+</label>
+
+{{ form.logo }}
+
+</div>
+
+</div>
+
+<div class="col-lg-9">
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label>
+
+Website Name
+
+</label>
+
+{{ form.website_name }}
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>
+
+Website URL
+
+</label>
+
+{{ form.website_url }}
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>
+
+Contact Email
+
+</label>
+
+{{ form.contact_email }}
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>
+
+Contact Number
+
+</label>
+
+{{ form.contact_number }}
+
+</div>
+
+<div class="col-12 mb-3">
+
+<label>
+
+Company Address
+
+</label>
+
+{{ form.company_address }}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+    
+    <!-- Website Settings -->
+
+    <div class="card settings-card mt-4">
+
+        <div class="card-header">
+
+            <i class="bi bi-globe"></i>
+
+            Website Settings
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label>
+
+                        Website Name
+
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="A2Z Resume Builder">
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label>
+
+                        Website URL
+
+                    </label>
+
+                    <input
+                        type="url"
+                        class="form-control"
+                        value="http://localhost:8000">
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label>
+
+                        Contact Email
+
+                    </label>
+
+                    <input
+                        type="email"
+                        class="form-control"
+                        value="admin@a2zit.com">
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label>
+
+                        Contact Number
+
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="+91 9876543210">
+
+                </div>
+
+                <div class="col-12 mb-3">
+
+                    <label>
+
+                        Company Address
+
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        rows="3">Pune, Maharashtra, India</textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Branding -->
+
+<div class="card settings-card mt-4">
+
+<div class="card-header">
+
+<i class="bi bi-palette-fill"></i>
+
+Brand Settings
+
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-6 mb-4">
+
+<label>
+
+Favicon
+
+</label>
+
+{{ form.favicon }}
+
+</div>
+
+<div class="col-md-3">
+
+<label>
+
+Primary Color
+
+</label>
+
+{{ form.primary_color }}
+
+</div>
+
+<div class="col-md-3">
+
+<label>
+
+Secondary Color
+
+</label>
+
+{{ form.secondary_color }}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+    <!-- Security -->
+
+<div class="card settings-card mt-4">
+
+<div class="card-header">
+
+<i class="bi bi-shield-lock-fill"></i>
+
+Security Settings
+
+</div>
+
+<div class="card-body">
+
+<div class="form-check form-switch mb-3">
+
+{{ form.enable_2fa }}
+
+<label class="form-check-label">
+
+Enable Two Factor Authentication
+
+</label>
+
+</div>
+
+<div class="form-check form-switch mb-3">
+
+{{ form.email_notification }}
+
+<label class="form-check-label">
+
+Email Notification
+
+</label>
+
+</div>
+
+<div class="form-check form-switch">
+
+{{ form.maintenance_mode }}
+
+<label class="form-check-label">
+
+Maintenance Mode
+
+</label>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+    <!-- System Information -->
+
+    <div class="card settings-card mt-4">
+
+        <div class="card-header">
+
+            <i class="bi bi-cpu-fill"></i>
+
+            System Information
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <div class="info-box">
+
+                        <i class="bi bi-hdd-network-fill"></i>
+
+                        <h6>Server</h6>
+
+                        <span class="badge bg-success">
+
+                            Online
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <div class="info-box">
+
+                        <i class="bi bi-database-fill"></i>
+
+                        <h6>Database</h6>
+
+                        <span class="badge bg-primary">
+
+                            Connected
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <div class="info-box">
+
+                        <i class="bi bi-code-slash"></i>
+
+                        <h6>Django</h6>
+
+                        <span>
+
+                            6.0.7
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <div class="info-box">
+
+                        <i class="bi bi-terminal-fill"></i>
+
+                        <h6>Python</h6>
+
+                        <span>
+
+                            3.14
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Backup -->
+
+    <div class="card settings-card mt-4">
+
+        <div class="card-header">
+
+            <i class="bi bi-cloud-arrow-down-fill"></i>
+
+            Backup & Restore
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6 text-center">
+
+                    <button class="btn btn-primary btn-lg w-100 mb-3">
+
+                        <i class="bi bi-download me-2"></i>
+
+                        Backup Database
+
+                    </button>
+
+                </div>
+
+                <div class="col-md-6 text-center">
+
+                    <button class="btn btn-success btn-lg w-100 mb-3">
+
+                        <i class="bi bi-upload me-2"></i>
+
+                        Restore Backup
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Save -->
+
+  <div class="text-end mt-4 mb-5">
+
+<button
+
+type="submit"
+
+class="btn btn-primary btn-lg px-5">
+
+<i class="bi bi-check-circle-fill me-2"></i>
+
+Save Settings
+
+</button>
+
+</div>
+
+</form>
+
+
+
+<style>
+
+.settings-card{
+
+    border:none;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+    margin-bottom:25px;
+
+}
+
+.settings-card .card-header{
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+    color:#fff;
+
+    font-size:20px;
+
+    font-weight:700;
+
+    padding:18px 25px;
+
+}
+
+.settings-card .card-header i{
+
+    margin-right:10px;
+
+}
+
+.settings-card .card-body{
+
+    padding:30px;
+
+}
+
+.settings-card label{
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+}
+
+.form-control{
+
+    border-radius:12px;
+
+    min-height:48px;
+
+}
+
+.info-box{
+
+    background:#f8fafc;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    text-align:center;
+
+    transition:.4s;
+
+}
+
+.info-box:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 12px 25px rgba(0,0,0,.12);
+
+}
+
+.info-box i{
+
+    font-size:35px;
+
+    color:#2563eb;
+
+    margin-bottom:12px;
+
+}
+
+.btn{
+
+    border-radius:12px;
+
+}
+
+</style>
+
+
+
+<script>
+
+document.getElementById("saveSettings").onclick=function(){
+
+    this.innerHTML='<i class="bi bi-check-circle-fill me-2"></i>Saved Successfully';
+
+    this.classList.remove("btn-primary");
+
+    this.classList.add("btn-success");
+
+};
+
+
+
+document.querySelectorAll(".info-box").forEach(function(card){
+
+    card.addEventListener("mouseenter",function(){
+
+        card.style.transform="translateY(-8px) scale(1.03)";
+
+    });
+
+    card.addEventListener("mouseleave",function(){
+
+        card.style.transform="translateY(0)";
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

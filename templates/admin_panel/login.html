@@ -1,0 +1,407 @@
+{% load static %}
+
+
+{% block content %}
+
+<link rel="icon"
+href="{% static 'website/images/favicon.png' %}">
+
+<!-- Bootstrap -->
+
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+rel="stylesheet">
+
+<!-- Google Font -->
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<div id="loader">
+
+<div class="loader-circle"></div>
+
+</div>
+
+<div class="container-fluid py-4">
+
+{% if messages %}
+
+{% for message in messages %}
+
+<div class="alert alert-{{ message.tags }} shadow">
+
+{{ message }}
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+
+
+</div>
+
+<script
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+<style>
+
+body{
+
+    background:linear-gradient(135deg,#2563eb,#4f46e5);
+
+}
+
+.login-wrapper{
+
+    min-height:85vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.login-card{
+
+    width:100%;
+
+    max-width:450px;
+
+    border:none;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    box-shadow:0 20px 45px rgba(0,0,0,.25);
+
+    animation:fadeIn .6s ease;
+
+}
+
+.login-header{
+
+    background:linear-gradient(135deg,#1e3a8a,#2563eb);
+
+    color:#fff;
+
+    padding:35px;
+
+    text-align:center;
+
+}
+
+.login-header i{
+
+    font-size:60px;
+
+    margin-bottom:15px;
+
+}
+
+.login-body{
+
+    padding:35px;
+
+    background:#fff;
+
+}
+
+.form-label{
+
+    font-weight:600;
+
+    color:#374151;
+
+}
+
+.form-control{
+
+    height:50px;
+
+    border-radius:12px;
+
+    border:1px solid #d1d5db;
+
+    transition:.3s;
+
+}
+
+.form-control:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 0 .2rem rgba(37,99,235,.15);
+
+}
+
+.password-box{
+
+    position:relative;
+
+}
+
+.toggle-password{
+
+    position:absolute;
+
+    right:15px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    cursor:pointer;
+
+    color:#6b7280;
+
+}
+
+.login-btn{
+
+    border-radius:12px;
+
+    height:50px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.login-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.footer-text{
+
+    text-align:center;
+
+    color:#6b7280;
+
+    margin-top:20px;
+
+    font-size:14px;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+</style>
+
+<div class="login-wrapper">
+
+<div class="login-card">
+
+<div class="login-header">
+
+<i class="bi bi-shield-lock-fill"></i>
+
+<h2 class="mb-2">
+
+Admin Panel
+
+</h2>
+
+<p class="mb-0">
+
+A2Z Resume Builder
+
+</p>
+
+</div>
+
+<div class="login-body">
+
+{% if messages %}
+
+{% for message in messages %}
+
+<div class="alert alert-{{ message.tags }}">
+
+{{ message }}
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+<form method="POST" id="loginForm">
+
+{% csrf_token %}
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Username
+
+</label>
+
+<input
+
+type="text"
+
+name="username"
+
+class="form-control"
+
+placeholder="Enter Username"
+
+required>
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label">
+
+Password
+
+</label>
+
+<div class="password-box">
+
+<input
+
+type="password"
+
+name="password"
+
+id="password"
+
+class="form-control"
+
+placeholder="Enter Password"
+
+required>
+
+<i
+
+class="bi bi-eye-slash toggle-password"
+
+id="togglePassword">
+
+</i>
+
+</div>
+
+</div>
+
+<button
+
+type="submit"
+
+class="btn btn-primary w-100 login-btn">
+
+<i class="bi bi-box-arrow-in-right me-2"></i>
+
+Admin Login
+
+</button>
+
+</form>
+
+<div class="footer-text">
+
+© {% now "Y" %}
+
+<strong>
+
+A2Z Resume Builder
+
+</strong>
+
+<br>
+
+Secure Admin Authentication
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const toggle=document.getElementById("togglePassword");
+
+const password=document.getElementById("password");
+
+toggle.addEventListener("click",function(){
+
+if(password.type==="password"){
+
+password.type="text";
+
+toggle.classList.remove("bi-eye-slash");
+
+toggle.classList.add("bi-eye");
+
+}else{
+
+password.type="password";
+
+toggle.classList.remove("bi-eye");
+
+toggle.classList.add("bi-eye-slash");
+
+}
+
+});
+
+document.getElementById("loginForm").addEventListener(
+
+"submit",
+
+function(){
+
+const btn=document.querySelector(".login-btn");
+
+btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Logging In...';
+
+btn.disabled=true;
+
+}
+
+);
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% load static %}
+<style>
+/* =============================================
+   RESUME APP FOOTER — CLEAN DASHBOARD FOOTER
+   ============================================= */
+.resume-footer {
+    background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
+    color: #94a3b8;
+    padding: 40px 0 24px;
+    margin-top: 60px;
+}
+.resume-footer-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 20px;
+}
+.resume-footer-logo {
+    display: flex; align-items: center; gap: 10px; text-decoration: none;
+}
+.resume-footer-logo-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: #fff;
+    box-shadow: 0 6px 18px rgba(29,78,216,0.4);
+}
+.resume-footer-logo-name { font-size: 16px; font-weight: 800; color: #e2e8f0; }
+.resume-footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+.resume-footer-links a {
+    color: #475569; font-size: 13.5px; text-decoration: none;
+    transition: color 0.25s;
+}
+.resume-footer-links a:hover { color: #2563eb; }
+.resume-footer-stats {
+    display: flex; gap: 20px; flex-wrap: wrap;
+}
+.resume-footer-stat {
+    text-align: center;
+    background: rgba(255,255,255,0.04); border-radius: 12px;
+    padding: 10px 20px; border: 1px solid rgba(255,255,255,0.07);
+}
+.resume-footer-stat .num { font-size: 20px; font-weight: 800; color: #3b82f6; }
+.resume-footer-stat .lbl { font-size: 11px; color: #64748b; }
+.resume-footer-copy {
+    text-align: center; margin-top: 24px;
+    font-size: 12.5px; color: #334155;
+}
+</style>
+
+<footer class="resume-footer">
+    <div class="container-xl">
+        <div class="resume-footer-inner">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="resume-footer-logo">
+                <div class="resume-footer-logo-icon"><i class="bi bi-file-earmark-person-fill"></i></div>
+                <div class="resume-footer-logo-name">A2Z Resume Builder</div>
+            </a>
+
+            <!-- Quick Stats (user context) -->
+            {% if user.is_authenticated %}
+            <div class="resume-footer-stats">
+                <div class="resume-footer-stat">
+                    <div class="num">{{ user.resumes.count|default:"0" }}</div>
+                    <div class="lbl">My Resumes</div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Links -->
+            <div class="resume-footer-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'resume_list' %}">My Resumes</a>
+                <a href="{% url 'privacy_policy' %}">Privacy</a>
+                <a href="{% url 'terms_conditions' %}">Terms</a>
+                <a href="{% url 'contact' %}">Support</a>
+            </div>
+        </div>
+        <hr style="border-color:rgba(255,255,255,0.06); margin:20px 0 14px;">
+        <p class="resume-footer-copy">© 2026 A2Z Resume Builder. All Rights Reserved. Made with <i class="bi bi-heart-fill text-danger"></i> in India.</p>
+    </div>
+</footer>

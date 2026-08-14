@@ -1,0 +1,667 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+
+ATS Resume
+
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+body{
+
+    background:#f5f5f5;
+
+    font-family:Arial,Helvetica,sans-serif;
+
+}
+
+.resume{
+
+    max-width:850px;
+
+    margin:40px auto;
+
+    background:#fff;
+
+    padding:50px;
+
+    border:1px solid #ddd;
+
+    color:#000;
+
+}
+
+.header{
+
+    border-bottom:1px solid #000;
+
+    padding-bottom:15px;
+
+    margin-bottom:25px;
+
+}
+
+.header h1{
+
+    font-size:30px;
+
+    font-weight:bold;
+
+    margin-bottom:5px;
+
+}
+
+.header h3{
+
+    font-size:18px;
+
+    font-weight:normal;
+
+    color:#333;
+
+}
+
+.contact{
+
+    margin-top:10px;
+
+    font-size:14px;
+
+}
+
+.section{
+
+    margin-top:25px;
+
+}
+
+.section-title{
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    text-transform:uppercase;
+
+    border-bottom:1px solid #000;
+
+    margin-bottom:12px;
+
+    padding-bottom:4px;
+
+}
+
+.timeline{
+
+    margin-bottom:16px;
+
+}
+
+.timeline h5{
+
+    font-weight:bold;
+
+    font-size:15px;
+
+    margin-bottom:2px;
+
+}
+
+ul{
+
+    margin:0;
+
+    padding-left:18px;
+
+}
+
+</style>
+
+<!-- ================= NOTE =================
+ATS templates avoid tables, columns, icons and
+graphics so Applicant Tracking Systems can parse
+every field correctly.
+==================================================== -->
+
+<div class="resume">
+
+<div class="header">
+
+<h1>
+
+{{ resume.full_name }}
+
+</h1>
+
+<h3>
+
+{{ resume.job_title }}
+
+</h3>
+
+<div class="contact">
+
+{{ resume.email }}
+
+|
+
+{{ resume.phone }}
+
+{% if resume.alternate_phone %}
+
+|
+
+{{ resume.alternate_phone }}
+
+{% endif %}
+
+|
+
+{{ resume.address }},
+
+{{ resume.city }},
+
+{{ resume.state }},
+
+{{ resume.country }}
+
+{{ resume.pincode }}
+
+</div>
+
+<div class="contact">
+
+{% if resume.linkedin %}LinkedIn: {{ resume.linkedin }}{% endif %}
+
+{% if resume.github %} | GitHub: {{ resume.github }}{% endif %}
+
+{% if resume.portfolio %} | Portfolio: {{ resume.portfolio }}{% endif %}
+
+{% if resume.website %} | Website: {{ resume.website }}{% endif %}
+
+</div>
+
+</div>
+
+<!-- ================= Career Objective ================= -->
+
+{% if resume.objective %}
+
+<div class="section">
+
+<div class="section-title">
+
+Career Objective
+
+</div>
+
+<p>
+
+{{ resume.objective }}
+
+</p>
+
+</div>
+
+{% endif %}
+
+<!-- ================= Skills ================= -->
+
+<div class="section">
+
+<div class="section-title">
+
+Technical Skills
+
+</div>
+
+<ul>
+
+{% for skill in resume.skills.all %}
+
+<li>
+
+{{ skill.name }} ({{ skill.level }})
+
+</li>
+
+{% empty %}
+
+<li>No Skills Added</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+<!-- ================= Education ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+
+        Education
+
+    </div>
+
+    {% for education in resume.educations.all %}
+
+    <div class="timeline">
+
+        <h5>
+
+            {{ education.degree }} ({{ education.start_year }} - {{ education.end_year }})
+
+        </h5>
+
+        <p class="mb-1">
+
+            {{ education.institute }}
+
+            {% if education.university %} - {{ education.university }}{% endif %}
+
+        </p>
+
+        {% if education.cgpa %}
+
+        <p>CGPA: {{ education.cgpa }}</p>
+
+        {% endif %}
+
+        {% if education.percentage %}
+
+        <p>Percentage: {{ education.percentage }}</p>
+
+        {% endif %}
+
+    </div>
+
+    {% empty %}
+
+    <p>No Education Added</p>
+
+    {% endfor %}
+
+</div>
+
+<!-- ================= Experience ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+
+        Professional Experience
+
+    </div>
+
+    {% for experience in resume.experiences.all %}
+
+    <div class="timeline">
+
+        <h5>
+
+            {{ experience.designation }}, {{ experience.company }}
+
+        </h5>
+
+        <p class="mb-1">
+
+            {{ experience.employment_type }}
+
+            {% if experience.location %} - {{ experience.location }}{% endif %}
+
+            |
+
+            {{ experience.start_date }}
+
+            -
+
+            {% if experience.currently_working %}
+
+            Present
+
+            {% else %}
+
+            {{ experience.end_date }}
+
+            {% endif %}
+
+        </p>
+
+        <p>
+
+            {{ experience.description }}
+
+        </p>
+
+    </div>
+
+    {% empty %}
+
+    <p>No Experience Added</p>
+
+    {% endfor %}
+
+</div>
+
+<!-- ================= Projects ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+
+        Projects
+
+    </div>
+
+    {% for project in resume.projects.all %}
+
+    <div class="timeline">
+
+        <h5>
+
+            {{ project.title }}
+
+        </h5>
+
+        <p class="mb-1">
+
+            Technologies: {{ project.technologies }}
+
+            {% if project.role %} | Role: {{ project.role }}{% endif %}
+
+        </p>
+
+        <p>
+
+            {{ project.description }}
+
+        </p>
+
+        <p>
+
+            {% if project.github_link %}GitHub: {{ project.github_link }}{% endif %}
+
+            {% if project.live_link %} | Live Demo: {{ project.live_link }}{% endif %}
+
+        </p>
+
+    </div>
+
+    {% empty %}
+
+    <p>No Projects Added</p>
+
+    {% endfor %}
+
+</div>
+
+<!-- ================= Certifications ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+
+        Certifications
+
+    </div>
+
+    <ul>
+
+    {% for certificate in resume.certifications.all %}
+
+    <li>
+
+        {{ certificate.certificate_name }} - {{ certificate.organization }}
+
+        {% if certificate.issue_date %} ({{ certificate.issue_date }}){% endif %}
+
+    </li>
+
+    {% empty %}
+
+    <li>No Certifications Added</li>
+
+    {% endfor %}
+
+    </ul>
+
+</div>
+
+<!-- ================= Languages ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+
+        Languages
+
+    </div>
+
+    <ul>
+
+        {% for language in resume.languages.all %}
+
+        <li>
+
+            {{ language.language }}
+            {% if language.read %} - Read{% endif %}
+            {% if language.write %}, Write{% endif %}
+            {% if language.speak %}, Speak{% endif %}
+
+        </li>
+
+        {% empty %}
+
+        <li>No Languages Added</li>
+
+        {% endfor %}
+
+    </ul>
+
+</div>
+
+<!-- ================= Achievements ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+
+        Achievements
+
+    </div>
+
+    <ul>
+
+    {% for achievement in resume.achievements.all %}
+
+    <li>
+
+        {{ achievement.title }}
+
+        {% if achievement.achievement_date %} ({{ achievement.achievement_date }}){% endif %}
+
+        {% if achievement.description %} - {{ achievement.description }}{% endif %}
+
+    </li>
+
+    {% empty %}
+
+    <li>No Achievements Added</li>
+
+    {% endfor %}
+
+    </ul>
+
+</div>
+
+<!-- ================= Hobbies & Interests ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+
+        Hobbies &amp; Interests
+
+    </div>
+
+    <ul>
+
+        {% for hobby in resume.hobbies.all %}
+
+        <li>{{ hobby.name }}</li>
+
+        {% empty %}
+
+        <li>No Hobbies Added</li>
+
+        {% endfor %}
+
+        {% for interest in resume.interests.all %}
+
+        <li>{{ interest.name }}</li>
+
+        {% endfor %}
+
+    </ul>
+
+</div>
+
+<!-- ================= References ================= -->
+
+<div class="section">
+
+    <div class="section-title">
+
+        References
+
+    </div>
+
+    {% for reference in resume.references.all %}
+
+    <div class="timeline">
+
+        <p class="mb-1">
+
+            <strong>{{ reference.name }}</strong>
+
+            {% if reference.designation %}, {{ reference.designation }}{% endif %}
+
+            {% if reference.company %}, {{ reference.company }}{% endif %}
+
+        </p>
+
+        <p>
+
+            {% if reference.phone %}Phone: {{ reference.phone }}{% endif %}
+
+            {% if reference.email %} | Email: {{ reference.email }}{% endif %}
+
+        </p>
+
+    </div>
+
+    {% empty %}
+
+    <p>No References Added</p>
+
+    {% endfor %}
+
+</div>
+
+<!-- ================= Custom Sections ================= -->
+
+{% for custom in resume.custom_sections.all %}
+
+<div class="section">
+
+    <div class="section-title">
+
+        {{ custom.heading }}
+
+    </div>
+
+    <p>
+
+        {{ custom.content }}
+
+    </p>
+
+</div>
+
+{% endfor %}
+
+<!-- ================= Declaration ================= -->
+
+{% if resume.declaration %}
+
+<div class="section">
+
+    <div class="section-title">
+
+        Declaration
+
+    </div>
+
+    <p>
+
+        {{ resume.declaration.declaration_text }}
+
+    </p>
+
+    <p>
+
+        {% if resume.declaration.place %}Place: {{ resume.declaration.place }}{% endif %}
+
+        {% if resume.declaration.declaration_date %} | Date: {{ resume.declaration.declaration_date }}{% endif %}
+
+    </p>
+
+    {% if resume.declaration.show_signature %}
+
+    <p>
+
+        <strong>{{ resume.full_name }}</strong>
+
+    </p>
+
+    {% endif %}
+
+</div>
+
+{% endif %}
+
+<hr>
+
+<div class="d-flex justify-content-between mt-5">
+
+    <a href="{% url 'update_resume' resume.id %}"
+       class="btn btn-outline-dark">
+        Edit Resume
+    </a>
+
+    <div>
+
+        <button
+            onclick="window.print()"
+            class="btn btn-success">
+            Print
+        </button>
+
+        <a href="{% url 'download_resume_pdf' resume.id %}"
+           class="btn btn-primary">
+            Download PDF
+        </a>
+
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<style>
+    :root { --primary: #1a2744; --gold: #c9a84c; --bg: #faf8f3; --text: #1a1a2e; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+    .analytics-hero {
+        background: linear-gradient(135deg, #1a2744 0%, #0d1627 100%);
+        padding: 70px 0 90px;
+        color: #fff;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .analytics-hero::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse at 60% 50%, rgba(201,168,76,0.15) 0%, transparent 70%);
+    }
+    .analytics-hero h1 { font-size: 3rem; color: #fff; margin-bottom: 10px; position: relative; }
+    .analytics-hero p { color: rgba(255,255,255,0.7); font-size: 1.1rem; position: relative; }
+    .gold-divider { width: 80px; height: 3px; background: var(--gold); margin: 15px auto; border-radius: 2px; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; margin-top: -50px; position: relative; z-index: 10; }
+    .stat-card {
+        background: white; border-radius: 20px; padding: 35px 25px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1); text-align: center;
+        border-bottom: 5px solid var(--gold); transition: 0.3s;
+        position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+        content: ''; position: absolute; top: -30px; right: -30px;
+        width: 100px; height: 100px; border-radius: 50%;
+        background: rgba(201,168,76,0.08);
+    }
+    .stat-card:hover { transform: translateY(-8px); box-shadow: 0 30px 80px rgba(0,0,0,0.15); }
+    .stat-icon { font-size: 2rem; color: var(--gold); margin-bottom: 15px; }
+    .stat-number { font-size: 3.5rem; color: var(--primary); font-family: 'Playfair Display', serif; font-weight: bold; line-height: 1; }
+    .stat-label { text-transform: uppercase; color: #6b7280; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px; margin-top: 10px; }
+
+    .section-card { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); margin-top: 30px; border-left: 5px solid var(--primary); }
+    .section-card h3 { color: var(--primary); margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+
+    /* Bar Chart */
+    .bar-chart-wrap { display: flex; align-items: flex-end; justify-content: space-around; height: 200px; border-bottom: 2px solid #eee; border-left: 2px solid #eee; padding: 10px 0 0; gap: 10px; }
+    .bar-col { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; }
+    .bar {
+        width: 40px; background: linear-gradient(to top, var(--primary), var(--gold));
+        border-radius: 6px 6px 0 0; transform-origin: bottom;
+        transform: scaleY(0); transition: transform 1s ease-out;
+        min-height: 4px;
+    }
+    .bar.animate { transform: scaleY(1); }
+    .bar-label { font-size: 0.75rem; color: #6b7280; margin-top: 8px; font-weight: 500; }
+
+    /* Activity Table */
+    .activity-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+    .activity-table thead th { background: var(--primary); color: #fff; padding: 12px 20px; font-weight: 500; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+    .activity-table thead th:first-child { border-radius: 10px 0 0 10px; }
+    .activity-table thead th:last-child { border-radius: 0 10px 10px 0; }
+    .activity-table tbody tr { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.04); transition: 0.3s; }
+    .activity-table tbody tr:hover { transform: translateX(5px); box-shadow: 0 5px 20px rgba(201,168,76,0.15); }
+    .activity-table tbody td { padding: 14px 20px; border-top: 1px solid #f0f0f0; font-size: 0.95rem; }
+    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+    .badge-completed { background: #dcfce7; color: #166534; }
+    .badge-draft { background: #fef9c3; color: #854d0e; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: #9ca3af; }
+    .empty-state i { font-size: 4rem; color: var(--gold); opacity: 0.5; margin-bottom: 20px; }
+
+    @media(max-width:768px) { .analytics-hero h1 { font-size: 2rem; } }
+</style>
+
+<!-- Hero -->
+<div class="analytics-hero" data-aos="fade-down">
+    <div class="container position-relative">
+        <h1>Resume Analytics</h1>
+        <div class="gold-divider"></div>
+        <p>Insights into your professional profiles</p>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Stats Cards -->
+    <div class="stats-grid" data-aos="fade-up" data-aos-delay="100">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="stat-number" id="cnt-total">{{ total_resumes }}</div>
+            <div class="stat-label">Total Resumes</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-eye"></i></div>
+            <div class="stat-number" id="cnt-views">{{ total_views }}</div>
+            <div class="stat-label">Total Views</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-download"></i></div>
+            <div class="stat-number" id="cnt-downloads">{{ total_downloads }}</div>
+            <div class="stat-label">Downloads</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-number" id="cnt-completed">{{ completed_resumes }}</div>
+            <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-pencil-alt"></i></div>
+            <div class="stat-number" id="cnt-draft">{{ draft_resumes }}</div>
+            <div class="stat-label">Drafts</div>
+        </div>
+    </div>
+
+    <!-- Visual Bar Chart -->
+    <div class="section-card" data-aos="zoom-in" data-aos-delay="200" style="margin-top:50px;">
+        <h3><i class="fas fa-chart-bar" style="color:var(--gold);"></i> Status Overview</h3>
+        <div class="bar-chart-wrap" id="barChart">
+            {% if total_resumes > 0 %}
+                {% with comp_pct=completed_resumes|default:0 draft_pct=draft_resumes|default:0 %}
+                <div class="bar-col">
+                    <div class="bar" id="bar-total" style="height:{{ total_resumes }}px; max-height:160px;"></div>
+                    <span class="bar-label">Total<br><strong>{{ total_resumes }}</strong></span>
+                </div>
+                <div class="bar-col">
+                    <div class="bar" id="bar-completed" style="height:{{ completed_resumes }}px; max-height:160px; background: linear-gradient(to top, #166534, #4ade80);"></div>
+                    <span class="bar-label">Completed<br><strong>{{ completed_resumes }}</strong></span>
+                </div>
+                <div class="bar-col">
+                    <div class="bar" id="bar-draft" style="height:{{ draft_resumes }}px; max-height:160px; background: linear-gradient(to top, #854d0e, #fbbf24);"></div>
+                    <span class="bar-label">Drafts<br><strong>{{ draft_resumes }}</strong></span>
+                </div>
+                <div class="bar-col">
+                    <div class="bar" id="bar-views" style="height:{% if total_views %}{{ total_views }}{% else %}4{% endif %}px; max-height:160px; background: linear-gradient(to top, #1e40af, #60a5fa);"></div>
+                    <span class="bar-label">Views<br><strong>{{ total_views }}</strong></span>
+                </div>
+                <div class="bar-col">
+                    <div class="bar" id="bar-dl" style="height:{% if total_downloads %}{{ total_downloads }}{% else %}4{% endif %}px; max-height:160px; background: linear-gradient(to top, #6b21a8, #c084fc);"></div>
+                    <span class="bar-label">Downloads<br><strong>{{ total_downloads }}</strong></span>
+                </div>
+                {% endwith %}
+            {% else %}
+                <div class="empty-state w-100">
+                    <i class="fas fa-chart-bar"></i>
+                    <p>No resume data yet. <a href="{% url 'create_resume' %}" style="color:var(--gold);">Create your first resume!</a></p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="section-card" data-aos="fade-up" data-aos-delay="300">
+        <h3><i class="fas fa-history" style="color:var(--gold);"></i> Recent Resumes</h3>
+        {% if latest_resumes %}
+        <div class="table-responsive">
+            <table class="activity-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Job Title</th>
+                        <th>Status</th>
+                        <th>Views</th>
+                        <th>Downloads</th>
+                        <th>Last Updated</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for resume in latest_resumes %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><strong>{{ resume.full_name|default:"Untitled" }}</strong></td>
+                        <td>{{ resume.job_title|default:"—" }}</td>
+                        <td>
+                            {% if resume.status == "COMPLETED" %}
+                                <span class="status-badge badge-completed">Completed</span>
+                            {% else %}
+                                <span class="status-badge badge-draft">Draft</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ resume.views }}</td>
+                        <td>{{ resume.downloads }}</td>
+                        <td>{{ resume.updated_at|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'resume_detail' resume.pk %}" class="btn btn-sm" style="background:var(--primary);color:#fff;border-radius:20px;padding:4px 14px;">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-folder-open"></i>
+            <h4>No Resumes Yet</h4>
+            <p>Start building your first professional resume.</p>
+            <a href="{% url 'create_resume' %}" class="btn mt-3" style="background:var(--gold);color:var(--primary);font-weight:600;border-radius:30px;padding:12px 35px;">
+                <i class="fas fa-plus me-2"></i>Create Resume
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({ duration: 800, once: true });
+
+    // Animate counter numbers
+    function animateCounter(el, target) {
+        let current = 0;
+        const inc = Math.max(1, Math.ceil(target / 60));
+        const timer = setInterval(() => {
+            current += inc;
+            if (current >= target) { el.innerText = target; clearInterval(timer); }
+            else { el.innerText = current; }
+        }, 20);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(document.getElementById('cnt-total'), {{ total_resumes }});
+                animateCounter(document.getElementById('cnt-views'), {{ total_views }});
+                animateCounter(document.getElementById('cnt-downloads'), {{ total_downloads }});
+                animateCounter(document.getElementById('cnt-completed'), {{ completed_resumes }});
+                animateCounter(document.getElementById('cnt-draft'), {{ draft_resumes }});
+                observer.disconnect();
+            }
+        });
+    }, { threshold: 0.3 });
+    observer.observe(document.querySelector('.stats-grid'));
+
+    // Animate bar chart
+    const chartObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            document.querySelectorAll('.bar').forEach(bar => bar.classList.add('animate'));
+            chartObserver.disconnect();
+        }
+    });
+    const chart = document.getElementById('barChart');
+    if (chart) chartObserver.observe(chart);
+</script>
+{% endblock %}

@@ -1,0 +1,337 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}
+Delete Resume
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+.delete-card{
+
+    max-width:720px;
+
+    margin:40px auto;
+
+    border:none;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.10);
+
+    animation:fadeIn .5s ease;
+
+}
+
+.delete-header{
+
+    background:linear-gradient(135deg,#dc2626,#991b1b);
+
+    color:#fff;
+
+    padding:25px 30px;
+
+}
+
+.warning-icon{
+
+    width:95px;
+
+    height:95px;
+
+    border-radius:50%;
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:50px;
+
+    margin:20px auto;
+
+    animation:pulse 1.6s infinite;
+
+}
+
+.resume-box{
+
+    background:#f8fafc;
+
+    border-left:5px solid #2563eb;
+
+    border-radius:12px;
+
+    padding:18px;
+
+    text-align:left;
+
+    margin-top:25px;
+
+}
+
+.resume-box p{
+
+    margin-bottom:10px;
+
+}
+
+.btn-delete{
+
+    min-width:170px;
+
+    transition:.3s;
+
+}
+
+.btn-delete:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 10px 25px rgba(220,38,38,.35);
+
+}
+
+.btn-cancel{
+
+    min-width:170px;
+
+}
+
+@keyframes fadeIn{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:none;
+
+}
+
+}
+
+@keyframes pulse{
+
+0%{
+
+transform:scale(1);
+
+}
+
+50%{
+
+transform:scale(1.08);
+
+}
+
+100%{
+
+transform:scale(1);
+
+}
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+<div class="card delete-card">
+
+<div class="delete-header">
+
+<h3 class="mb-0">
+
+<i class="bi bi-file-earmark-x-fill me-2"></i>
+
+Delete Resume
+
+</h3>
+
+</div>
+
+<div class="card-body text-center p-5">
+
+<div class="warning-icon">
+
+<i class="bi bi-trash-fill"></i>
+
+</div>
+
+<h4>
+
+Delete Resume?
+
+</h4>
+
+<p class="text-muted">
+
+This resume will be permanently removed from the system.
+
+</p>
+
+<div class="resume-box">
+
+<p>
+
+<strong>
+
+<i class="bi bi-person-fill me-2 text-primary"></i>
+
+Full Name
+
+</strong>
+
+</p>
+
+<p>
+
+{{ resume.full_name }}
+
+</p>
+
+{% if resume.email %}
+
+<hr>
+
+<p>
+
+<strong>
+
+<i class="bi bi-envelope-fill me-2 text-success"></i>
+
+Email
+
+</strong>
+
+</p>
+
+<p>
+
+{{ resume.email }}
+
+</p>
+
+{% endif %}
+
+{% if resume.template %}
+
+<hr>
+
+<p>
+
+<strong>
+
+<i class="bi bi-grid-3x3-gap-fill me-2 text-warning"></i>
+
+Template
+
+</strong>
+
+</p>
+
+<p>
+
+{{ resume.template.name }}
+
+</p>
+
+{% endif %}
+
+</div>
+
+<div class="alert alert-warning mt-4">
+
+<i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+This action cannot be undone. The resume and its associated information will be permanently deleted.
+
+</div>
+
+<form
+
+method="POST"
+
+id="deleteForm"
+
+class="mt-4">
+
+{% csrf_token %}
+
+<button
+
+type="submit"
+
+class="btn btn-danger btn-delete me-2">
+
+<i class="bi bi-trash-fill me-2"></i>
+
+Delete Resume
+
+</button>
+
+<a
+
+href="{% url 'admin_resume_list' %}"
+
+class="btn btn-secondary btn-cancel">
+
+<i class="bi bi-arrow-left me-2"></i>
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("deleteForm").addEventListener(
+
+"submit",
+
+function(e){
+
+if(
+
+!confirm(
+
+"Are you sure you want to permanently delete this resume?"
+
+)
+
+){
+
+e.preventDefault();
+
+}
+
+}
+
+);
+
+</script>
+
+{% endblock %}

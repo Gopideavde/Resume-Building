@@ -1,118 +1,195 @@
-{% extends 'base.html' %}
-
-{% block title %}Live Demo: {{ template.name }} - {{ site_settings.site_name|default:'ResumePro' }}{% endblock %}
+{% extends 'website/base.html' %}
+{% load static %}
 
 {% block content %}
 <style>
-    body, html {
-        height: 100%;
-        overflow: hidden;
+    :root {
+        --primary: #1a2744;
+        --gold: #c9a84c;
+        --burgundy: #8b1a3e;
+        --bg-color: #faf8f3;
+        --text-color: #1a1a2e;
+        --light: #fff8f0;
+        --muted: #6b7280;
     }
-    
-    .demo-header {
-        background: #1a2744;
-        color: #fff;
-        padding: 15px 30px;
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Playfair Display', serif;
+    }
+
+    .demo-toolbar {
+        background: var(--primary);
+        color: var(--light);
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        border-bottom: 2px solid var(--gold);
+    }
+
+    .demo-info h1 {
+        margin: 0;
+        font-size: 1.8rem;
+        color: var(--gold);
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        z-index: 1000;
-        position: relative;
+        gap: 15px;
     }
-    
-    .demo-title {
-        font-family: 'Playfair Display', serif;
-        margin: 0;
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-    
+
     .premium-badge {
-        background: linear-gradient(135deg, #d4af37, #f1c40f);
-        color: #fff;
+        background: linear-gradient(45deg, var(--gold), #e0c879);
+        color: var(--primary);
+        padding: 4px 12px;
+        border-radius: 15px;
         font-size: 0.8rem;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-weight: 700;
-        letter-spacing: 1px;
+        font-weight: bold;
+        font-family: 'Inter', sans-serif;
+        animation: pulseBadge 2s infinite;
     }
-    
-    .free-badge {
-        background: linear-gradient(135deg, #2ecc71, #27ae60);
-        color: #fff;
-        font-size: 0.8rem;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-weight: 700;
-        letter-spacing: 1px;
+
+    @keyframes pulseBadge {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
     }
-    
-    .demo-wrapper {
-        height: calc(100vh - 150px);
-        background: #f0f2f5;
-        padding: 40px;
+
+    .demo-actions {
+        display: flex;
+        gap: 20px;
+    }
+
+    .btn-outline {
+        border: 2px solid var(--gold);
+        color: var(--gold);
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-outline:hover {
+        background: var(--gold);
+        color: var(--primary);
+        box-shadow: 0 4px 15px rgba(201,168,76,0.3);
+    }
+
+    .btn-gold {
+        background: linear-gradient(45deg, var(--gold), #d4b86a);
+        color: var(--primary);
+        padding: 10px 25px;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(201,168,76,0.3);
+        cursor: pointer;
+    }
+
+    .btn-gold:hover {
+        box-shadow: 0 8px 25px rgba(201,168,76,0.5);
+        transform: scale(1.05);
+    }
+
+    .preview-container {
+        padding: 60px 20px;
         display: flex;
         justify-content: center;
-        overflow-y: auto;
+        align-items: flex-start;
+        min-height: calc(100vh - 100px);
     }
-    
-    .iframe-container {
+
+    .a4-preview {
+        background: white;
         width: 100%;
-        max-width: 900px;
-        min-height: 1100px;
-        background: #fff;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        max-width: 800px;
+        min-height: 1131px; /* A4 aspect ratio approx */
+        box-shadow: 0 25px 70px rgba(0,0,0,0.15);
         border-radius: 8px;
         overflow: hidden;
+        position: relative;
+        border: 1px solid #eaeaea;
+    }
+
+    .a4-preview img {
+        width: 100%;
+        height: auto;
+        display: block;
     }
     
-    .iframe-container iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
+    .ornamental-divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+        color: var(--gold);
+        font-size: 1.2rem;
     }
+
+    .ornamental-divider::before,
+    .ornamental-divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--gold);
+        margin: 0 15px;
+        max-width: 100px;
+    }
+
 </style>
 
-<div class="demo-header">
-    <div class="d-flex align-items-center gap-4">
-        <a href="{% url 'template_list' %}" class="btn btn-outline-light rounded-pill btn-sm"><i class="bi bi-arrow-left"></i> Back to Templates</a>
-        <div>
-            <h1 class="demo-title">{{ template.name }}</h1>
-        </div>
-        <div>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<div class="demo-toolbar" data-aos="fade-down">
+    <div class="demo-info">
+        <h1>
+            {{ template.name }}
             {% if template.is_premium %}
-                <span class="premium-badge"><i class="bi bi-star-fill"></i> Premium &bull; ₹{{ template.price }}</span>
+            <span class="premium-badge">Premium</span>
             {% else %}
-                <span class="free-badge">FREE</span>
+            <span class="premium-badge" style="background: #eef2f5; color: var(--primary);">Free</span>
             {% endif %}
-        </div>
+        </h1>
+        <div class="ornamental-divider">❦</div>
+        <p style="margin: 0; font-size: 0.9rem; color: #d1d5db;">{{ template.description }}</p>
     </div>
-    
-    <div>
-        <a href="{% url 'use_template' template.id %}" class="btn {% if template.is_premium %}btn-warning text-dark{% else %}btn-success{% endif %} rounded-pill px-4 fw-bold shadow-sm">
-            {% if template.is_premium %}
-                <i class="bi bi-lock-fill"></i> Unlock & Use Template
-            {% else %}
-                <i class="bi bi-check-circle"></i> Use Template
-            {% endif %}
-        </a>
+    <div class="demo-actions">
+        <a href="{% url 'templates_list' %}" class="btn-outline">Back to Explorer</a>
+        <a href="{% url 'use_template' template.id %}" class="btn-gold">Use This Template</a>
     </div>
 </div>
 
-<div class="demo-wrapper">
-    <div class="iframe-container">
-        <iframe src="{% url 'template_demo' template.id %}?raw=1"></iframe>
+<div class="preview-container">
+    <div class="a4-preview" data-aos="zoom-in" data-aos-duration="1000">
+        {% if template.image %}
+        <img src="{{ template.image.url }}" alt="{{ template.name }} Preview">
+        {% else %}
+        <div style="padding: 100px; text-align: center; color: var(--muted); font-size: 1.2rem;">
+            Full preview not available.
+        </div>
+        {% endif %}
     </div>
 </div>
 
 <script>
-    // Hide standard navbar/footer for full immersion
-    document.addEventListener('DOMContentLoaded', function() {
-        const navbar = document.querySelector('.navbar');
-        const footer = document.querySelector('footer');
-        if(navbar) navbar.style.display = 'none';
-        if(footer) footer.style.display = 'none';
+    AOS.init({
+        duration: 800,
+        once: true
     });
 </script>
 {% endblock %}

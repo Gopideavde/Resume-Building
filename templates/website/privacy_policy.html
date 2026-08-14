@@ -1,0 +1,78 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #1a2744;
+        --gold: #c9a84c;
+        --bg: #faf8f3;
+        --text: #1a1a2e;
+        --light: #fff8f0;
+        --muted: #6b7280;
+    }
+    body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; color: var(--primary); }
+    
+    .doc-hero {
+        background: var(--primary);
+        padding: 80px 0; color: #fff; text-align: center; border-bottom: 5px solid var(--gold);
+    }
+    .doc-hero h1 { color: #fff; font-size: 3rem; }
+    
+    .doc-container { background: #fff; border-radius: 16px; padding: 50px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); margin-top: -30px; position: relative; border: 1px solid rgba(201,168,76,0.1); }
+    
+    .doc-content h2 { color: var(--gold); font-size: 1.8rem; margin-top: 40px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .doc-content p { color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+    .doc-content ul { color: var(--muted); line-height: 1.8; margin-bottom: 20px; padding-left: 20px; }
+    .doc-content li { margin-bottom: 10px; }
+</style>
+
+<div class="doc-hero" data-aos="fade-in">
+    <div class="container">
+        <h1>Privacy Policy</h1>
+        <p class="text-light mt-2">Last updated: October 2023</p>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10" data-aos="fade-up">
+                <div class="doc-container doc-content">
+                    <p class="lead text-dark">Your privacy is important to us. This Privacy Policy outlines how we collect, use, and protect your information when you use our Classic Resume building services.</p>
+                    
+                    <h2>1. Information We Collect</h2>
+                    <p>We collect information you provide directly to us when you create an account, build a resume, or contact support. This may include:</p>
+                    <ul>
+                        <li>Personal identification information (Name, email address, phone number, etc.)</li>
+                        <li>Professional information entered into your resumes (Employment history, education, skills, etc.)</li>
+                        <li>Payment and billing information</li>
+                    </ul>
+
+                    <h2>2. How We Use Your Information</h2>
+                    <p>We use the information we collect to:</p>
+                    <ul>
+                        <li>Provide, operate, and maintain our platform</li>
+                        <li>Generate and format your resumes and cover letters</li>
+                        <li>Process transactions and send related information</li>
+                        <li>Send technical notices, updates, security alerts, and support messages</li>
+                    </ul>
+
+                    <h2>3. Data Security</h2>
+                    <p>We implement appropriate technical and organizational security measures designed to protect your personal information against accidental or unlawful destruction, loss, alteration, and unauthorized disclosure.</p>
+
+                    <h2>4. Sharing of Information</h2>
+                    <p>We do not sell, trade, or rent your personal identification information to others. We may share generic aggregated demographic information not linked to any personal identification information regarding visitors and users with our business partners and trusted affiliates.</p>
+
+                    <h2>5. Your Rights</h2>
+                    <p>You have the right to access, update, or delete the information we have on you. You can do this directly within your account settings section. If you are unable to perform these actions yourself, please contact us to assist you.</p>
+
+                    <h2>6. Contact Us</h2>
+                    <p>If you have any questions about this Privacy Policy, please contact us at <a href="mailto:privacy@classicresume.com" class="text-primary fw-bold">privacy@classicresume.com</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

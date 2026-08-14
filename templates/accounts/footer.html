@@ -1,0 +1,73 @@
+{% load static %}
+<style>
+/* =============================================
+   ACCOUNTS FOOTER — MINIMAL AUTH FOOTER
+   ============================================= */
+.accounts-footer {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #94a3b8;
+    padding: 36px 0;
+    margin-top: auto;
+}
+.accounts-footer .footer-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+}
+.acct-footer-logo {
+    display: flex; align-items: center; gap: 10px; text-decoration: none;
+}
+.acct-footer-logo-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: #fff;
+}
+.acct-footer-logo-name { font-size: 16px; font-weight: 700; color: #e2e8f0; }
+.accounts-footer .footer-links-row { display: flex; gap: 20px; flex-wrap: wrap; }
+.accounts-footer .footer-links-row a {
+    color: #64748b; font-size: 13.5px; text-decoration: none; transition: color 0.25s;
+}
+.accounts-footer .footer-links-row a:hover { color: #2563eb; }
+.accounts-footer .footer-copy { font-size: 13px; color: #475569; text-align: center; }
+.accounts-footer .footer-social-mini { display: flex; gap: 10px; }
+.accounts-footer .footer-social-mini a {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.06); color: #94a3b8;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; text-decoration: none; transition: all 0.3s;
+}
+.accounts-footer .footer-social-mini a:hover { background: #2563eb; color: #fff; transform: translateY(-4px); }
+</style>
+
+<footer class="accounts-footer">
+    <div class="container">
+        <div class="footer-inner">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="acct-footer-logo">
+                <div class="acct-footer-logo-icon"><i class="bi bi-file-earmark-person-fill"></i></div>
+                <div class="acct-footer-logo-name">A2Z Resume</div>
+            </a>
+
+            <!-- Center Links -->
+            <div class="footer-links-row">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'about' %}">About</a>
+                <a href="{% url 'pricing' %}">Pricing</a>
+                <a href="{% url 'privacy_policy' %}">Privacy</a>
+                <a href="{% url 'terms_conditions' %}">Terms</a>
+                <a href="{% url 'contact' %}">Contact</a>
+            </div>
+
+            <!-- Social -->
+            <div class="footer-social-mini">
+                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <hr style="border-color:rgba(255,255,255,0.07);margin:20px 0 14px;">
+        <p class="footer-copy">© 2026 A2Z Resume Builder. All Rights Reserved. Made with <i class="bi bi-heart-fill text-danger"></i> in India.</p>
+    </div>
+</footer>

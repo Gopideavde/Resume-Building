@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<style>
+    :root { --primary: #1a2744; --gold: #c9a84c; --bg: #faf8f3; --text: #1a1a2e; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    .search-bar { background: white; border-radius: 50px; padding: 10px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(201,168,76,0.3); }
+    .search-input { border: none; outline: none; width: 100%; padding: 10px; background: transparent; }
+    .resume-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: all 0.4s ease; border-left: 4px solid var(--gold); }
+    .resume-card:hover { transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+    .profile-photo { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
+    .btn-gold { background: linear-gradient(135deg, #c9a84c, #b39542); color: white; padding: 8px 20px; border-radius: 30px; border: none; text-decoration: none; font-weight: 500; transition: 0.3s; display: inline-block; box-shadow: 0 4px 15px rgba(201,168,76,0.3); }
+    .btn-gold:hover { transform: translateY(-2px); color: white; box-shadow: 0 8px 25px rgba(201,168,76,0.5); }
+    .ornament { text-align: center; color: var(--gold); font-size: 24px; margin: 20px 0; }
+</style>
+<div class="container py-5">
+    <div class="text-center mb-5" data-aos="fade-down">
+        <h1 class="display-5" style="color: var(--primary);">Resume Directory</h1>
+        <div class="ornament">&#10086;</div>
+    </div>
+    
+    <div class="row justify-content-center mb-5" data-aos="fade-up">
+        <div class="col-md-8">
+            <form class="search-bar d-flex" method="GET">
+                <input type="text" name="search" value="{{ search|default:'' }}" class="search-input" placeholder="Search resumes by name, title or keywords...">
+                <button type="submit" class="btn-gold m-1">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for resume in resumes %}
+        <div class="col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+            <div class="resume-card p-4 d-flex align-items-center">
+                <div class="me-4">
+                    {% if resume.profile_picture %}
+                        <img src="{{ resume.profile_picture.url }}" alt="Profile" class="profile-photo">
+                    {% else %}
+                        <div class="profile-photo d-flex justify-content-center align-items-center bg-light text-muted" style="font-size: 24px;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="flex-grow-1">
+                    <h4 class="mb-1">{{ resume.full_name|default:resume.title }}</h4>
+                    <p class="text-muted mb-2">{{ resume.job_title|default:"Professional" }}</p>
+                    <span class="badge" style="background: var(--primary); color: white;">{{ resume.get_status_display|default:"Active" }}</span>
+                    <span class="text-muted small ms-2">{{ resume.created_at|date:"M d, Y" }}</span>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <a href="{% url 'resume_detail' resume.pk %}" class="btn btn-sm btn-outline-primary rounded-pill">View</a>
+                    {% if user.is_authenticated and resume.user == user %}
+                    <a href="{% url 'update_resume' resume.pk %}" class="btn btn-sm btn-outline-secondary rounded-pill">Edit</a>
+                    <a href="{% url 'delete_resume' resume.pk %}" class="btn btn-sm btn-outline-danger rounded-pill">Delete</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5" data-aos="fade-in">
+            <img src="https://illustrations.popsy.co/amber/surreal-hourglass.svg" alt="Empty" style="height: 150px; margin-bottom: 20px;">
+            <p class="lead text-muted">No resumes found matching your criteria.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>AOS.init({ duration: 800, once: true });</script>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<style>
+    :root { --primary: #1a2744; --gold: #c9a84c; --bg: #faf8f3; --text: #1a1a2e; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+    h1, h2, h3, h4, h5 { font-family: 'Playfair Display', serif; }
+    .hero { background: linear-gradient(135deg, var(--primary), #0f172a); color: white; padding: 60px 0; border-radius: 0 0 30px 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .stat-card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: all 0.4s ease; border-top: 4px solid var(--gold); }
+    .stat-card:hover { transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+    .stat-num { font-size: 2.5rem; color: var(--primary); font-family: 'Playfair Display', serif; }
+    .resume-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: all 0.4s ease; position: relative; }
+    .resume-card:hover { transform: perspective(1000px) rotateX(2deg) rotateY(2deg) scale(1.02); box-shadow: 0 20px 60px rgba(0,0,0,0.15); z-index: 10; }
+    .resume-card-header { background: var(--primary); color: white; padding: 20px; border-bottom: 3px solid var(--gold); }
+    .btn-gold { background: linear-gradient(135deg, #c9a84c, #b39542); color: white; padding: 10px 24px; border-radius: 30px; border: none; text-decoration: none; font-weight: 500; transition: 0.3s; box-shadow: 0 4px 15px rgba(201,168,76,0.3); display: inline-block; }
+    .btn-gold:hover { transform: translateY(-2px); color: white; box-shadow: 0 8px 25px rgba(201,168,76,0.5); }
+    .ornament { text-align: center; color: var(--gold); font-size: 24px; margin: 20px 0; }
+</style>
+<div class="hero mb-5" data-aos="fade-down">
+    <div class="container text-center">
+        <h1 class="display-4">Welcome back, <span style="color: var(--gold);">{{ user.username|title }}</span></h1>
+        <p class="lead">Manage your professional journey with elegance.</p>
+        <div class="mt-4">
+            <a href="{% url 'create_resume' %}" class="btn-gold mx-2">Create New Resume</a>
+            <a href="{% url 'resume_analytics' %}" class="btn-gold mx-2" style="background: transparent; border: 2px solid var(--gold); box-shadow: none;">View Analytics</a>
+        </div>
+    </div>
+</div>
+<div class="container mb-5">
+    <div class="row g-4 mb-5" data-aos="fade-up">
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="stat-num counter">{{ resumes.count }}</div>
+                <div class="text-muted text-uppercase small fw-bold">Total Resumes</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="stat-num counter">0</div>
+                <div class="text-muted text-uppercase small fw-bold">Total Views</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="stat-num counter">0</div>
+                <div class="text-muted text-uppercase small fw-bold">Total Downloads</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="stat-num counter">0</div>
+                <div class="text-muted text-uppercase small fw-bold">Drafts</div>
+            </div>
+        </div>
+    </div>
+    <div class="ornament">&#10086;</div>
+    <h2 class="text-center mb-4" data-aos="fade-up">Your Recent Resumes</h2>
+    {% if resumes %}
+    <div class="row g-4">
+        {% for resume in resumes %}
+        <div class="col-md-4" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+            <div class="resume-card">
+                <div class="resume-card-header">
+                    <h4 class="mb-0">{{ resume.title|default:"Untitled Resume" }}</h4>
+                    <small>{{ resume.created_at|date:"M d, Y" }}</small>
+                </div>
+                <div class="p-4">
+                    <p class="text-muted">{{ resume.get_status_display|default:"Completed" }}</p>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="{% url 'resume_detail' resume.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+                        <a href="{% url 'update_resume' resume.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <a href="{% url 'delete_resume' resume.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5" data-aos="fade-up">
+        <img src="https://illustrations.popsy.co/amber/freelancer.svg" alt="Empty" style="height: 200px; margin-bottom: 20px;">
+        <h4 class="text-muted">You haven't created any resumes yet.</h4>
+        <p>Start building your elegant professional profile today.</p>
+        <a href="{% url 'create_resume' %}" class="btn-gold mt-3">Create Resume</a>
+    </div>
+    {% endif %}
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({ duration: 800, once: true });
+    const counters = document.querySelectorAll('.counter');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = +counter.innerText;
+                counter.innerText = '0';
+                const updateCount = () => {
+                    const count = +counter.innerText;
+                    const inc = target / 50;
+                    if(count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+                observer.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.5 });
+    counters.forEach(c => observer.observe(c));
+</script>
+{% endblock %}

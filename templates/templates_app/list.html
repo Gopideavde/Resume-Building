@@ -1,205 +1,332 @@
-{% extends 'base.html' %}
-
-{% block title %}Explore Templates - {{ site_settings.site_name|default:'ResumePro' }}{% endblock %}
+{% extends 'website/base.html' %}
+{% load static %}
 
 {% block content %}
 <style>
-    /* Premium Visual Enhancements */
+    :root {
+        --primary: #1a2744;
+        --gold: #c9a84c;
+        --burgundy: #8b1a3e;
+        --bg-color: #faf8f3;
+        --text-color: #1a1a2e;
+        --light: #fff8f0;
+        --muted: #6b7280;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Playfair Display', serif;
+    }
+
     .hero-section {
-        background: linear-gradient(135deg, #1a2744 0%, #2c3e50 100%);
-        color: #ffffff;
-        padding: 80px 0 60px 0;
-        margin-bottom: 50px;
+        background: linear-gradient(135deg, var(--primary) 0%, #2a3d66 100%);
+        color: var(--light);
+        padding: 100px 20px;
+        text-align: center;
         position: relative;
         overflow: hidden;
     }
-    .hero-section::after {
-        content: '';
-        position: absolute;
-        bottom: 0; left: 0; right: 0;
-        height: 50px;
-        background: linear-gradient(to bottom, transparent, #faf8f3);
+
+    .hero-section h1 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        color: var(--gold);
     }
-    .search-bar {
+
+    .hero-section p {
+        font-size: 1.2rem;
         max-width: 600px;
+        margin: 0 auto 30px auto;
+        color: var(--light);
+    }
+
+    .ornamental-divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 40px 0;
+        color: var(--gold);
+        font-size: 1.5rem;
+    }
+
+    .ornamental-divider::before,
+    .ornamental-divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--gold);
+        margin: 0 20px;
+        max-width: 150px;
+    }
+
+    .container {
+        max-width: 1200px;
         margin: 0 auto;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        border-radius: 50px;
-        overflow: hidden;
+        padding: 40px 20px;
     }
-    .search-bar input {
-        border: none;
-        padding: 15px 25px;
-        font-size: 1.1rem;
-    }
-    .search-bar input:focus {
-        box-shadow: none;
-        outline: none;
-    }
-    .search-bar button {
-        padding: 10px 30px;
-        font-weight: 600;
-        border-radius: 0 50px 50px 0;
-    }
-    
-    .filter-btn {
-        transition: all 0.3s ease;
-        border: 1px solid #e0e0e0;
-        color: #555;
-        background: #fff;
-    }
-    .filter-btn:hover, .filter-btn.active {
-        background: #c9a84c;
-        color: #fff;
-        border-color: #c9a84c;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(201,168,76,0.3);
+
+    .templates-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 40px;
     }
 
     .template-card {
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        border: 1px solid #eee;
-        background: #fff;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(201, 168, 76, 0.3);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        transform-style: preserve-3d;
     }
+
     .template-card:hover {
         transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        border-color: #dcdcdc;
+        box-shadow: 0 30px 70px rgba(0,0,0,0.15);
+        border-color: var(--gold);
     }
-    
-    .preview-container {
-        height: 320px;
-        overflow: hidden;
-        background: #f8f9fa;
-        position: relative;
+
+    .template-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at top right, rgba(201,168,76,0.1), transparent);
+        pointer-events: none;
     }
-    .preview-container img {
+
+    .template-image {
         width: 100%;
-        height: 100%;
+        height: 350px;
+        border-radius: 12px;
         object-fit: cover;
-        object-position: top;
-        transition: transform 0.6s ease;
+        margin-bottom: 20px;
+        border: 1px solid #eaeaea;
+        transform: translateZ(20px);
     }
-    .template-card:hover .preview-container img {
-        transform: scale(1.05);
-    }
-    
+
     .premium-badge {
-        background: linear-gradient(135deg, #d4af37, #f1c40f);
-        color: #fff;
-        font-weight: 700;
-        letter-spacing: 1px;
-        box-shadow: 0 4px 10px rgba(212,175,55,0.4);
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        background: linear-gradient(45deg, var(--gold), #e0c879);
+        color: var(--primary);
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.8rem;
+        box-shadow: 0 4px 10px rgba(201, 168, 76, 0.4);
+        transform: translateZ(30px);
+        animation: pulseBadge 2s infinite;
     }
-    .free-badge {
-        background: linear-gradient(135deg, #2ecc71, #27ae60);
-        color: #fff;
-        font-weight: 700;
-        letter-spacing: 1px;
-        box-shadow: 0 4px 10px rgba(46,204,113,0.3);
+
+    @keyframes pulseBadge {
+        0% { transform: translateZ(30px) scale(1); }
+        50% { transform: translateZ(30px) scale(1.05); }
+        100% { transform: translateZ(30px) scale(1); }
     }
-    
-    .card-footer-custom {
-        background: #fff;
-        border-top: 1px solid #f1f1f1;
-        padding: 20px;
+
+    .template-title {
+        font-size: 1.5rem;
+        color: var(--primary);
+        margin-bottom: 10px;
+        transform: translateZ(30px);
     }
-    
-    .btn-use-premium {
-        background: linear-gradient(135deg, #1a2744, #2c3e50);
-        color: #fff;
+
+    .template-desc {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+        transform: translateZ(30px);
+    }
+
+    .btn-gold {
+        background: linear-gradient(45deg, var(--gold), #d4b86a);
+        color: var(--primary);
+        padding: 12px 24px;
         border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateZ(40px);
+        box-shadow: 0 4px 15px rgba(201,168,76,0.3);
+        cursor: pointer;
     }
-    .btn-use-premium:hover {
-        background: linear-gradient(135deg, #2c3e50, #1a2744);
-        color: #fff;
-        box-shadow: 0 5px 15px rgba(26,39,68,0.3);
+
+    .btn-gold:hover {
+        box-shadow: 0 8px 25px rgba(201,168,76,0.5);
+        transform: translateZ(40px) scale(1.05);
+    }
+
+    .stats-section {
+        background-color: var(--primary);
+        color: var(--light);
+        padding: 60px 20px;
+        margin-top: 60px;
+    }
+
+    .stats-grid {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .stat-item {
+        text-align: center;
+        margin: 20px;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-family: 'Playfair Display', serif;
+        color: var(--gold);
+        margin-bottom: 10px;
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    #scrollTop {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: var(--primary);
+        color: var(--gold);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        cursor: pointer;
+        opacity: 0;
+        transition: all 0.3s;
+        border: 2px solid var(--gold);
+        z-index: 1000;
+    }
+
+    #scrollTop.visible {
+        opacity: 1;
     }
 </style>
 
-<div class="hero-section text-center">
-    <div class="container" data-aos="fade-up">
-        <h1 class="display-4 fw-bold mb-3" style="font-family: 'Playfair Display', serif;">Professional Resume Templates</h1>
-        <p class="lead mb-5 opacity-75">Discover meticulously crafted designs tailored for every industry and career level.</p>
-        
-        <form method="get" class="search-bar d-flex">
-            <!-- Preserve other filters -->
-            {% if current_type %}<input type="hidden" name="type" value="{{ current_type }}">{% endif %}
-            {% if current_cat %}<input type="hidden" name="category" value="{{ current_cat }}">{% endif %}
-            
-            <input type="text" name="q" class="form-control" placeholder="Search templates (e.g. Minimal, Executive)..." value="{{ search_query|default:'' }}">
-            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
-        </form>
-    </div>
+<!-- Include AOS and Vanilla-tilt -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
+
+<div class="hero-section" data-aos="fade-down">
+    <h1 data-aos="zoom-in" data-aos-delay="100">Classic Resume Templates</h1>
+    <p data-aos="fade-up" data-aos-delay="200">Discover our collection of premium, elegantly designed templates crafted to leave a lasting professional impression.</p>
+    <div class="ornamental-divider" data-aos="fade-up" data-aos-delay="300">❦</div>
 </div>
 
-<div class="container pb-5">
-    <!-- Filters -->
-    <div class="d-flex flex-column align-items-center mb-5 gap-3" data-aos="fade-up" data-aos-delay="100">
-        <!-- Type Filter -->
-        <div class="d-flex flex-wrap justify-content-center gap-2">
-            <a href="{% url 'template_list' %}{% if current_cat %}?category={{ current_cat }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn rounded-pill px-4 filter-btn {% if not current_type %}active{% endif %}">All Types</a>
-            <a href="{% url 'template_list' %}?type=free{% if current_cat %}&category={{ current_cat }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn rounded-pill px-4 filter-btn {% if current_type == 'free' %}active{% endif %}">Free</a>
-            <a href="{% url 'template_list' %}?type=premium{% if current_cat %}&category={{ current_cat }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn rounded-pill px-4 filter-btn {% if current_type == 'premium' %}active{% endif %}">Premium</a>
-        </div>
-        
-        <!-- Category Filter -->
-        <div class="d-flex flex-wrap justify-content-center gap-2">
-            <a href="{% url 'template_list' %}{% if current_type %}?type={{ current_type }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn rounded-pill px-3 btn-sm filter-btn {% if not current_cat %}active{% endif %}">All Categories</a>
-            {% for cat in categories %}
-                <a href="{% url 'template_list' %}?category={{ cat.slug }}{% if current_type %}&type={{ current_type }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn rounded-pill px-3 btn-sm filter-btn {% if current_cat == cat.slug %}active{% endif %}">{{ cat.name }}</a>
-            {% endfor %}
-        </div>
-    </div>
-
-    <!-- Templates Grid -->
-    <div class="row g-4">
+<div class="container">
+    <div class="templates-grid">
         {% for template in templates %}
-            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
-                <div class="card rounded-4 h-100 template-card">
-                    {% if template.is_premium %}
-                        <span class="badge position-absolute top-0 end-0 m-3 z-3 premium-badge px-3 py-2 rounded-pill"><i class="bi bi-star-fill text-white"></i> Premium &bull; ₹{{ template.price }}</span>
-                    {% else %}
-                        <span class="badge position-absolute top-0 end-0 m-3 z-3 free-badge px-3 py-2 rounded-pill">FREE</span>
-                    {% endif %}
-                    
-                    <div class="preview-container rounded-top-4">
-                        {% if template.preview_image %}
-                            <img src="{{ template.preview_image.url }}" alt="{{ template.name }}">
-                        {% else %}
-                            <div class="h-100 d-flex align-items-center justify-content-center">
-                                <i class="bi bi-file-earmark-richtext text-muted opacity-25" style="font-size: 6rem;"></i>
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="card-body p-4 d-flex flex-column">
-                        <div class="mb-auto">
-                            <span class="text-primary fw-bold small text-uppercase" style="letter-spacing: 1px;">{% if template.category %}{{ template.category.name }}{% else %}Uncategorized{% endif %}</span>
-                            <h4 class="fw-bold mt-2" style="font-family: 'Playfair Display', serif;">{{ template.name }}</h4>
-                            <p class="text-muted small mt-2">{{ template.description }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card-footer-custom rounded-bottom-4">
-                        <div class="d-flex gap-2 mb-2">
-                            <a href="{% url 'template_demo' template.id %}" target="_blank" class="btn btn-outline-secondary rounded-pill w-100 fw-semibold"><i class="bi bi-eye"></i> Live Demo</a>
-                        </div>
-                        <a href="{% url 'use_template' template.id %}{% if request.GET.resume_id %}?resume_id={{ request.GET.resume_id }}{% endif %}" class="btn {% if template.is_premium %}btn-use-premium{% else %}btn-success{% endif %} rounded-pill w-100 fw-bold shadow-sm">
-                            {% if template.is_premium %}<i class="bi bi-lock-fill"></i> Unlock Template{% else %}<i class="bi bi-check-circle"></i> Use Template{% endif %}
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <div class="template-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.2">
+            {% if template.is_premium %}
+            <div class="premium-badge">Premium</div>
+            {% endif %}
+            
+            {% if template.image %}
+            <img src="{{ template.image.url }}" alt="{{ template.name }}" class="template-image">
+            {% else %}
+            <div class="template-image" style="background: #eef2f5; display: flex; align-items: center; justify-content: center; color: var(--muted);">No Preview</div>
+            {% endif %}
+            
+            <h3 class="template-title">{{ template.name }}</h3>
+            <p class="template-desc">{{ template.description|truncatewords:15 }}</p>
+            
+            <a href="{% url 'template_demo' template.id %}" class="btn-gold">Preview Template</a>
+        </div>
         {% empty %}
-            <div class="col-12 text-center py-5">
-                <i class="bi bi-search text-muted opacity-25" style="font-size: 4rem;"></i>
-                <h4 class="mt-4 fw-bold">No templates found</h4>
-                <p class="text-muted">Try adjusting your search or filters.</p>
-                <a href="{% url 'template_list' %}" class="btn btn-primary rounded-pill mt-3">Clear All Filters</a>
-            </div>
+        <div data-aos="fade-in" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+            <h3 style="color: var(--primary);">No templates available yet.</h3>
+        </div>
         {% endfor %}
     </div>
 </div>
+
+<div class="stats-section" data-aos="fade-up">
+    <div class="stats-grid">
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
+            <div class="stat-number counter" data-target="50">0</div>
+            <div class="stat-label">Templates</div>
+        </div>
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="200">
+            <div class="stat-number counter" data-target="10000">0</div>
+            <div class="stat-label">Users</div>
+        </div>
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="300">
+            <div class="stat-number counter" data-target="99">0</div>
+            <div class="stat-label">Success Rate (%)</div>
+        </div>
+    </div>
+</div>
+
+<div id="scrollTop" onclick="window.scrollTo(0,0)">↑</div>
+
+<script>
+    AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100
+    });
+
+    // Scroll to top visibility
+    window.addEventListener('scroll', () => {
+        const btn = document.getElementById('scrollTop');
+        if (window.scrollY > 300) {
+            btn.classList.add('visible');
+        } else {
+            btn.classList.remove('visible');
+        }
+    });
+
+    // Counter animation
+    const counters = document.querySelectorAll('.counter');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = +entry.target.getAttribute('data-target');
+                const duration = 2000;
+                const increment = target / (duration / 16);
+                
+                let current = 0;
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        entry.target.innerText = Math.ceil(current);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        entry.target.innerText = target;
+                    }
+                };
+                updateCounter();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => observer.observe(counter));
+</script>
 {% endblock %}

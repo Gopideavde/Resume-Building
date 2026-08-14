@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+
+<title>
+
+{% block title %}
+A2Z Resume Builder Admin
+{% endblock %}
+
+</title>
+
+<link rel="icon"
+href="{% static 'website/images/favicon.png' %}">
+
+<!-- Bootstrap -->
+
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+rel="stylesheet">
+
+<!-- Google Font -->
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<!-- Custom CSS -->
+
+<link
+href="{% static 'admin_panel/css/admin.css' %}"
+rel="stylesheet">
+
+{% block css %}
+{% endblock %}
+
+</head>
+
+<body>
+
+<!-- Loader -->
+
+<div id="loader">
+
+<div class="loader-circle"></div>
+
+</div>
+
+<!-- Navbar -->
+
+{% include "admin_panel/navbar.html" %}
+
+<div class="admin-wrapper">
+
+<!-- Sidebar -->
+
+{% include "admin_panel/sidebar.html" %}
+
+<!-- Main -->
+
+<div class="main-content">
+
+<div class="container-fluid py-4">
+
+{% if messages %}
+
+{% for message in messages %}
+
+<div class="alert alert-{{ message.tags }} shadow">
+
+{{ message }}
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+{% block content %}
+
+{% endblock %}
+
+</div>
+
+{% include "admin_panel/footer.html" %}
+
+</div>
+
+</div>
+
+<script
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+<script
+src="{% static 'admin_panel/js/admin.js' %}">
+</script>
+
+{% block js %}
+{% endblock %}
+
+</body>
+
+</html>

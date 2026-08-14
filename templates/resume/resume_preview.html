@@ -1,0 +1,752 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Resume Preview
+{% endblock %}
+
+{% block content %}
+
+<div class="container my-5">
+
+<div class="text-end mb-4">
+
+<a href="{% url 'update_resume' resume.id %}" class="btn btn-warning">
+
+<i class="bi bi-pencil-square"></i>
+
+Edit Resume
+
+</a>
+
+<button onclick="window.print()" class="btn btn-success">
+
+<i class="bi bi-printer-fill"></i>
+
+Print Resume
+
+</button>
+
+<a href="{% url 'download_resume_pdf' resume.id %}" class="btn btn-danger">
+
+<i class="bi bi-file-earmark-pdf-fill"></i>
+
+Download PDF
+
+</a>
+
+</div>
+
+<div class="resume shadow-lg bg-white p-5">
+
+<div class="row">
+
+<div class="col-md-3 text-center">
+
+{% if resume.profile_photo %}
+
+<img src="{{ resume.profile_photo.url }}"
+
+class="img-fluid rounded-circle border border-4"
+
+style="width:180px;height:180px;object-fit:cover;">
+
+{% else %}
+
+<img src="{% static 'resume/images/default-user.png' %}"
+
+class="img-fluid rounded-circle"
+
+style="width:180px;">
+
+{% endif %}
+
+</div>
+
+<div class="col-md-9">
+
+<h1 class="fw-bold text-primary">
+
+{{ resume.full_name }}
+
+</h1>
+
+<h4 class="text-secondary">
+
+{{ resume.job_title }}
+
+</h4>
+
+<hr>
+
+<div class="row">
+
+<div class="col-md-6">
+
+<p>
+
+<i class="bi bi-envelope-fill"></i>
+
+{{ resume.email }}
+
+</p>
+
+<p>
+
+<i class="bi bi-telephone-fill"></i>
+
+{{ resume.phone }}
+
+</p>
+
+<p>
+
+<i class="bi bi-geo-alt-fill"></i>
+
+{{ resume.city }},
+
+{{ resume.state }}
+
+</p>
+
+</div>
+
+<div class="col-md-6">
+
+<p>
+
+<i class="bi bi-linkedin"></i>
+
+{{ resume.linkedin }}
+
+</p>
+
+<p>
+
+<i class="bi bi-github"></i>
+
+{{ resume.github }}
+
+</p>
+
+<p>
+
+<i class="bi bi-globe2"></i>
+
+{{ resume.website }}
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<hr class="my-5">
+
+<!-- Objective -->
+
+<h3 class="text-primary">
+
+Career Objective
+
+</h3>
+
+<p>
+
+{{ resume.objective }}
+
+</p>
+
+<hr>
+
+<!-- Education -->
+
+<h3 class="text-primary">
+
+Education
+
+</h3>
+
+{% for education in resume.educations.all %}
+
+<div class="mb-4">
+
+<h5>
+
+{{ education.degree }}
+
+</h5>
+
+<p>
+
+{{ education.institute }}
+
+</p>
+
+<p>
+
+{{ education.start_year }}
+
+-
+
+{{ education.end_year }}
+
+</p>
+
+<p>
+
+CGPA :
+
+{{ education.cgpa }}
+
+|
+
+Percentage :
+
+{{ education.percentage }}
+
+</p>
+
+</div>
+
+{% empty %}
+
+<p>No Education Added.</p>
+
+{% endfor %}
+
+<hr>
+<!-- ================= Experience ================= -->
+
+<h3 class="text-primary mt-5">
+
+Experience
+
+</h3>
+
+{% for experience in resume.experiences.all %}
+
+<div class="mb-4">
+
+<h5>
+
+{{ experience.designation }}
+
+</h5>
+
+<h6 class="text-muted">
+
+{{ experience.company }}
+
+</h6>
+
+<p>
+
+{{ experience.start_date }}
+
+-
+
+{% if experience.currently_working %}
+
+Present
+
+{% else %}
+
+{{ experience.end_date }}
+
+{% endif %}
+
+</p>
+
+<p>
+
+{{ experience.description }}
+
+</p>
+
+</div>
+
+{% empty %}
+
+<p>No Experience Added.</p>
+
+{% endfor %}
+
+<hr>
+
+
+<!-- ================= Projects ================= -->
+
+<h3 class="text-primary mt-5">
+
+Projects
+
+</h3>
+
+{% for project in resume.projects.all %}
+
+<div class="mb-4">
+
+<h5>
+
+{{ project.title }}
+
+</h5>
+
+<p>
+
+<b>Technologies :</b>
+
+{{ project.technologies }}
+
+</p>
+
+{% if project.role %}
+
+<p>
+
+<b>Role :</b>
+
+{{ project.role }}
+
+</p>
+
+{% endif %}
+
+{% if project.team_size %}
+
+<p>
+
+<b>Team Size :</b>
+
+{{ project.team_size }}
+
+</p>
+
+{% endif %}
+
+<p>
+
+{{ project.description }}
+
+</p>
+
+{% if project.github_link %}
+
+<p>
+
+<b>Github :</b>
+
+<a href="{{ project.github_link }}">
+
+{{ project.github_link }}
+
+</a>
+
+</p>
+
+{% endif %}
+
+{% if project.live_link %}
+
+<p>
+
+<b>Live :</b>
+
+<a href="{{ project.live_link }}">
+
+{{ project.live_link }}
+
+</a>
+
+</p>
+
+{% endif %}
+
+</div>
+
+{% empty %}
+
+<p>No Projects Added.</p>
+
+{% endfor %}
+
+<hr>
+
+
+<!-- ================= Skills ================= -->
+
+<h3 class="text-primary mt-5">
+
+Technical Skills
+
+</h3>
+
+<div class="mb-4">
+
+{% for skill in resume.skills.all %}
+
+<span class="badge bg-primary p-2 m-1">
+
+{{ skill.name }}
+
+-
+
+{{ skill.level }}
+
+</span>
+
+{% empty %}
+
+<p>No Skills Added.</p>
+
+{% endfor %}
+
+</div>
+
+<hr>
+
+
+<!-- ================= Languages ================= -->
+
+<h3 class="text-primary mt-5">
+
+Languages
+
+</h3>
+
+<ul class="list-group mb-4">
+
+{% for language in resume.languages.all %}
+
+<li class="list-group-item">
+
+<strong>{{ language.language }}</strong>
+
+-
+
+{% if language.read %}Read{% endif %}
+
+{% if language.write %} | Write{% endif %}
+
+{% if language.speak %} | Speak{% endif %}
+
+</li>
+
+{% empty %}
+
+<li class="list-group-item">
+
+No Languages Added.
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+<hr>
+
+
+<!-- ================= Certificates ================= -->
+
+<h3 class="text-primary mt-5">
+
+Certifications
+
+</h3>
+
+{% for certificate in resume.certifications.all %}
+
+<div class="mb-4">
+
+<h5>
+
+{{ certificate.certificate_name }}
+
+</h5>
+
+<p>
+
+{{ certificate.organization }}
+
+</p>
+
+<p>
+
+Issue Date :
+
+{{ certificate.issue_date }}
+
+</p>
+
+{% if certificate.credential_url %}
+
+<p>
+
+<a href="{{ certificate.credential_url }}">
+
+View Certificate
+
+</a>
+
+</p>
+
+{% endif %}
+
+</div>
+
+{% empty %}
+
+<p>No Certifications Added.</p>
+
+{% endfor %}
+
+<hr>
+<!-- ================= Achievements ================= -->
+
+<h3 class="text-primary mt-5">
+    Achievements
+</h3>
+
+{% for achievement in resume.achievements.all %}
+
+<div class="mb-4">
+
+    <h5>{{ achievement.title }}</h5>
+
+    <p>{{ achievement.description }}</p>
+
+    {% if achievement.achievement_date %}
+    <small class="text-muted">
+        {{ achievement.achievement_date }}
+    </small>
+    {% endif %}
+
+</div>
+
+{% empty %}
+
+<p>No Achievements Added.</p>
+
+{% endfor %}
+
+<hr>
+
+
+<!-- ================= Hobbies ================= -->
+
+<h3 class="text-primary mt-5">
+    Hobbies
+</h3>
+
+<div class="mb-4">
+
+{% for hobby in resume.hobbies.all %}
+
+<span class="badge bg-secondary p-2 m-1">
+
+{{ hobby.name }}
+
+</span>
+
+{% empty %}
+
+<p>No Hobbies Added.</p>
+
+{% endfor %}
+
+</div>
+
+<hr>
+
+
+<!-- ================= Interests ================= -->
+
+<h3 class="text-primary mt-5">
+    Interests
+</h3>
+
+<div class="mb-4">
+
+{% for interest in resume.interests.all %}
+
+<span class="badge bg-info text-dark p-2 m-1">
+
+{{ interest.name }}
+
+</span>
+
+{% empty %}
+
+<p>No Interests Added.</p>
+
+{% endfor %}
+
+</div>
+
+<hr>
+
+
+<!-- ================= References ================= -->
+
+<h3 class="text-primary mt-5">
+    References
+</h3>
+
+{% for reference in resume.references.all %}
+
+<div class="card mb-3 border-0 shadow-sm">
+
+<div class="card-body">
+
+<h5>
+
+{{ reference.name }}
+
+</h5>
+
+<p>
+
+<strong>Designation :</strong>
+
+{{ reference.designation }}
+
+</p>
+
+<p>
+
+<strong>Company :</strong>
+
+{{ reference.company }}
+
+</p>
+
+<p>
+
+<strong>Email :</strong>
+
+{{ reference.email }}
+
+</p>
+
+<p>
+
+<strong>Phone :</strong>
+
+{{ reference.phone }}
+
+</p>
+
+</div>
+
+</div>
+
+{% empty %}
+
+<p>No References Added.</p>
+
+{% endfor %}
+
+<hr>
+
+
+<!-- ================= Custom Sections ================= -->
+
+{% for section in resume.custom_sections.all %}
+
+<h3 class="text-primary mt-5">
+
+{{ section.heading }}
+
+</h3>
+
+<p>
+
+{{ section.content|linebreaks }}
+
+</p>
+
+<hr>
+
+{% endfor %}
+
+
+<!-- ================= Declaration ================= -->
+
+{% if resume.declaration %}
+
+<h3 class="text-primary mt-5">
+
+Declaration
+
+</h3>
+
+<p>
+
+{{ resume.declaration.declaration_text }}
+
+</p>
+
+<div class="row mt-5">
+
+<div class="col-md-6">
+
+{% if resume.declaration.place %}
+
+<strong>Place :</strong>
+
+{{ resume.declaration.place }}
+
+{% endif %}
+
+</div>
+
+<div class="col-md-6 text-end">
+
+{% if resume.declaration.show_signature %}
+
+<strong>
+
+{{ resume.full_name }}
+
+</strong>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% endif %}
+
+
+<hr class="mt-5">
+
+<div class="text-center text-muted">
+
+<p class="mb-1">
+
+Generated using
+
+<strong>A2Z Resume Builder</strong>
+
+</p>
+
+<p>
+
+© 2026 All Rights Reserved
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

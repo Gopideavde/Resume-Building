@@ -1,0 +1,950 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<style>
+    :root { --primary: #1a2744; --gold: #c9a84c; --bg: #faf8f3; --text: #1a1a2e; --muted: #6b7280; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+    h1, h2, h3, h4, h5 { font-family: 'Playfair Display', serif; }
+
+    /* Hero */
+    .form-hero { background: linear-gradient(135deg, #1a2744 0%, #0d1627 100%); padding: 60px 0 80px; color: #fff; text-align: center; position: relative; overflow: hidden; }
+    .form-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 50%, rgba(201,168,76,0.18) 0%, transparent 70%); }
+    .form-hero h1 { font-size: 2.8rem; color: #fff; position: relative; }
+    .form-hero p { color: rgba(255,255,255,0.65); position: relative; }
+    .gold-divider { width: 60px; height: 3px; background: var(--gold); margin: 12px auto; border-radius: 2px; }
+
+    /* Main Container */
+    .form-container { background: #fff; border-radius: 20px; box-shadow: 0 20px 70px rgba(0,0,0,0.1); margin: -40px auto 60px; max-width: 960px; padding: 0; overflow: hidden; border-top: 5px solid var(--gold); }
+
+    /* Progress Bar */
+    .progress-wrap { background: #f0f0f0; height: 6px; }
+    .progress-bar { height: 6px; background: linear-gradient(to right, var(--primary), var(--gold)); width: 10%; transition: width 0.4s ease; border-radius: 0 3px 3px 0; }
+
+    /* Tabs */
+    .form-tabs { display: flex; overflow-x: auto; background: #fafafa; border-bottom: 2px solid #eee; scrollbar-width: none; }
+    .form-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { border: none; background: transparent; padding: 16px 22px; font-size: 0.88rem; font-weight: 600; color: var(--muted); cursor: pointer; white-space: nowrap; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+    .tab-btn:hover { color: var(--primary); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--gold); background: #fff; }
+    .tab-btn .tab-num { width: 22px; height: 22px; border-radius: 50%; background: #e5e7eb; color: var(--muted); font-size: 0.75rem; display: flex; align-items: center; justify-content: center; }
+    .tab-btn.active .tab-num, .tab-btn.done .tab-num { background: var(--gold); color: #fff; }
+
+    /* Section Panels */
+    .form-panel { display: none; padding: 35px 40px; animation: panelIn 0.4s ease; }
+    .form-panel.active { display: block; }
+    @keyframes panelIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .panel-title { color: var(--primary); font-size: 1.6rem; margin-bottom: 6px; display: flex; align-items: center; gap: 12px; }
+    .panel-title i { color: var(--gold); font-size: 1.3rem; }
+    .panel-subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+
+    /* Form Fields */
+    .field-group { margin-bottom: 22px; }
+    .field-group label { display: block; font-weight: 600; font-size: 0.88rem; color: var(--primary); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .field-group label .req { color: #ef4444; margin-left: 2px; }
+    .field-group input, .field-group select, .field-group textarea { width: 100%; padding: 12px 15px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fafafa; font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--text); transition: 0.3s; }
+    .field-group input:focus, .field-group select:focus, .field-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.15); background: #fff; outline: none; }
+    .field-group input[type="checkbox"] { width: auto; margin-right: 8px; }
+    .errorlist { list-style: none; padding: 0; margin: 6px 0 0; }
+    .errorlist li { color: #ef4444; font-size: 0.83rem; background: #fef2f2; padding: 5px 10px; border-radius: 6px; border-left: 3px solid #ef4444; }
+
+    /* Formset Cards */
+    .formset-card { background: #faf8f3; border: 1px solid #e9e4d8; border-left: 4px solid var(--gold); border-radius: 14px; padding: 25px; margin-bottom: 20px; position: relative; transition: 0.3s; }
+    .formset-card:hover { box-shadow: 0 5px 20px rgba(0,0,0,0.06); }
+    .formset-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .formset-card-header h5 { margin: 0; color: var(--primary); font-size: 1rem; }
+    .formset-num { background: var(--primary); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; }
+    .delete-row { background: none; border: 1px solid #fee2e2; color: #ef4444; border-radius: 8px; padding: 5px 12px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
+    .delete-row:hover { background: #fee2e2; }
+    .delete-check { display: none; }
+
+    .add-row-btn { border: 2px dashed var(--gold); background: transparent; color: var(--gold); font-weight: 600; padding: 12px 25px; border-radius: 12px; cursor: pointer; width: 100%; transition: 0.3s; font-family: 'Inter', sans-serif; margin-top: 5px; }
+    .add-row-btn:hover { background: rgba(201,168,76,0.08); }
+
+    /* Navigation Footer */
+    .form-footer { padding: 25px 40px; background: #fafafa; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+    .btn-nav { padding: 12px 30px; border-radius: 30px; font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; transition: 0.3s; }
+    .btn-prev { background: #fff; border: 2px solid #ddd; color: var(--primary); }
+    .btn-prev:hover { border-color: var(--primary); }
+    .btn-next { background: var(--primary); color: #fff; box-shadow: 0 4px 15px rgba(26,39,68,0.3); }
+    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(26,39,68,0.4); background: #0d1627; }
+    .btn-submit { background: linear-gradient(135deg, var(--gold), #b39542); color: #fff; box-shadow: 0 4px 15px rgba(201,168,76,0.4); }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201,168,76,0.5); }
+
+    .step-counter { color: var(--muted); font-size: 0.9rem; font-weight: 500; }
+
+    /* Django form field rendering override */
+    p { margin: 0; }
+    .as-p-field { display: contents; }
+
+    @media(max-width: 768px) {
+        .form-panel { padding: 25px 20px; }
+        .form-footer { padding: 20px; }
+        .form-hero h1 { font-size: 2rem; }
+    }
+</style>
+
+<!-- Hero -->
+<div class="form-hero" data-aos="fade-down">
+    <div class="container position-relative">
+        <h1>{{ page_title|default:"Build Your Resume" }}</h1>
+        <div class="gold-divider"></div>
+        <p>Complete the sections below to craft a professional profile.</p>
+    </div>
+</div>
+
+<div class="container position-relative">
+<form method="POST" enctype="multipart/form-data" id="resumeForm" novalidate>
+{% csrf_token %}
+
+<!-- All management forms MUST be output at top level of form -->
+{{ education_formset.management_form }}
+{{ experience_formset.management_form }}
+{{ project_formset.management_form }}
+{{ certification_formset.management_form }}
+{{ skill_formset.management_form }}
+{{ language_formset.management_form }}
+{{ achievement_formset.management_form }}
+{{ hobby_formset.management_form }}
+{{ interest_formset.management_form }}
+{{ reference_formset.management_form }}
+{{ custom_formset.management_form }}
+
+<div class="form-container" data-aos="fade-up" data-aos-delay="100">
+    <!-- Progress Bar -->
+    <div class="progress-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="form-tabs" id="formTabs">
+        <button type="button" class="tab-btn active" data-tab="0"><span class="tab-num">1</span> Personal</button>
+        <button type="button" class="tab-btn" data-tab="1"><span class="tab-num">2</span> Education</button>
+        <button type="button" class="tab-btn" data-tab="2"><span class="tab-num">3</span> Experience</button>
+        <button type="button" class="tab-btn" data-tab="3"><span class="tab-num">4</span> Projects</button>
+        <button type="button" class="tab-btn" data-tab="4"><span class="tab-num">5</span> Certifications</button>
+        <button type="button" class="tab-btn" data-tab="5"><span class="tab-num">6</span> Skills</button>
+        <button type="button" class="tab-btn" data-tab="6"><span class="tab-num">7</span> Languages</button>
+        <button type="button" class="tab-btn" data-tab="7"><span class="tab-num">8</span> Achievements</button>
+        <button type="button" class="tab-btn" data-tab="8"><span class="tab-num">9</span> Hobbies</button>
+        <button type="button" class="tab-btn" data-tab="9"><span class="tab-num">10</span> References</button>
+        <button type="button" class="tab-btn" data-tab="10"><span class="tab-num">11</span> Declaration</button>
+        <button type="button" class="tab-btn" data-tab="11"><span class="tab-num">12</span> Custom</button>
+    </div>
+
+    <!-- ===== PANEL 0: PERSONAL INFO ===== -->
+    <div class="form-panel active" id="panel-0">
+        <h2 class="panel-title"><i class="fas fa-user-circle"></i> Personal Information</h2>
+        <p class="panel-subtitle">Your basic personal and contact details. Fields marked <span style="color:#ef4444">*</span> are required.</p>
+
+        {% if resume_form.errors %}
+        <div class="alert alert-danger border-0 rounded-3 mb-4" style="background:#fef2f2;">
+            <i class="fas fa-exclamation-circle me-2" style="color:#ef4444;"></i>
+            <strong>Please correct the errors below.</strong>
+        </div>
+        {% endif %}
+
+        <div class="row g-3">
+            <!-- Template -->
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.template.label }}</label>
+                    {{ resume_form.template }}
+                    {% if resume_form.template.errors %}<ul class="errorlist">{% for e in resume_form.template.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- Full Name -->
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.full_name.label }} <span class="req">*</span></label>
+                    {{ resume_form.full_name }}
+                    {% if resume_form.full_name.errors %}<ul class="errorlist">{% for e in resume_form.full_name.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- Job Title -->
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.job_title.label }}</label>
+                    {{ resume_form.job_title }}
+                    {% if resume_form.job_title.errors %}<ul class="errorlist">{% for e in resume_form.job_title.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- Email -->
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.email.label }} <span class="req">*</span></label>
+                    {{ resume_form.email }}
+                    {% if resume_form.email.errors %}<ul class="errorlist">{% for e in resume_form.email.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- Phone -->
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.phone.label }}</label>
+                    {{ resume_form.phone }}
+                    {% if resume_form.phone.errors %}<ul class="errorlist">{% for e in resume_form.phone.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- Alternate Phone -->
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.alternate_phone.label }}</label>
+                    {{resume_form.alternate_phone}}
+                        {% if resume_form.alternate_phone.errors %}<ul class="errorlist">{% for e in resume_form.alternate_phone.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- Date of Birth -->
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.date_of_birth.label }}</label>
+                    {{resume_form.date_of_birth}}
+                        {% if resume_form.date_of_birth.errors %}<ul class="errorlist">{% for e in resume_form.date_of_birth.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- Gender -->
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.gender.label }}</label>
+                    {{resume_form.gender}}
+                        {% if resume_form.gender.errors %}<ul class="errorlist">{% for e in resume_form.gender.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- Nationality -->
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.nationality.label }}</label>
+                    {{resume_form.nationality}}
+                        {% if resume_form.nationality.errors %}<ul class="errorlist">{% for e in resume_form.nationality.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- Profile Photo -->
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.profile_photo.label }}</label>
+                    {{ resume_form.profile_photo }}
+                    {% if resume_form.profile_photo.errors %}<ul class="errorlist">{% for e in resume_form.profile_photo.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- Address -->
+            <div class="col-12">
+                <div class="field-group">
+                    <label>{{ resume_form.address.label }}</label>
+                    {{resume_form.address}}
+                        {% if resume_form.address.errors %}<ul class="errorlist">{% for e in resume_form.address.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- City / State / Country / Pincode -->
+            <div class="col-md-3">
+                <div class="field-group">
+                    <label>{{ resume_form.city.label }}</label>
+                    {{resume_form.city}}
+                        {% if resume_form.city.errors %}<ul class="errorlist">{% for e in resume_form.city.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="field-group">
+                    <label>{{ resume_form.state.label }}</label>
+                    {{resume_form.state}}
+                        {% if resume_form.state.errors %}<ul class="errorlist">{% for e in resume_form.state.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="field-group">
+                    <label>{{ resume_form.country.label }}</label>
+                    {{resume_form.country}}
+                        {% if resume_form.country.errors %}<ul class="errorlist">{% for e in resume_form.country.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="field-group">
+                    <label>{{ resume_form.pincode.label }}</label>
+                    {{resume_form.pincode}}
+                        {% if resume_form.pincode.errors %}<ul class="errorlist">{% for e in resume_form.pincode.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- LinkedIn / GitHub / Portfolio / Website -->
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label><i class="fab fa-linkedin" style="color:#0077b5;"></i> {{ resume_form.linkedin.label }}</label>
+                    {{resume_form.linkedin}}
+                        {% if resume_form.linkedin.errors %}<ul class="errorlist">{% for e in resume_form.linkedin.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label><i class="fab fa-github"></i> {{ resume_form.github.label }}</label>
+                    {{resume_form.github}}
+                        {% if resume_form.github.errors %}<ul class="errorlist">{% for e in resume_form.github.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.portfolio.label }}</label>
+                    {{resume_form.portfolio}}
+                        {% if resume_form.portfolio.errors %}<ul class="errorlist">{% for e in resume_form.portfolio.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="field-group">
+                    <label>{{ resume_form.website.label }}</label>
+                    {{resume_form.website}}
+                        {% if resume_form.website.errors %}<ul class="errorlist">{% for e in resume_form.website.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+            <!-- Objective -->
+            <div class="col-12">
+                <div class="field-group">
+                    <label>{{ resume_form.objective.label }}</label>
+                    {{resume_form.objective}}
+                        {% if resume_form.objective.errors %}<ul class="errorlist">{% for e in resume_form.objective.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PANEL 1: EDUCATION ===== -->
+    <div class="form-panel" id="panel-1">
+        <h2 class="panel-title"><i class="fas fa-graduation-cap"></i> Education</h2>
+        <p class="panel-subtitle">Add your academic qualifications. Click "Add Education" to add more entries.</p>
+        <div id="education-container">
+            {% for form in education_formset %}
+            <div class="formset-card" id="edu-{{ forloop.counter0 }}">
+                <div class="formset-card-header">
+                    <span class="formset-num">{{ forloop.counter }}</span>
+                    <h5>Education Entry #{{ forloop.counter }}</h5>
+                    {% if not forloop.first %}
+                    <label class="delete-row" style="cursor:pointer;">
+                        <i class="fas fa-trash-alt me-1"></i> Remove
+                        {{ form.DELETE }}
+                    </label>
+                    {% else %}
+                    <span></span>
+                    {% endif %}
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6 field-group">
+                        <label>{{ form.degree.label }}</label>{{ form.degree }}
+                        {% if form.degree.errors %}<ul class="errorlist">{% for e in form.degree.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                    <div class="col-md-6 field-group">
+                        <label>{{ form.institute.label }}</label>{{ form.institute }}
+                        {% if form.institute.errors %}<ul class="errorlist">{% for e in form.institute.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                    <div class="col-md-6 field-group">
+                        <label>{{ form.university.label }}</label>{{form.university}}
+                        {% if form.university.errors %}<ul class="errorlist">{% for e in form.university.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                    <div class="col-md-3 field-group">
+                        <label>{{ form.start_year.label }}</label>{{form.start_year}}
+                        {% if form.start_year.errors %}<ul class="errorlist">{% for e in form.start_year.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                    <div class="col-md-3 field-group">
+                        <label>{{ form.end_year.label }}</label>{{form.end_year}}
+                        {% if form.end_year.errors %}<ul class="errorlist">{% for e in form.end_year.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                    <div class="col-md-6 field-group">
+                        <label>{{ form.percentage.label }}</label>{{form.percentage}}
+                        {% if form.percentage.errors %}<ul class="errorlist">{% for e in form.percentage.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                    <div class="col-md-6 field-group">
+                        <label>{{ form.cgpa.label }}</label>{{form.cgpa}}
+                        {% if form.cgpa.errors %}<ul class="errorlist">{% for e in form.cgpa.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                    <div class="col-12 field-group">
+                        <label>{{ form.description.label }}</label>{{form.description}}
+                        {% if form.description.errors %}<ul class="errorlist">{% for e in form.description.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('education', educationTemplate)">
+            <i class="fas fa-plus me-2"></i>Add Education
+        </button>
+    </div>
+
+    <!-- ===== PANEL 2: EXPERIENCE ===== -->
+    <div class="form-panel" id="panel-2">
+        <h2 class="panel-title"><i class="fas fa-briefcase"></i> Work Experience</h2>
+        <p class="panel-subtitle">Add your professional work experience, internships, and freelance work.</p>
+        <div id="experience-container">
+            {% for form in experience_formset %}
+            <div class="formset-card">
+                <div class="formset-card-header">
+                    <span class="formset-num">{{ forloop.counter }}</span>
+                    <h5>Experience #{{ forloop.counter }}</h5>
+                    {% if not forloop.first %}<label class="delete-row">Remove {{ form.DELETE }}</label>{% else %}<span></span>{% endif %}
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6 field-group"><label>{{ form.company.label }}</label>{{form.company}}
+                        {% if form.company.errors %}<ul class="errorlist">{% for e in form.company.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.designation.label }}</label>{{form.designation}}
+                        {% if form.designation.errors %}<ul class="errorlist">{% for e in form.designation.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-4 field-group"><label>{{ form.employment_type.label }}</label>{{form.employment_type}}
+                        {% if form.employment_type.errors %}<ul class="errorlist">{% for e in form.employment_type.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-4 field-group"><label>{{ form.location.label }}</label>{{form.location}}
+                        {% if form.location.errors %}<ul class="errorlist">{% for e in form.location.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-4 field-group"><label>{{ form.start_date.label }}</label>{{form.start_date}}
+                        {% if form.start_date.errors %}<ul class="errorlist">{% for e in form.start_date.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.end_date.label }}</label>{{form.end_date}}
+                        {% if form.end_date.errors %}<ul class="errorlist">{% for e in form.end_date.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group" style="display:flex;align-items:center;gap:10px;margin-top:35px;">
+                        {{form.currently_working}}
+                        {% if form.currently_working.errors %}<ul class="errorlist">{% for e in form.currently_working.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %} <label style="text-transform:none;font-size:0.95rem;">{{ form.currently_working.label }}</label>
+                    </div>
+                    <div class="col-12 field-group"><label>{{ form.description.label }}</label>{{form.description}}
+                        {% if form.description.errors %}<ul class="errorlist">{% for e in form.description.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('experience', experienceTemplate)">
+            <i class="fas fa-plus me-2"></i>Add Experience
+        </button>
+    </div>
+
+    <!-- ===== PANEL 3: PROJECTS ===== -->
+    <div class="form-panel" id="panel-3">
+        <h2 class="panel-title"><i class="fas fa-code"></i> Projects</h2>
+        <p class="panel-subtitle">Showcase your personal and professional projects.</p>
+        <div id="project-container">
+            {% for form in project_formset %}
+            <div class="formset-card">
+                <div class="formset-card-header">
+                    <span class="formset-num">{{ forloop.counter }}</span>
+                    <h5>Project #{{ forloop.counter }}</h5>
+                    {% if not forloop.first %}<label class="delete-row">Remove {{ form.DELETE }}</label>{% else %}<span></span>{% endif %}
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6 field-group"><label>{{ form.title.label }}</label>{{form.title}}
+                        {% if form.title.errors %}<ul class="errorlist">{% for e in form.title.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.technologies.label }}</label>{{form.technologies}}
+                        {% if form.technologies.errors %}<ul class="errorlist">{% for e in form.technologies.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.role.label }}</label>{{form.role}}
+                        {% if form.role.errors %}<ul class="errorlist">{% for e in form.role.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.team_size.label }}</label>{{form.team_size}}
+                        {% if form.team_size.errors %}<ul class="errorlist">{% for e in form.team_size.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.start_date.label }}</label>{{form.start_date}}
+                        {% if form.start_date.errors %}<ul class="errorlist">{% for e in form.start_date.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.end_date.label }}</label>{{form.end_date}}
+                        {% if form.end_date.errors %}<ul class="errorlist">{% for e in form.end_date.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.github_link.label }}</label>{{form.github_link}}
+                        {% if form.github_link.errors %}<ul class="errorlist">{% for e in form.github_link.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.live_link.label }}</label>{{form.live_link}}
+                        {% if form.live_link.errors %}<ul class="errorlist">{% for e in form.live_link.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-12 field-group"><label>{{ form.description.label }}</label>{{form.description}}
+                        {% if form.description.errors %}<ul class="errorlist">{% for e in form.description.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('project', projectTemplate)">
+            <i class="fas fa-plus me-2"></i>Add Project
+        </button>
+    </div>
+
+    <!-- ===== PANEL 4: CERTIFICATIONS ===== -->
+    <div class="form-panel" id="panel-4">
+        <h2 class="panel-title"><i class="fas fa-certificate"></i> Certifications</h2>
+        <p class="panel-subtitle">Add your professional certifications and courses.</p>
+        <div id="certification-container">
+            {% for form in certification_formset %}
+            <div class="formset-card">
+                <div class="formset-card-header">
+                    <span class="formset-num">{{ forloop.counter }}</span>
+                    <h5>Certification #{{ forloop.counter }}</h5>
+                    {% if not forloop.first %}<label class="delete-row">Remove {{ form.DELETE }}</label>{% else %}<span></span>{% endif %}
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6 field-group"><label>{{ form.certificate_name.label }}</label>{{form.certificate_name}}
+                        {% if form.certificate_name.errors %}<ul class="errorlist">{% for e in form.certificate_name.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.organization.label }}</label>{{form.organization}}
+                        {% if form.organization.errors %}<ul class="errorlist">{% for e in form.organization.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.issue_date.label }}</label>{{form.issue_date}}
+                        {% if form.issue_date.errors %}<ul class="errorlist">{% for e in form.issue_date.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.expiry_date.label }}</label>{{form.expiry_date}}
+                        {% if form.expiry_date.errors %}<ul class="errorlist">{% for e in form.expiry_date.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.credential_id.label }}</label>{{form.credential_id}}
+                        {% if form.credential_id.errors %}<ul class="errorlist">{% for e in form.credential_id.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.credential_url.label }}</label>{{form.credential_url}}
+                        {% if form.credential_url.errors %}<ul class="errorlist">{% for e in form.credential_url.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('certification', certificationTemplate)">
+            <i class="fas fa-plus me-2"></i>Add Certification
+        </button>
+    </div>
+
+    <!-- ===== PANEL 5: SKILLS ===== -->
+    <div class="form-panel" id="panel-5">
+        <h2 class="panel-title"><i class="fas fa-star"></i> Skills</h2>
+        <p class="panel-subtitle">List your technical and soft skills with proficiency levels.</p>
+        <div id="skill-container" class="row g-3">
+            {% for form in skill_formset %}
+            <div class="col-md-6">
+                <div class="formset-card" style="border-radius:10px;">
+                    <div class="formset-card-header">
+                        <span class="formset-num">{{ forloop.counter }}</span>
+                        {% if not forloop.first %}<label class="delete-row">Remove {{ form.DELETE }}</label>{% else %}<span></span>{% endif %}
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-7 field-group"><label>{{ form.name.label }}</label>{{form.name}}
+                        {% if form.name.errors %}<ul class="errorlist">{% for e in form.name.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                        <div class="col-5 field-group"><label>{{ form.level.label }}</label>{{form.level}}
+                        {% if form.level.errors %}<ul class="errorlist">{% for e in form.level.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                        {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn mt-3" onclick="addFormsetRow('skill', skillTemplate)">
+            <i class="fas fa-plus me-2"></i>Add Skill
+        </button>
+    </div>
+
+    <!-- ===== PANEL 6: LANGUAGES ===== -->
+    <div class="form-panel" id="panel-6">
+        <h2 class="panel-title"><i class="fas fa-language"></i> Languages</h2>
+        <p class="panel-subtitle">Add languages you know with your proficiency.</p>
+        <div id="language-container">
+            {% for form in language_formset %}
+            <div class="formset-card">
+                <div class="formset-card-header">
+                    <span class="formset-num">{{ forloop.counter }}</span>
+                    <h5>Language #{{ forloop.counter }}</h5>
+                    {% if not forloop.first %}<label class="delete-row">Remove {{ form.DELETE }}</label>{% else %}<span></span>{% endif %}
+                </div>
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-4 field-group"><label>{{ form.language.label }}</label>{{form.language}}
+                        {% if form.language.errors %}<ul class="errorlist">{% for e in form.language.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-2 field-group" style="text-align:center; margin-top:28px;">
+                        {{form.read}}
+                        {% if form.read.errors %}<ul class="errorlist">{% for e in form.read.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %} <label style="text-transform:none;font-size:0.9rem;display:block;">{{ form.read.label }}</label>
+                    </div>
+                    <div class="col-md-2 field-group" style="text-align:center; margin-top:28px;">
+                        {{form.write}}
+                        {% if form.write.errors %}<ul class="errorlist">{% for e in form.write.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %} <label style="text-transform:none;font-size:0.9rem;display:block;">{{ form.write.label }}</label>
+                    </div>
+                    <div class="col-md-2 field-group" style="text-align:center; margin-top:28px;">
+                        {{form.speak}}
+                        {% if form.speak.errors %}<ul class="errorlist">{% for e in form.speak.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %} <label style="text-transform:none;font-size:0.9rem;display:block;">{{ form.speak.label }}</label>
+                    </div>
+                    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('language', languageTemplate)">
+            <i class="fas fa-plus me-2"></i>Add Language
+        </button>
+    </div>
+
+    <!-- ===== PANEL 7: ACHIEVEMENTS ===== -->
+    <div class="form-panel" id="panel-7">
+        <h2 class="panel-title"><i class="fas fa-trophy"></i> Achievements</h2>
+        <p class="panel-subtitle">Highlight your awards, accomplishments, and recognitions.</p>
+        <div id="achievement-container">
+            {% for form in achievement_formset %}
+            <div class="formset-card">
+                <div class="formset-card-header">
+                    <span class="formset-num">{{ forloop.counter }}</span>
+                    <h5>Achievement #{{ forloop.counter }}</h5>
+                    {% if not forloop.first %}<label class="delete-row">Remove {{ form.DELETE }}</label>{% else %}<span></span>{% endif %}
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-8 field-group"><label>{{ form.title.label }}</label>{{form.title}}
+                        {% if form.title.errors %}<ul class="errorlist">{% for e in form.title.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-4 field-group"><label>{{ form.achievement_date.label }}</label>{{form.achievement_date}}
+                        {% if form.achievement_date.errors %}<ul class="errorlist">{% for e in form.achievement_date.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-12 field-group"><label>{{ form.description.label }}</label>{{form.description}}
+                        {% if form.description.errors %}<ul class="errorlist">{% for e in form.description.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('achievement', achievementTemplate)">
+            <i class="fas fa-plus me-2"></i>Add Achievement
+        </button>
+    </div>
+
+    <!-- ===== PANEL 8: HOBBIES & INTERESTS ===== -->
+    <div class="form-panel" id="panel-8">
+        <h2 class="panel-title"><i class="fas fa-heart"></i> Hobbies & Interests</h2>
+        <p class="panel-subtitle">Add your hobbies and personal interests to show personality.</p>
+
+        <h5 style="color:var(--primary); margin-bottom:15px; font-size:1.1rem;"><i class="fas fa-gamepad me-2" style="color:var(--gold);"></i>Hobbies</h5>
+        <div id="hobby-container" class="row g-3">
+            {% for form in hobby_formset %}
+            <div class="col-md-4">
+                <div class="formset-card" style="border-radius:10px; padding:15px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <div class="field-group" style="flex:1; margin:0;"><label>{{ form.name.label }}</label>{{form.name}}
+                        {% if form.name.errors %}<ul class="errorlist">{% for e in form.name.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                        {% if not forloop.first %}<label class="delete-row" style="margin-top:22px;">{{ form.DELETE }}×</label>{% endif %}
+                        {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn mt-3" onclick="addFormsetRow('hobby', hobbyTemplate)">
+            <i class="fas fa-plus me-2"></i>Add Hobby
+        </button>
+
+        <hr style="margin: 30px 0; border-color: var(--gold); opacity:0.3;">
+
+        <h5 style="color:var(--primary); margin-bottom:15px; font-size:1.1rem;"><i class="fas fa-star me-2" style="color:var(--gold);"></i>Interests</h5>
+        <div id="interest-container" class="row g-3">
+            {% for form in interest_formset %}
+            <div class="col-md-4">
+                <div class="formset-card" style="border-radius:10px; padding:15px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <div class="field-group" style="flex:1; margin:0;"><label>{{ form.name.label }}</label>{{form.name}}
+                        {% if form.name.errors %}<ul class="errorlist">{% for e in form.name.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                        {% if not forloop.first %}<label class="delete-row" style="margin-top:22px;">{{ form.DELETE }}×</label>{% endif %}
+                        {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn mt-3" onclick="addFormsetRow('interest', interestTemplate)">
+            <i class="fas fa-plus me-2"></i>Add Interest
+        </button>
+    </div>
+
+    <!-- ===== PANEL 9: REFERENCES ===== -->
+    <div class="form-panel" id="panel-9">
+        <h2 class="panel-title"><i class="fas fa-address-book"></i> References</h2>
+        <p class="panel-subtitle">Add professional references who can vouch for your work.</p>
+        <div id="reference-container">
+            {% for form in reference_formset %}
+            <div class="formset-card">
+                <div class="formset-card-header">
+                    <span class="formset-num">{{ forloop.counter }}</span>
+                    <h5>Reference #{{ forloop.counter }}</h5>
+                    {% if not forloop.first %}<label class="delete-row">Remove {{ form.DELETE }}</label>{% else %}<span></span>{% endif %}
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6 field-group"><label>{{ form.name.label }}</label>{{form.name}}
+                        {% if form.name.errors %}<ul class="errorlist">{% for e in form.name.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.designation.label }}</label>{{form.designation}}
+                        {% if form.designation.errors %}<ul class="errorlist">{% for e in form.designation.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.company.label }}</label>{{form.company}}
+                        {% if form.company.errors %}<ul class="errorlist">{% for e in form.company.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.email.label }}</label>{{form.email}}
+                        {% if form.email.errors %}<ul class="errorlist">{% for e in form.email.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-6 field-group"><label>{{ form.phone.label }}</label>{{form.phone}}
+                        {% if form.phone.errors %}<ul class="errorlist">{% for e in form.phone.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('reference', referenceTemplate)">
+            <i class="fas fa-plus me-2"></i>Add Reference
+        </button>
+    </div>
+
+    <!-- ===== PANEL 10: DECLARATION ===== -->
+    <div class="form-panel" id="panel-10">
+        <h2 class="panel-title"><i class="fas fa-file-signature"></i> Declaration</h2>
+        <p class="panel-subtitle">Add a declaration statement to authenticate your resume information.</p>
+        <div class="formset-card">
+            <div class="row g-3">
+                <div class="col-12 field-group">
+                    <label>{{ declaration_form.declaration_text.label }}</label>
+                    {{ declaration_form.declaration_text }}
+                    {% if declaration_form.declaration_text.errors %}<ul class="errorlist">{% for e in declaration_form.declaration_text.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                <div class="col-md-6 field-group">
+                    <label>{{ declaration_form.place.label }}</label>
+                    {{ declaration_form.place }}
+                </div>
+                <div class="col-md-6 field-group">
+                    <label>{{ declaration_form.declaration_date.label }}</label>
+                    {{ declaration_form.declaration_date }}
+                </div>
+                <div class="col-md-12 field-group" style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+                    {{ declaration_form.show_signature }}
+                    <label style="text-transform:none; font-size:1rem; margin:0;">{{ declaration_form.show_signature.label }}</label>
+                </div>
+                {% for hidden in declaration_form.hidden_fields %}{{ hidden }}{% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== PANEL 11: CUSTOM SECTIONS ===== -->
+    <div class="form-panel" id="panel-11">
+        <h2 class="panel-title"><i class="fas fa-plus-square"></i> Custom Sections</h2>
+        <p class="panel-subtitle">Add any additional sections like Publications, Volunteer Work, etc.</p>
+        <div id="custom-container">
+            {% for form in custom_formset %}
+            <div class="formset-card">
+                <div class="formset-card-header">
+                    <span class="formset-num">{{ forloop.counter }}</span>
+                    <h5>Custom Section #{{ forloop.counter }}</h5>
+                    {% if not forloop.first %}<label class="delete-row">Remove {{ form.DELETE }}</label>{% else %}<span></span>{% endif %}
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-8 field-group"><label>{{ form.heading.label }}</label>{{form.heading}}
+                        {% if form.heading.errors %}<ul class="errorlist">{% for e in form.heading.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-md-4 field-group"><label>{{ form.order.label }}</label>{{form.order}}
+                        {% if form.order.errors %}<ul class="errorlist">{% for e in form.order.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    <div class="col-12 field-group"><label>{{ form.content.label }}</label>{{form.content}}
+                        {% if form.content.errors %}<ul class="errorlist">{% for e in form.content.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}</div>
+                    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('custom', customTemplate)">
+            <i class="fas fa-plus me-2"></i>Add Custom Section
+        </button>
+
+        <!-- Final Save Summary -->
+        <div style="background: linear-gradient(135deg, #1a2744, #0d1627); border-radius: 16px; padding: 30px; color: #fff; text-align: center; margin-top: 30px;">
+            <h3 style="color: var(--gold); font-size: 1.8rem; margin-bottom: 10px;">Ready to Save!</h3>
+            <p style="color: rgba(255,255,255,0.75); margin-bottom: 20px;">Review all sections and click Save to create your professional resume.</p>
+            <button type="submit" class="btn-nav btn-submit btn-lg px-5">
+                <i class="fas fa-save me-2"></i>Save Resume
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="form-footer">
+        <button type="button" class="btn-nav btn-prev" id="prevBtn" style="display:none;">
+            <i class="fas fa-arrow-left me-2"></i>Previous
+        </button>
+        <span class="step-counter" id="stepCounter">Step 1 of 11</span>
+        <button type="button" class="btn-nav btn-next" id="nextBtn">
+            Next <i class="fas fa-arrow-right ms-2"></i>
+        </button>
+    </div>
+</div>
+</form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+AOS.init({ duration: 800, once: true });
+
+// ---- TAB NAVIGATION ----
+const tabBtns = document.querySelectorAll('.tab-btn');
+const panels = document.querySelectorAll('.form-panel');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const stepCounter = document.getElementById('stepCounter');
+const progressBar = document.getElementById('progressBar');
+const totalSteps = panels.length;
+let currentStep = 0;
+
+// Check if there are form errors and jump to first error panel
+{% if resume_form.errors %}
+currentStep = 0;
+{% endif %}
+
+function goToStep(step) {
+    panels.forEach((p, i) => {
+        p.classList.toggle('active', i === step);
+    });
+    tabBtns.forEach((t, i) => {
+        t.classList.toggle('active', i === step);
+        if (i < step) t.classList.add('done');
+        else t.classList.remove('done');
+    });
+    prevBtn.style.display = step === 0 ? 'none' : 'inline-flex';
+    nextBtn.style.display = step === totalSteps - 1 ? 'none' : 'inline-flex';
+    stepCounter.textContent = `Step ${step + 1} of ${totalSteps}`;
+    progressBar.style.width = `${((step + 1) / totalSteps) * 100}%`;
+    // Scroll to top of form
+    document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    currentStep = step;
+}
+
+tabBtns.forEach((btn, i) => {
+    btn.addEventListener('click', () => goToStep(i));
+});
+nextBtn.addEventListener('click', () => { if (currentStep < totalSteps - 1) goToStep(currentStep + 1); });
+prevBtn.addEventListener('click', () => { if (currentStep > 0) goToStep(currentStep - 1); });
+
+// Initialize
+goToStep(currentStep);
+
+// ---- DYNAMIC FORMSET ADD ROW ----
+function getFormsetTotal(prefix) {
+    const totalInput = document.querySelector(`#id_${prefix}-TOTAL_FORMS`);
+    return totalInput ? parseInt(totalInput.value) : 0;
+}
+function setFormsetTotal(prefix, val) {
+    const totalInput = document.querySelector(`#id_${prefix}-TOTAL_FORMS`);
+    if (totalInput) totalInput.value = val;
+}
+function addFormsetRow(prefix, templateFn) {
+    const total = getFormsetTotal(prefix);
+    const container = document.getElementById(`${prefix}-container`);
+    const newHtml = templateFn(total);
+    const div = document.createElement('div');
+    div.innerHTML = newHtml;
+    container.appendChild(div.firstElementChild);
+    setFormsetTotal(prefix, total + 1);
+}
+
+// Template generators — uses __prefix__ placeholder replaced with actual index
+function educationTemplate(n) {
+    return `<div class="formset-card">
+        <div class="formset-card-header"><span class="formset-num">${n+1}</span><h5>Education #${n+1}</h5>
+        <label class="delete-row">Remove <input type="checkbox" name="education-${n}-DELETE" id="id_education-${n}-DELETE"></label></div>
+        <div class="row g-3">
+            <div class="col-md-6 field-group"><label>Degree</label><input type="text" name="education-${n}-degree" id="id_education-${n}-degree" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Institute</label><input type="text" name="education-${n}-institute" id="id_education-${n}-institute" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>University</label><input type="text" name="education-${n}-university" id="id_education-${n}-university" class="form-control"></div>
+            <div class="col-md-3 field-group"><label>Start Year</label><input type="number" name="education-${n}-start_year" id="id_education-${n}-start_year" class="form-control"></div>
+            <div class="col-md-3 field-group"><label>End Year</label><input type="number" name="education-${n}-end_year" id="id_education-${n}-end_year" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Percentage</label><input type="text" name="education-${n}-percentage" id="id_education-${n}-percentage" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>CGPA</label><input type="text" name="education-${n}-cgpa" id="id_education-${n}-cgpa" class="form-control"></div>
+            <div class="col-12 field-group"><label>Description</label><textarea name="education-${n}-description" id="id_education-${n}-description" class="form-control" rows="2"></textarea></div>
+            <input type="hidden" name="education-${n}-id" id="id_education-${n}-id">
+        </div></div>`;
+}
+function experienceTemplate(n) {
+    return `<div class="formset-card">
+        <div class="formset-card-header"><span class="formset-num">${n+1}</span><h5>Experience #${n+1}</h5>
+        <label class="delete-row">Remove <input type="checkbox" name="experience-${n}-DELETE" id="id_experience-${n}-DELETE"></label></div>
+        <div class="row g-3">
+            <div class="col-md-6 field-group"><label>Company</label><input type="text" name="experience-${n}-company" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Designation</label><input type="text" name="experience-${n}-designation" class="form-control"></div>
+            <div class="col-md-4 field-group"><label>Type</label><select name="experience-${n}-employment_type" class="form-control">
+                <option value="FULL_TIME">Full Time</option><option value="PART_TIME">Part Time</option>
+                <option value="INTERNSHIP">Internship</option><option value="FREELANCE">Freelance</option>
+            </select></div>
+            <div class="col-md-4 field-group"><label>Location</label><input type="text" name="experience-${n}-location" class="form-control"></div>
+            <div class="col-md-4 field-group"><label>Start Date</label><input type="date" name="experience-${n}-start_date" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>End Date</label><input type="date" name="experience-${n}-end_date" class="form-control"></div>
+            <div class="col-md-6 field-group" style="margin-top:28px;"><input type="checkbox" name="experience-${n}-currently_working"> <label style="text-transform:none;">Currently Working Here</label></div>
+            <div class="col-12 field-group"><label>Description</label><textarea name="experience-${n}-description" class="form-control" rows="3"></textarea></div>
+            <input type="hidden" name="experience-${n}-id">
+        </div></div>`;
+}
+function projectTemplate(n) {
+    return `<div class="formset-card">
+        <div class="formset-card-header"><span class="formset-num">${n+1}</span><h5>Project #${n+1}</h5>
+        <label class="delete-row">Remove <input type="checkbox" name="project-${n}-DELETE"></label></div>
+        <div class="row g-3">
+            <div class="col-md-6 field-group"><label>Title</label><input type="text" name="project-${n}-title" class="form-control" placeholder="Project Title"></div>
+            <div class="col-md-6 field-group"><label>Technologies</label><input type="text" name="project-${n}-technologies" class="form-control" placeholder="Python, Django, React"></div>
+            <div class="col-md-6 field-group"><label>Role</label><input type="text" name="project-${n}-role" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Team Size</label><input type="number" name="project-${n}-team_size" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Start Date</label><input type="date" name="project-${n}-start_date" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>End Date</label><input type="date" name="project-${n}-end_date" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>GitHub Link</label><input type="url" name="project-${n}-github_link" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Live Link</label><input type="url" name="project-${n}-live_link" class="form-control"></div>
+            <div class="col-12 field-group"><label>Description</label><textarea name="project-${n}-description" class="form-control" rows="3"></textarea></div>
+            <input type="hidden" name="project-${n}-id">
+        </div></div>`;
+}
+function certificationTemplate(n) {
+    return `<div class="formset-card">
+        <div class="formset-card-header"><span class="formset-num">${n+1}</span><h5>Certification #${n+1}</h5>
+        <label class="delete-row">Remove <input type="checkbox" name="certification-${n}-DELETE"></label></div>
+        <div class="row g-3">
+            <div class="col-md-6 field-group"><label>Certificate Name</label><input type="text" name="certification-${n}-certificate_name" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Organization</label><input type="text" name="certification-${n}-organization" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Issue Date</label><input type="date" name="certification-${n}-issue_date" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Expiry Date</label><input type="date" name="certification-${n}-expiry_date" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Credential ID</label><input type="text" name="certification-${n}-credential_id" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Credential URL</label><input type="url" name="certification-${n}-credential_url" class="form-control"></div>
+            <input type="hidden" name="certification-${n}-id">
+        </div></div>`;
+}
+function skillTemplate(n) {
+    return `<div class="col-md-6"><div class="formset-card" style="border-radius:10px;">
+        <div class="formset-card-header"><span class="formset-num">${n+1}</span>
+        <label class="delete-row">Remove <input type="checkbox" name="skill-${n}-DELETE"></label></div>
+        <div class="row g-2">
+            <div class="col-7 field-group"><label>Skill</label><input type="text" name="skill-${n}-name" class="form-control"></div>
+            <div class="col-5 field-group"><label>Level</label><select name="skill-${n}-level" class="form-control">
+                <option value="BEGINNER">Beginner</option><option value="INTERMEDIATE">Intermediate</option>
+                <option value="ADVANCED">Advanced</option><option value="EXPERT">Expert</option>
+            </select></div>
+            <input type="hidden" name="skill-${n}-id">
+        </div></div></div>`;
+}
+function languageTemplate(n) {
+    return `<div class="formset-card">
+        <div class="formset-card-header"><span class="formset-num">${n+1}</span><h5>Language #${n+1}</h5>
+        <label class="delete-row">Remove <input type="checkbox" name="language-${n}-DELETE"></label></div>
+        <div class="row g-3 align-items-center">
+            <div class="col-md-4 field-group"><label>Language</label><input type="text" name="language-${n}-language" class="form-control"></div>
+            <div class="col-md-2" style="text-align:center;"><input type="checkbox" name="language-${n}-read"><label style="display:block;font-size:0.9rem;">Read</label></div>
+            <div class="col-md-2" style="text-align:center;"><input type="checkbox" name="language-${n}-write"><label style="display:block;font-size:0.9rem;">Write</label></div>
+            <div class="col-md-2" style="text-align:center;"><input type="checkbox" name="language-${n}-speak"><label style="display:block;font-size:0.9rem;">Speak</label></div>
+            <input type="hidden" name="language-${n}-id">
+        </div></div>`;
+}
+function achievementTemplate(n) {
+    return `<div class="formset-card">
+        <div class="formset-card-header"><span class="formset-num">${n+1}</span><h5>Achievement #${n+1}</h5>
+        <label class="delete-row">Remove <input type="checkbox" name="achievement-${n}-DELETE"></label></div>
+        <div class="row g-3">
+            <div class="col-md-8 field-group"><label>Title</label><input type="text" name="achievement-${n}-title" class="form-control"></div>
+            <div class="col-md-4 field-group"><label>Date</label><input type="date" name="achievement-${n}-achievement_date" class="form-control"></div>
+            <div class="col-12 field-group"><label>Description</label><textarea name="achievement-${n}-description" class="form-control" rows="2"></textarea></div>
+            <input type="hidden" name="achievement-${n}-id">
+        </div></div>`;
+}
+function hobbyTemplate(n) {
+    return `<div class="col-md-4"><div class="formset-card" style="border-radius:10px; padding:15px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <div class="field-group" style="flex:1; margin:0;"><label>Hobby</label><input type="text" name="hobby-${n}-name" class="form-control"></div>
+            <label class="delete-row" style="margin-top:22px;"><input type="checkbox" name="hobby-${n}-DELETE">×</label>
+        </div>
+        <input type="hidden" name="hobby-${n}-id">
+    </div></div>`;
+}
+function interestTemplate(n) {
+    return `<div class="col-md-4"><div class="formset-card" style="border-radius:10px; padding:15px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <div class="field-group" style="flex:1; margin:0;"><label>Interest</label><input type="text" name="interest-${n}-name" class="form-control"></div>
+            <label class="delete-row" style="margin-top:22px;"><input type="checkbox" name="interest-${n}-DELETE">×</label>
+        </div>
+        <input type="hidden" name="interest-${n}-id">
+    </div></div>`;
+}
+function referenceTemplate(n) {
+    return `<div class="formset-card">
+        <div class="formset-card-header"><span class="formset-num">${n+1}</span><h5>Reference #${n+1}</h5>
+        <label class="delete-row">Remove <input type="checkbox" name="reference-${n}-DELETE"></label></div>
+        <div class="row g-3">
+            <div class="col-md-6 field-group"><label>Name</label><input type="text" name="reference-${n}-name" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Designation</label><input type="text" name="reference-${n}-designation" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Company</label><input type="text" name="reference-${n}-company" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Email</label><input type="email" name="reference-${n}-email" class="form-control"></div>
+            <div class="col-md-6 field-group"><label>Phone</label><input type="text" name="reference-${n}-phone" class="form-control"></div>
+            <input type="hidden" name="reference-${n}-id">
+        </div></div>`;
+}
+function customTemplate(n) {
+    return `<div class="formset-card">
+        <div class="formset-card-header"><span class="formset-num">${n+1}</span><h5>Custom Section #${n+1}</h5>
+        <label class="delete-row">Remove <input type="checkbox" name="custom-${n}-DELETE"></label></div>
+        <div class="row g-3">
+            <div class="col-md-8 field-group"><label>Heading</label><input type="text" name="custom-${n}-heading" class="form-control" placeholder="Publications, Volunteer Work, etc."></div>
+            <div class="col-md-4 field-group"><label>Order</label><input type="number" name="custom-${n}-order" class="form-control" value="${n+1}"></div>
+            <div class="col-12 field-group"><label>Content</label><textarea name="custom-${n}-content" class="form-control" rows="4" placeholder="Describe this section..."></textarea></div>
+            <input type="hidden" name="custom-${n}-id">
+        </div></div>`;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,397 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+    :root { --primary: #1a2744; --gold: #c9a84c; --bg: #faf8f3; --text: #1a1a2e; --muted: #6b7280; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; color: var(--primary); }
+    .action-bar {
+        background: white; padding: 15px 25px; border-radius: 50px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.06); position: sticky;
+        top: 80px; z-index: 100; margin-bottom: 30px;
+        display: flex; justify-content: space-between; align-items: center;
+        border: 1px solid rgba(201,168,76,0.15);
+    }
+    .section-card {
+        background: white; border-radius: 16px; padding: 30px;
+        margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+        border-top: 3px solid var(--gold); transition: all 0.3s ease;
+    }
+    .section-card:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.09); transform: translateY(-2px); }
+    .section-card h3, .section-card h4 { color: var(--primary); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 10px; }
+    .section-card h3 i, .section-card h4 i { color: var(--gold); }
+
+    .profile-header {
+        background: linear-gradient(135deg, var(--primary) 0%, #0f172a 100%);
+        color: white; border-radius: 20px; padding: 45px;
+        margin-bottom: 30px; position: relative; overflow: hidden;
+    }
+    .profile-header::before {
+        content: ''; position: absolute; top: -80px; right: -80px;
+        width: 300px; height: 300px; border-radius: 50%;
+        background: rgba(201,168,76,0.12); pointer-events: none;
+    }
+    .profile-header h1 { color: white; font-size: 2.5rem; }
+    .profile-header .job-title { color: var(--gold); font-size: 1.2rem; font-weight: 500; }
+    .profile-photo {
+        width: 120px; height: 120px; border-radius: 50%;
+        border: 4px solid var(--gold); object-fit: cover;
+        margin: 0 auto 20px; display: block;
+    }
+    .contact-chip {
+        display: inline-flex; align-items: center; gap: 8px;
+        background: rgba(255,255,255,0.12); border-radius: 30px;
+        padding: 6px 15px; margin: 4px; font-size: 0.88rem;
+        color: rgba(255,255,255,0.9);
+    }
+    .contact-chip i { color: var(--gold); }
+
+    .timeline-item {
+        border-left: 2px solid var(--gold); padding-left: 20px;
+        position: relative; margin-bottom: 22px; padding-bottom: 5px;
+    }
+    .timeline-item::before {
+        content: ''; position: absolute; left: -6px; top: 5px;
+        width: 10px; height: 10px; border-radius: 50%;
+        background: var(--gold); border: 2px solid white;
+        box-shadow: 0 0 0 2px var(--gold);
+    }
+    .timeline-item h5 { color: var(--primary); margin-bottom: 4px; font-size: 1rem; }
+    .timeline-item .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 6px; }
+
+    .skill-badge {
+        background: var(--bg); color: var(--primary);
+        border: 1px solid rgba(201,168,76,0.4); padding: 5px 16px;
+        border-radius: 20px; display: inline-block; margin: 4px;
+        font-size: 0.85rem; font-weight: 500; transition: 0.3s;
+    }
+    .skill-badge:hover { background: var(--gold); color: white; border-color: var(--gold); }
+
+    .lang-item {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 0; border-bottom: 1px solid #f0ead8;
+    }
+    .lang-item:last-child { border-bottom: none; }
+    .lang-badges span {
+        font-size: 0.75rem; background: #eef4ff; color: #1a2744;
+        padding: 2px 8px; border-radius: 10px; margin-left: 4px;
+    }
+
+    .stat-pill {
+        background: var(--bg); border-radius: 12px; padding: 15px 20px;
+        text-align: center; border: 1px solid rgba(201,168,76,0.2);
+    }
+    .stat-pill .num { font-size: 1.8rem; font-weight: 700; color: var(--gold); font-family: 'Playfair Display', serif; }
+    .stat-pill .lbl { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    .btn-gold {
+        background: linear-gradient(135deg, #c9a84c, #b39542); color: white;
+        padding: 9px 22px; border-radius: 30px; border: none;
+        text-decoration: none; font-weight: 600; transition: 0.3s;
+        box-shadow: 0 4px 15px rgba(201,168,76,0.3); font-size: 0.9rem;
+    }
+    .btn-gold:hover { transform: translateY(-2px); color: white; box-shadow: 0 8px 25px rgba(201,168,76,0.5); }
+
+    .scroll-to-top {
+        position: fixed; bottom: 25px; right: 25px;
+        background: var(--primary); color: white; width: 48px; height: 48px;
+        border-radius: 50%; display: none; align-items: center; justify-content: center;
+        text-decoration: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        transition: 0.3s; z-index: 1000; font-size: 1.1rem;
+    }
+    .scroll-to-top:hover { background: var(--gold); color: white; transform: translateY(-3px); }
+
+    .empty-section { color: var(--muted); font-style: italic; text-align: center; padding: 20px; }
+</style>
+
+<div class="container py-4" style="max-width: 1100px;">
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-file-alt" style="color: var(--gold); font-size: 1.3rem;"></i>
+            <h5 class="mb-0" style="color: var(--primary);">{{ resume.full_name }}'s Resume</h5>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'update_resume' resume.pk %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                <i class="fas fa-edit me-1"></i>Edit
+            </a>
+            <a href="{% url 'download_resume_pdf' resume.pk %}" class="btn-gold">
+                <i class="fas fa-download me-1"></i>Download PDF
+            </a>
+            <a href="{% url 'resume_ats_score' resume.pk %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                <i class="fas fa-chart-bar me-1"></i>ATS Score
+            </a>
+            <a href="{% url 'delete_resume' resume.pk %}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                <i class="fas fa-trash me-1"></i>Delete
+            </a>
+        </div>
+    </div>
+
+    <!-- Profile Header -->
+    <div class="profile-header text-center">
+        {% if resume.profile_photo %}
+        <img src="{{ resume.profile_photo.url }}" alt="{{ resume.full_name }}" class="profile-photo">
+        {% else %}
+        <div style="width:90px; height:90px; border-radius:50%; background:rgba(201,168,76,0.2); border:3px solid var(--gold); display:flex; align-items:center; justify-content:center; margin: 0 auto 20px;">
+            <i class="fas fa-user" style="font-size:2.5rem; color:var(--gold);"></i>
+        </div>
+        {% endif %}
+        <h1>{{ resume.full_name }}</h1>
+        <p class="job-title">{{ resume.job_title }}</p>
+        <div class="mt-3 d-flex flex-wrap justify-content-center">
+            {% if resume.email %}<span class="contact-chip"><i class="fas fa-envelope"></i>{{ resume.email }}</span>{% endif %}
+            {% if resume.phone %}<span class="contact-chip"><i class="fas fa-phone"></i>{{ resume.phone }}</span>{% endif %}
+            {% if resume.city or resume.country %}<span class="contact-chip"><i class="fas fa-map-marker-alt"></i>{{ resume.city }}{% if resume.city and resume.country %}, {% endif %}{{ resume.country }}</span>{% endif %}
+            {% if resume.linkedin %}<span class="contact-chip"><i class="fab fa-linkedin"></i>LinkedIn</span>{% endif %}
+            {% if resume.github %}<span class="contact-chip"><i class="fab fa-github"></i>GitHub</span>{% endif %}
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-4">
+            <div class="stat-pill">
+                <div class="num">{{ resume.views }}</div>
+                <div class="lbl">Views</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="stat-pill">
+                <div class="num">{{ resume.downloads }}</div>
+                <div class="lbl">Downloads</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="stat-pill">
+                <div class="num">{{ resume.status }}</div>
+                <div class="lbl">Status</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left Column (main) -->
+        <div class="col-lg-8">
+
+            <!-- Objective/Summary -->
+            {% if resume.objective %}
+            <div class="section-card">
+                <h3><i class="fas fa-bullseye"></i>Professional Summary</h3>
+                <p style="line-height:1.8;">{{ resume.objective }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Experience -->
+            {% if resume.experiences.all %}
+            <div class="section-card">
+                <h3><i class="fas fa-briefcase"></i>Work Experience</h3>
+                {% for exp in resume.experiences.all %}
+                <div class="timeline-item">
+                    <h5>{{ exp.designation }} — {{ exp.company }}</h5>
+                    <div class="meta">
+                        <i class="fas fa-calendar me-1"></i>{{ exp.start_date|date:"M Y" }} — {% if exp.currently_working %}Present{% else %}{{ exp.end_date|date:"M Y"|default:"Present" }}{% endif %}
+                        {% if exp.location %} &nbsp;·&nbsp; <i class="fas fa-map-marker-alt me-1"></i>{{ exp.location }}{% endif %}
+                        &nbsp;·&nbsp; <span class="badge bg-light text-muted" style="font-size:0.75rem;">{{ exp.employment_type }}</span>
+                    </div>
+                    {% if exp.description %}<p style="font-size:0.93rem; color:#4b5563;">{{ exp.description|linebreaksbr }}</p>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Education -->
+            {% if resume.educations.all %}
+            <div class="section-card">
+                <h3><i class="fas fa-graduation-cap"></i>Education</h3>
+                {% for edu in resume.educations.all %}
+                <div class="timeline-item">
+                    <h5>{{ edu.degree }}</h5>
+                    <div class="meta">
+                        {{ edu.institute }}{% if edu.university %} — {{ edu.university }}{% endif %}
+                        &nbsp;·&nbsp; {{ edu.start_year }} – {{ edu.end_year }}
+                        {% if edu.percentage %} &nbsp;·&nbsp; {{ edu.percentage }}%{% endif %}
+                        {% if edu.cgpa %} &nbsp;·&nbsp; CGPA: {{ edu.cgpa }}{% endif %}
+                    </div>
+                    {% if edu.description %}<p style="font-size:0.93rem;">{{ edu.description }}</p>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Projects -->
+            {% if resume.projects.all %}
+            <div class="section-card">
+                <h3><i class="fas fa-code"></i>Projects</h3>
+                {% for proj in resume.projects.all %}
+                <div class="timeline-item">
+                    <h5>
+                        {{ proj.title }}
+                        {% if proj.github_link %}<a href="{{ proj.github_link }}" target="_blank" rel="noopener" class="ms-2 fs-6 text-muted"><i class="fab fa-github"></i></a>{% endif %}
+                        {% if proj.live_link %}<a href="{{ proj.live_link }}" target="_blank" rel="noopener" class="ms-2 fs-6 text-muted"><i class="fas fa-external-link-alt"></i></a>{% endif %}
+                    </h5>
+                    <div class="meta">
+                        {{ proj.technologies }}
+                        {% if proj.start_date %}&nbsp;·&nbsp;{{ proj.start_date|date:"M Y" }} – {{ proj.end_date|date:"M Y"|default:"Ongoing" }}{% endif %}
+                        {% if proj.role %}&nbsp;·&nbsp;{{ proj.role }}{% endif %}
+                    </div>
+                    {% if proj.description %}<p style="font-size:0.93rem;">{{ proj.description }}</p>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Certifications -->
+            {% if resume.certifications.all %}
+            <div class="section-card">
+                <h3><i class="fas fa-certificate"></i>Certifications</h3>
+                {% for cert in resume.certifications.all %}
+                <div class="timeline-item">
+                    <h5>{{ cert.certificate_name }}</h5>
+                    <div class="meta">
+                        {{ cert.organization }}
+                        {% if cert.issue_date %}&nbsp;·&nbsp;{{ cert.issue_date|date:"M Y" }}{% endif %}
+                        {% if cert.credential_id %}&nbsp;·&nbsp;ID: {{ cert.credential_id }}{% endif %}
+                    </div>
+                    {% if cert.credential_url %}<a href="{{ cert.credential_url }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary mt-1" style="border-radius:20px; font-size:0.78rem;">View Certificate</a>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Achievements -->
+            {% if resume.achievements.all %}
+            <div class="section-card">
+                <h3><i class="fas fa-trophy"></i>Achievements</h3>
+                {% for ach in resume.achievements.all %}
+                <div class="timeline-item">
+                    <h5>{{ ach.title }}</h5>
+                    {% if ach.achievement_date %}<div class="meta">{{ ach.achievement_date|date:"M Y" }}</div>{% endif %}
+                    {% if ach.description %}<p style="font-size:0.93rem;">{{ ach.description }}</p>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Custom Sections -->
+            {% if resume.custom_sections.all %}
+            {% for section in resume.custom_sections.all %}
+            <div class="section-card">
+                <h3><i class="fas fa-layer-group"></i>{{ section.heading }}</h3>
+                <p style="white-space: pre-wrap;">{{ section.content }}</p>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+        </div>
+
+        <!-- Right Column (sidebar) -->
+        <div class="col-lg-4">
+
+            <!-- Skills -->
+            {% if resume.skills.all %}
+            <div class="section-card">
+                <h4><i class="fas fa-star"></i>Skills</h4>
+                <div>
+                    {% for skill in resume.skills.all %}
+                    <span class="skill-badge">{{ skill.name }}{% if skill.level %} <small style="opacity:0.7;">({{ skill.level }})</small>{% endif %}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Languages -->
+            {% if resume.languages.all %}
+            <div class="section-card">
+                <h4><i class="fas fa-language"></i>Languages</h4>
+                {% for lang in resume.languages.all %}
+                <div class="lang-item">
+                    <span style="font-weight: 500;">{{ lang.language }}</span>
+                    <div class="lang-badges">
+                        {% if lang.read %}<span>Read</span>{% endif %}
+                        {% if lang.write %}<span>Write</span>{% endif %}
+                        {% if lang.speak %}<span>Speak</span>{% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Hobbies -->
+            {% if resume.hobbies.all %}
+            <div class="section-card">
+                <h4><i class="fas fa-heart"></i>Hobbies</h4>
+                <div>
+                    {% for h in resume.hobbies.all %}<span class="skill-badge">{{ h.name }}</span>{% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Interests -->
+            {% if resume.interests.all %}
+            <div class="section-card">
+                <h4><i class="fas fa-lightbulb"></i>Interests</h4>
+                <div>
+                    {% for i in resume.interests.all %}<span class="skill-badge">{{ i.name }}</span>{% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- References -->
+            {% if resume.references.all %}
+            <div class="section-card">
+                <h4><i class="fas fa-address-book"></i>References</h4>
+                {% for ref in resume.references.all %}
+                <div class="mb-3 pb-3" style="border-bottom: 1px solid #f0ead8;">
+                    <strong>{{ ref.name }}</strong>
+                    {% if ref.designation %}<div class="text-muted" style="font-size:0.85rem;">{{ ref.designation }}{% if ref.company %} @ {{ ref.company }}{% endif %}</div>{% endif %}
+                    {% if ref.email %}<div style="font-size:0.83rem;"><i class="fas fa-envelope me-1" style="color:var(--gold);"></i>{{ ref.email }}</div>{% endif %}
+                    {% if ref.phone %}<div style="font-size:0.83rem;"><i class="fas fa-phone me-1" style="color:var(--gold);"></i>{{ ref.phone }}</div>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Personal Details (supplemental) -->
+            <div class="section-card">
+                <h4><i class="fas fa-id-card"></i>Personal Details</h4>
+                {% if resume.date_of_birth %}<p class="mb-1"><small class="text-muted text-uppercase" style="font-size:0.72rem; letter-spacing:1px;">Date of Birth</small><br>{{ resume.date_of_birth|date:"F d, Y" }}</p>{% endif %}
+                {% if resume.gender %}<p class="mb-1"><small class="text-muted text-uppercase" style="font-size:0.72rem; letter-spacing:1px;">Gender</small><br>{{ resume.gender }}</p>{% endif %}
+                {% if resume.nationality %}<p class="mb-1"><small class="text-muted text-uppercase" style="font-size:0.72rem; letter-spacing:1px;">Nationality</small><br>{{ resume.nationality }}</p>{% endif %}
+                {% if resume.address %}<p class="mb-1"><small class="text-muted text-uppercase" style="font-size:0.72rem; letter-spacing:1px;">Address</small><br>{{ resume.address }}{% if resume.city %}, {{ resume.city }}{% endif %}{% if resume.state %}, {{ resume.state }}{% endif %}{% if resume.pincode %} - {{ resume.pincode }}{% endif %}</p>{% endif %}
+            </div>
+
+            <!-- Social Links -->
+            {% if resume.linkedin or resume.github or resume.portfolio or resume.website %}
+            <div class="section-card">
+                <h4><i class="fas fa-link"></i>Links</h4>
+                {% if resume.linkedin %}<a href="{{ resume.linkedin }}" target="_blank" class="d-block mb-2" style="color:var(--primary);"><i class="fab fa-linkedin me-2" style="color:#0077b5;"></i>LinkedIn</a>{% endif %}
+                {% if resume.github %}<a href="{{ resume.github }}" target="_blank" class="d-block mb-2" style="color:var(--primary);"><i class="fab fa-github me-2"></i>GitHub</a>{% endif %}
+                {% if resume.portfolio %}<a href="{{ resume.portfolio }}" target="_blank" class="d-block mb-2" style="color:var(--primary);"><i class="fas fa-globe me-2" style="color:var(--gold);"></i>Portfolio</a>{% endif %}
+                {% if resume.website %}<a href="{{ resume.website }}" target="_blank" class="d-block mb-2" style="color:var(--primary);"><i class="fas fa-link me-2" style="color:var(--gold);"></i>Website</a>{% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Declaration -->
+            {% if resume.declaration %}
+            <div class="section-card">
+                <h4><i class="fas fa-file-signature"></i>Declaration</h4>
+                <p style="font-size:0.88rem; color:var(--muted);">{{ resume.declaration.declaration_text }}</p>
+                {% if resume.declaration.place %}<p class="mt-2 mb-0" style="font-size:0.85rem;"><strong>Place:</strong> {{ resume.declaration.place }}</p>{% endif %}
+                {% if resume.declaration.declaration_date %}<p class="mb-0" style="font-size:0.85rem;"><strong>Date:</strong> {{ resume.declaration.declaration_date|date:"F d, Y" }}</p>{% endif %}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<a href="#" class="scroll-to-top" id="scrollToTop"><i class="fas fa-chevron-up"></i></a>
+<script>
+    window.addEventListener('scroll', () => {
+        const btn = document.getElementById('scrollToTop');
+        if (btn) { btn.style.display = window.scrollY > 300 ? 'flex' : 'none'; }
+    });
+</script>
+{% endblock %}

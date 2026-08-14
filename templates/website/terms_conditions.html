@@ -1,0 +1,71 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #1a2744;
+        --gold: #c9a84c;
+        --bg: #faf8f3;
+        --text: #1a1a2e;
+        --light: #fff8f0;
+        --muted: #6b7280;
+    }
+    body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; color: var(--primary); }
+    
+    .doc-hero {
+        background: var(--primary);
+        padding: 80px 0; color: #fff; text-align: center; border-bottom: 5px solid var(--gold);
+    }
+    .doc-hero h1 { color: #fff; font-size: 3rem; }
+    
+    .doc-container { background: #fff; border-radius: 16px; padding: 50px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); margin-top: -30px; position: relative; border: 1px solid rgba(201,168,76,0.1); }
+    
+    .doc-content h2 { color: var(--gold); font-size: 1.8rem; margin-top: 40px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .doc-content p { color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+    .doc-content ul { color: var(--muted); line-height: 1.8; margin-bottom: 20px; padding-left: 20px; }
+    .doc-content li { margin-bottom: 10px; }
+</style>
+
+<div class="doc-hero" data-aos="fade-in">
+    <div class="container">
+        <h1>Terms & Conditions</h1>
+        <p class="text-light mt-2">Last updated: October 2023</p>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10" data-aos="fade-up">
+                <div class="doc-container doc-content">
+                    <p class="lead text-dark">Please read these Terms and Conditions carefully before using our website and services.</p>
+                    
+                    <h2>1. Acceptance of Terms</h2>
+                    <p>By accessing or using our platform, you agree to be bound by these Terms. If you disagree with any part of the terms, you may not access the service.</p>
+
+                    <h2>2. User Accounts</h2>
+                    <p>When you create an account with us, you must provide information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account.</p>
+                    <p>You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password.</p>
+
+                    <h2>3. Intellectual Property</h2>
+                    <p>The Service and its original content (excluding Content provided by users), features and functionality are and will remain the exclusive property of our platform and its licensors. Our templates, designs, and code are protected by copyright and other intellectual property laws.</p>
+
+                    <h2>4. User Content</h2>
+                    <p>You retain any and all of your rights to any Content you submit, post or display on or through the Service and you are responsible for protecting those rights. However, by posting Content to the public areas of the Service, you grant us the right to use, copy, modify, adapt, publish, translate and distribute such Content.</p>
+
+                    <h2>5. Termination</h2>
+                    <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</p>
+
+                    <h2>6. Limitation of Liability</h2>
+                    <p>In no event shall we, nor our directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.</p>
+
+                    <h2>7. Contact Us</h2>
+                    <p>If you have any questions about these Terms, please contact us at <a href="mailto:legal@classicresume.com" class="text-primary fw-bold">legal@classicresume.com</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

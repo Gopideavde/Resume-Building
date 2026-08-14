@@ -1,0 +1,816 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Modern Resume
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+body{
+    background:#edf2f7;
+    font-family:'Poppins',sans-serif;
+}
+
+.resume{
+    max-width:1000px;
+    margin:40px auto;
+    background:#fff;
+    box-shadow:0 15px 40px rgba(0,0,0,.15);
+}
+
+.left-side{
+    background:#0d6efd;
+    color:#fff;
+    min-height:1200px;
+    padding:40px 30px;
+}
+
+.right-side{
+    padding:40px;
+}
+
+.profile-image{
+    width:170px;
+    height:170px;
+    border-radius:50%;
+    object-fit:cover;
+    border:6px solid white;
+    margin:auto;
+    display:block;
+}
+
+.section-title{
+
+    border-bottom:2px solid #0d6efd;
+
+    padding-bottom:8px;
+
+    margin-top:30px;
+
+    margin-bottom:20px;
+
+    font-weight:bold;
+
+    color:#0d6efd;
+
+}
+
+.left-title{
+
+    font-size:22px;
+
+    margin-top:35px;
+
+    margin-bottom:15px;
+
+    font-weight:bold;
+
+}
+
+.skill{
+
+    background:rgba(255,255,255,.15);
+
+    padding:8px 14px;
+
+    border-radius:25px;
+
+    margin:5px;
+
+    display:inline-block;
+
+}
+
+.language{
+
+    padding:6px 0;
+
+}
+
+.contact p{
+
+    margin-bottom:12px;
+
+    font-size:15px;
+
+}
+
+</style>
+
+<div class="resume">
+
+<div class="row g-0">
+
+<!-- ================= Left ================= -->
+
+<div class="col-lg-4 left-side">
+
+{% if resume.profile_photo %}
+
+<img
+src="{{ resume.profile_photo.url }}"
+class="profile-image">
+
+{% else %}
+
+<img
+src="{% static 'resume/images/default-user.png' %}"
+class="profile-image">
+
+{% endif %}
+
+<h2 class="text-center mt-4">
+
+{{ resume.full_name }}
+
+</h2>
+
+<p class="text-center">
+
+{{ resume.job_title }}
+
+</p>
+
+<div class="left-title">
+
+Contact
+
+</div>
+
+<div class="contact">
+
+<p>
+
+📧 {{ resume.email }}
+
+</p>
+
+<p>
+
+📞 {{ resume.phone }}
+
+</p>
+
+<p>
+
+📍 {{ resume.city }},
+
+{{ resume.state }}
+
+</p>
+
+<p>
+
+🌍 {{ resume.country }}
+
+</p>
+
+</div>
+
+<div class="left-title">
+
+Skills
+
+</div>
+
+{% for skill in resume.skills.all %}
+
+<span class="skill">
+
+{{ skill.name }}
+
+</span>
+
+{% endfor %}
+
+<div class="left-title">
+
+Languages
+
+</div>
+
+{% for language in resume.languages.all %}
+
+<div class="language">
+
+{{ language.language }}
+
+</div>
+
+{% endfor %}
+
+<div class="left-title">
+
+Social Links
+
+</div>
+
+<p>
+
+LinkedIn
+
+</p>
+
+<p>
+
+{{ resume.linkedin }}
+
+</p>
+
+<p>
+
+Github
+
+</p>
+
+<p>
+
+{{ resume.github }}
+
+</p>
+
+<p>
+
+Portfolio
+
+</p>
+
+<p>
+
+{{ resume.portfolio }}
+
+</p>
+
+</div>
+
+<!-- ================= Right ================= -->
+
+<div class="col-lg-8 right-side">
+
+<h2 class="section-title">
+
+Career Objective
+
+</h2>
+
+<p>
+
+{{ resume.objective }}
+
+</p>
+<!-- ================= Education ================= -->
+
+<h2 class="section-title">
+
+Education
+
+</h2>
+
+{% for education in resume.educations.all %}
+
+<div class="mb-4 border-start border-4 border-primary ps-3">
+
+<h5 class="fw-bold">
+
+{{ education.degree }}
+
+</h5>
+
+<p class="text-muted mb-1">
+
+{{ education.institute }}
+
+</p>
+
+{% if education.university %}
+
+<p class="mb-1">
+
+{{ education.university }}
+
+</p>
+
+{% endif %}
+
+<p class="mb-1">
+
+{{ education.start_year }}
+
+-
+
+{{ education.end_year }}
+
+</p>
+
+{% if education.cgpa %}
+
+<p class="mb-0">
+
+<b>CGPA:</b>
+
+{{ education.cgpa }}
+
+</p>
+
+{% endif %}
+
+{% if education.percentage %}
+
+<p>
+
+<b>Percentage:</b>
+
+{{ education.percentage }}
+
+</p>
+
+{% endif %}
+
+</div>
+
+{% empty %}
+
+<p>No Education Added</p>
+
+{% endfor %}
+
+
+<!-- ================= Experience ================= -->
+
+<h2 class="section-title">
+
+Work Experience
+
+</h2>
+
+{% for experience in resume.experiences.all %}
+
+<div class="mb-4 border-start border-4 border-success ps-3">
+
+<h5 class="fw-bold">
+
+{{ experience.designation }}
+
+</h5>
+
+<h6 class="text-primary">
+
+{{ experience.company }}
+
+</h6>
+
+<p class="text-muted">
+
+{{ experience.start_date }}
+
+-
+
+{% if experience.currently_working %}
+
+Present
+
+{% else %}
+
+{{ experience.end_date }}
+
+{% endif %}
+
+</p>
+
+<p>
+
+{{ experience.description }}
+
+</p>
+
+</div>
+
+{% empty %}
+
+<p>No Experience Added</p>
+
+{% endfor %}
+
+
+<!-- ================= Projects ================= -->
+
+<h2 class="section-title">
+
+Projects
+
+</h2>
+
+{% for project in resume.projects.all %}
+
+<div class="card border-0 shadow-sm mb-4">
+
+<div class="card-body">
+
+<h5 class="fw-bold">
+
+{{ project.title }}
+
+</h5>
+
+<p>
+
+<b>Technology:</b>
+
+{{ project.technologies }}
+
+</p>
+
+{% if project.role %}
+
+<p>
+
+<b>Role:</b>
+
+{{ project.role }}
+
+</p>
+
+{% endif %}
+
+{% if project.team_size %}
+
+<p>
+
+<b>Team Size:</b>
+
+{{ project.team_size }}
+
+</p>
+
+{% endif %}
+
+<p>
+
+{{ project.description }}
+
+</p>
+
+{% if project.github_link %}
+
+<a
+href="{{ project.github_link }}"
+target="_blank"
+class="btn btn-sm btn-dark">
+
+Github
+
+</a>
+
+{% endif %}
+
+{% if project.live_link %}
+
+<a
+href="{{ project.live_link }}"
+target="_blank"
+class="btn btn-sm btn-primary">
+
+Live Demo
+
+</a>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% empty %}
+
+<p>No Projects Added</p>
+
+{% endfor %}
+<!-- ================= Certifications ================= -->
+
+<h2 class="section-title">
+
+Certifications
+
+</h2>
+
+{% for certificate in resume.certifications.all %}
+
+<div class="mb-4">
+
+<h5 class="fw-bold">
+
+{{ certificate.certificate_name }}
+
+</h5>
+
+<p class="mb-1">
+
+{{ certificate.organization }}
+
+</p>
+
+{% if certificate.issue_date %}
+
+<p class="text-muted">
+
+Issue Date : {{ certificate.issue_date }}
+
+</p>
+
+{% endif %}
+
+{% if certificate.credential_url %}
+
+<a href="{{ certificate.credential_url }}"
+target="_blank"
+class="btn btn-sm btn-outline-primary">
+
+View Certificate
+
+</a>
+
+{% endif %}
+
+</div>
+
+{% empty %}
+
+<p>No Certifications Added</p>
+
+{% endfor %}
+
+
+
+<!-- ================= Achievements ================= -->
+
+<h2 class="section-title">
+
+Achievements
+
+</h2>
+
+{% for achievement in resume.achievements.all %}
+
+<div class="mb-3">
+
+<h5>
+
+🏆 {{ achievement.title }}
+
+</h5>
+
+<p>
+
+{{ achievement.description }}
+
+</p>
+
+{% if achievement.achievement_date %}
+
+<small class="text-muted">
+
+{{ achievement.achievement_date }}
+
+</small>
+
+{% endif %}
+
+</div>
+
+{% empty %}
+
+<p>No Achievements Added</p>
+
+{% endfor %}
+
+
+
+<!-- ================= Hobbies ================= -->
+
+<h2 class="section-title">
+
+Hobbies
+
+</h2>
+
+<div class="mb-4">
+
+{% for hobby in resume.hobbies.all %}
+
+<span class="badge bg-secondary p-2 m-1">
+
+{{ hobby.name }}
+
+</span>
+
+{% empty %}
+
+<p>No Hobbies Added</p>
+
+{% endfor %}
+
+</div>
+
+
+
+<!-- ================= Interests ================= -->
+
+<h2 class="section-title">
+
+Interests
+
+</h2>
+
+<div class="mb-4">
+
+{% for interest in resume.interests.all %}
+
+<span class="badge bg-info text-dark p-2 m-1">
+
+{{ interest.name }}
+
+</span>
+
+{% empty %}
+
+<p>No Interests Added</p>
+
+{% endfor %}
+
+</div>
+
+
+
+<!-- ================= References ================= -->
+
+<h2 class="section-title">
+
+References
+
+</h2>
+
+{% for reference in resume.references.all %}
+
+<div class="card shadow-sm mb-3">
+
+<div class="card-body">
+
+<h5>
+
+{{ reference.name }}
+
+</h5>
+
+<p>
+
+<strong>Designation:</strong>
+
+{{ reference.designation }}
+
+</p>
+
+<p>
+
+<strong>Company:</strong>
+
+{{ reference.company }}
+
+</p>
+
+{% if reference.email %}
+
+<p>
+
+<strong>Email:</strong>
+
+{{ reference.email }}
+
+</p>
+
+{% endif %}
+
+{% if reference.phone %}
+
+<p>
+
+<strong>Phone:</strong>
+
+{{ reference.phone }}
+
+</p>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% empty %}
+
+<p>No References Added</p>
+
+{% endfor %}
+
+
+
+<!-- ================= Declaration ================= -->
+
+{% if resume.declaration %}
+
+<h2 class="section-title">
+
+Declaration
+
+</h2>
+
+<p>
+
+{{ resume.declaration.declaration_text }}
+
+</p>
+
+<div class="row mt-5">
+
+<div class="col-6">
+
+{% if resume.declaration.place %}
+
+<strong>
+
+Place:
+
+</strong>
+
+{{ resume.declaration.place }}
+
+{% endif %}
+
+</div>
+
+<div class="col-6 text-end">
+
+{% if resume.declaration.show_signature %}
+
+<strong>
+
+{{ resume.full_name }}
+
+</strong>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% endif %}
+
+
+
+<hr class="mt-5">
+
+<div class="d-flex justify-content-between">
+
+{% if resume %}
+<a href="{% url 'update_resume' resume.id %}"class="btn btn-warning">
+    ✏ Edit Resume
+</a>
+{% endif %}
+
+
+
+
+
+</a>
+
+<div>
+
+<button onclick="window.print()"
+
+class="btn btn-success">
+
+🖨 Print
+
+</button>
+
+{% if resume and resume.id %}
+<a href="{% url 'download_resume_pdf' resume.id %}"
+   class="btn btn-danger">
+    📄 Download PDF
+</a>
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
