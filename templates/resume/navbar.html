@@ -106,7 +106,7 @@ body { padding-top: 88px; }
                 <a href="{% url 'dashboard' %}" class="resume-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
                     <i class="bi bi-speedometer2"></i> Dashboard
                 </a>
-                <a href="{% url 'resume_list' %}" class="resume-nav-link {% if request.resolver_match.url_name == 'resume_list' %}active{% endif %}">
+                <a href="{% url 'template_list' %}" class="resume-nav-link {% if request.resolver_match.url_name == 'resume_list' %}active{% endif %}">
                     <i class="bi bi-files"></i> My Resumes
                 </a>
                 <a href="{% url 'resume_analytics' %}" class="resume-nav-link {% if request.resolver_match.url_name == 'resume_analytics' %}active{% endif %}">
@@ -167,7 +167,7 @@ body { padding-top: 88px; }
             <div class="py-2 mt-2 border-top border-white border-opacity-25">
                 <div class="d-flex flex-column gap-1">
                     <a href="{% url 'dashboard' %}" class="resume-nav-link"><i class="bi bi-speedometer2"></i> Dashboard</a>
-                    <a href="{% url 'resume_list' %}" class="resume-nav-link"><i class="bi bi-files"></i> My Resumes</a>
+                    <a href="{% url 'template_list' %}" class="resume-nav-link"><i class="bi bi-files"></i> My Resumes</a>
                     <a href="{% url 'create_resume' %}" class="resume-nav-link"><i class="bi bi-plus-circle-fill"></i> Create Resume</a>
                     <a href="{% url 'resume_analytics' %}" class="resume-nav-link"><i class="bi bi-graph-up-arrow"></i> Analytics</a>
                     <a href="{% url 'home' %}" class="resume-nav-link"><i class="bi bi-house-door"></i> Website</a>

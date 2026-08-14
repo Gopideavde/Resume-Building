@@ -246,7 +246,7 @@ body { padding-top: 80px; }
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'blog' %}" class="nav-link {% if request.resolver_match.url_name == 'blog' %}active{% endif %}">
+                    <a href="#" class="nav-link {% if request.resolver_match.url_name == 'blog' %}active{% endif %}">
                         <i class="bi bi-newspaper"></i> Blog
                     </a>
                 </li>
@@ -305,7 +305,7 @@ body { padding-top: 80px; }
                         </li>
                         <li><hr class="dropdown-divider mx-2"></li>
                         <li><a class="dropdown-item rounded-3 py-2" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2 text-primary"></i>My Dashboard</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2" href="{% url 'resume_list' %}"><i class="bi bi-file-earmark-person me-2 text-success"></i>My Resumes</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2" href="{% url 'template_list' %}"><i class="bi bi-file-earmark-person me-2 text-success"></i>My Resumes</a></li>
                         <li><a class="dropdown-item rounded-3 py-2" href="{% url 'profile' %}"><i class="bi bi-person-circle me-2 text-info"></i>Profile</a></li>
                         <li><a class="dropdown-item rounded-3 py-2" href="{% url 'edit_profile' %}"><i class="bi bi-gear me-2 text-warning"></i>Settings</a></li>
                         {% if user.is_staff %}
@@ -341,7 +341,7 @@ body { padding-top: 80px; }
                 <ul class="list-unstyled mb-3">
                     <li><a href="{% url 'home' %}" class="d-block py-2 px-3 rounded-3 fw-semibold text-dark text-decoration-none"><i class="bi bi-house-door me-2"></i>Home</a></li>
                     <li><a href="{% url 'about' %}" class="d-block py-2 px-3 rounded-3 fw-semibold text-dark text-decoration-none"><i class="bi bi-info-circle me-2"></i>About</a></li>
-                    <li><a href="{% url 'blog' %}" class="d-block py-2 px-3 rounded-3 fw-semibold text-dark text-decoration-none"><i class="bi bi-newspaper me-2"></i>Blog</a></li>
+                    <li><a href="#" class="d-block py-2 px-3 rounded-3 fw-semibold text-dark text-decoration-none"><i class="bi bi-newspaper me-2"></i>Blog</a></li>
                     <li><a href="{% url 'contact' %}" class="d-block py-2 px-3 rounded-3 fw-semibold text-dark text-decoration-none"><i class="bi bi-envelope me-2"></i>Contact</a></li>
                     {% if user.is_authenticated %}
                     <li><hr></li>

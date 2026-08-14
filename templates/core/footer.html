@@ -212,8 +212,8 @@
                 <ul class="footer-links">
                     <li><a href="{% url 'home' %}"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>Home</a></li>
                     <li><a href="{% url 'about' %}"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>About Us</a></li>
-                    <li><a href="{% url 'services' %}"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>Services</a></li>
-                    <li><a href="{% url 'blog' %}"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>Blog</a></li>
+                    <li><a href="#"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>Services</a></li>
+                    <li><a href="#"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>Blog</a></li>
                     <li><a href="{% url 'contact' %}"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>Contact</a></li>
                 </ul>
             </div>
@@ -235,7 +235,7 @@
             <div class="col-lg-3 col-md-4">
                 <h5 class="footer-section-title">Stay Updated</h5>
                 <p class="footer-desc mb-3">Get new templates, career tips and resume tricks delivered to your inbox.</p>
-                <form method="POST" action="{% url 'subscribe_newsletter' %}" class="footer-newsletter-form">
+                <form method="POST" action="#" class="footer-newsletter-form">
                     {% csrf_token %}
                     <input type="email" name="email" class="footer-newsletter-input" placeholder="Your email address" required>
                     <button type="submit" class="footer-newsletter-btn"><i class="bi bi-send-fill me-1"></i>Subscribe</button>
@@ -243,9 +243,9 @@
                 <div class="mt-4">
                     <h5 class="footer-section-title">Support</h5>
                     <ul class="footer-links">
-                        <li><a href="{% url 'faq' %}"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>FAQ</a></li>
+                        <li><a href="#"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>FAQ</a></li>
                         <li><a href="{% url 'privacy_policy' %}"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>Privacy Policy</a></li>
-                        <li><a href="{% url 'terms_conditions' %}"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>Terms & Conditions</a></li>
+                        <li><a href="{% url 'terms' %}"><span class="link-arrow"><i class="bi bi-chevron-right"></i></span>Terms & Conditions</a></li>
                     </ul>
                 </div>
             </div>
@@ -260,8 +260,8 @@
             <p>© 2026 <strong>A2Z Resume Builder</strong>. All Rights Reserved. Made with <i class="bi bi-heart-fill text-danger"></i> in India.</p>
             <div class="footer-bottom-links">
                 <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
-                <a href="{% url 'terms_conditions' %}">Terms of Service</a>
-                <a href="{% url 'faq' %}">FAQ</a>
+                <a href="{% url 'terms' %}">Terms of Service</a>
+                <a href="#">FAQ</a>
                 <a href="{% url 'contact' %}">Contact</a>
             </div>
         </div>
